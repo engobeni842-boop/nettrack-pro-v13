@@ -4933,5 +4933,115 @@ body.portal-open .brand-footer{ display:none; }
 </script>
 <!-- /NETTRACK PRO V13.6 CONTEXT-AWARE PUBLIC SIGNAL GENERATOR PATCH -->
 
+
+
+<!-- NETTRACK PRO V13.7 SENSITIVE-SIGNAL LOCKDOWN PATCH -->
+<style id="v137-sensitive-lockdown">
+/* V13.7: Signal-only platform protection. Only Daily Signal Generator remains open. */
+#mainChart{
+  filter: blur(8px) saturate(.72) contrast(.86) brightness(.92) !important;
+  opacity:.62 !important;
+}
+.card:has(#mainChart){
+  position:relative !important;
+  overflow:hidden !important;
+  background:linear-gradient(135deg,rgba(248,250,252,.88),rgba(226,232,240,.78)), rgba(15,23,42,.92) !important;
+}
+.card:has(#mainChart)::after{
+  content:"🔒 Live chart preview — generate Signal A + Signal B or subscribe to unlock full chart details.";
+  position:absolute; inset:0; z-index:30;
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  padding:34px; color:#0f172a; font-weight:950; font-size:1.02rem; line-height:1.45;
+  background:linear-gradient(135deg,rgba(248,250,252,.40),rgba(226,232,240,.52));
+  backdrop-filter: blur(2px);
+  pointer-events:none;
+}
+#maOverlay, #brokerOverlayName{ filter:blur(3px); opacity:.42; }
+/* Executive summary is sensitive; keep only public generator if mounted inside it */
+#signalGrade,#signalText,.confidence-box,.summary-mini,#signalExplainer,#liveAlignmentBox{
+  filter:blur(5px) !important; opacity:.28 !important; pointer-events:none !important; user-select:none !important;
+}
+#ntSignalSwitchMount, #ntPublicSignalGenerator, .nt-public-signal-card{
+  filter:none !important; opacity:1 !important; pointer-events:auto !important; user-select:auto !important;
+}
+.nt-sensitive-locked{
+  position:relative !important;
+  min-height:260px !important;
+  border:1px solid rgba(250,204,21,.38)!important;
+  background:linear-gradient(135deg,rgba(248,250,252,.92),rgba(226,232,240,.86)) !important;
+  color:#0f172a !important;
+  overflow:hidden !important;
+}
+.nt-sensitive-locked h3,
+.nt-sensitive-locked .quality-bar,
+.nt-sensitive-locked .level-grid,
+.nt-sensitive-locked .watch-note,
+.nt-sensitive-locked .level-box,
+.nt-sensitive-locked #qualityValue{
+  display:none !important;
+}
+.nt-sensitive-lock-message{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:235px; gap:10px; text-align:center; padding:28px;
+  color:#0f172a;
+}
+.nt-sensitive-lock-message .lock-title{font-size:1.05rem;font-weight:950;letter-spacing:.5px;text-transform:uppercase;color:#020617}
+.nt-sensitive-lock-message .lock-body{font-size:.92rem;line-height:1.45;color:#334155;max-width:420px}
+.nt-sensitive-lock-message .lock-pill{border:1px solid rgba(14,165,233,.28);background:#fff;color:#0369a1;border-radius:999px;padding:7px 12px;font-weight:900;font-size:.72rem;text-transform:uppercase;box-shadow:0 10px 24px rgba(15,23,42,.08)}
+.nt-sensitive-lock-message .lock-action{margin-top:6px;background:#22c55e;color:#052e16;border-radius:10px;padding:10px 14px;font-weight:950;font-size:.82rem;box-shadow:0 12px 24px rgba(34,197,94,.18)}
+.nt-public-signal-card{order:-50 !important;}
+.nt-public-signal-card .nt-public-head h3::after{content:"  🔓"; color:#22c55e}
+.nt-public-signal-card{border:1px solid rgba(34,197,94,.55)!important;box-shadow:0 0 0 1px rgba(34,197,94,.12),0 20px 60px rgba(2,6,23,.18)!important;}
+</style>
+<script id="v137-sensitive-lockdown-script">
+(function(){
+  const OWNER_EMAIL="engobeni842@gmail.com";
+  const $=(id)=>document.getElementById(id);
+  function isOwner(){
+    const txt=(document.body.innerText||"").toLowerCase();
+    return txt.includes(OWNER_EMAIL.toLowerCase()) && false; /* user view remains protected; owner portal can be separate */
+  }
+  function lockTradeLevels(){
+    const cards=[...document.querySelectorAll('.card')];
+    const tradeCard=cards.find(c=>/Trade Quality\s*&\s*Levels/i.test(c.textContent||''));
+    if(tradeCard && !tradeCard.dataset.v137Locked){
+      tradeCard.dataset.v137Locked="1";
+      tradeCard.classList.add('nt-sensitive-locked');
+      const msg=document.createElement('div');
+      msg.className='nt-sensitive-lock-message';
+      msg.innerHTML='<div class="lock-pill">Under Subscription</div><div class="lock-title">Premium Signal Details Locked</div><div class="lock-body">Entry, Stop Loss, Take Profit, Risk/Reward, ATR, trade quality and profit levels are sensitive NetTrack signal data.</div><div class="lock-action">Use Generate Signal A + Signal B or subscribe to unlock full details.</div>';
+      tradeCard.appendChild(msg);
+    }
+  }
+  function secureSensitiveNumbers(){
+    // Keep sensitive plan values hidden even if old engine continues updating them in the background.
+    ['qualityValue','planEntry','planSL','planTP','planRR','planRiskAmt','planRewardAmt','planATR','planDistance'].forEach(id=>{
+      const el=$(id); if(el){el.textContent='LOCKED'; el.setAttribute('aria-label','Locked under subscription');}
+    });
+    const note=$('planNote'); if(note) note.textContent='Sensitive levels are locked. Generate Signal A + Signal B or subscribe.';
+  }
+  function protectChartLabels(){
+    const tags=[...document.querySelectorAll('span')].filter(x=>/Entry\s*\/\s*SL\s*\/\s*TP/i.test(x.textContent||''));
+    tags.forEach(x=>x.textContent='Signal levels: LOCKED');
+  }
+  function movePublicGeneratorUp(){
+    const gen=$('ntPublicSignalGenerator');
+    const grid=document.querySelector('.container .grid');
+    if(gen&&grid){
+      const firstStatus=grid.querySelector('.card.span-12');
+      if(firstStatus && firstStatus.nextSibling && gen.previousElementSibling!==firstStatus){
+        grid.insertBefore(gen, firstStatus.nextSibling);
+      }
+    }
+  }
+  function boot(){
+    lockTradeLevels(); secureSensitiveNumbers(); protectChartLabels(); movePublicGeneratorUp();
+    setInterval(()=>{lockTradeLevels(); secureSensitiveNumbers(); protectChartLabels(); movePublicGeneratorUp();},600);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
+})();
+</script>
+<!-- /NETTRACK PRO V13.7 SENSITIVE-SIGNAL LOCKDOWN PATCH -->
+
 </body>
 </html>
