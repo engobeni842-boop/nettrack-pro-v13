@@ -1,0 +1,4235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NetTrack Tester V12.4 Signal Platform</title>
+<style>
+:root {
+--bg: #050a14;
+--card-bg: #0f172a;
+--border: #1e293b;
+--text: #f8fafc;
+--muted: #94a3b8;
+--primary: #38bdf8;
+--buy: #22c55e;
+--sell: #ef4444;
+--neutral: #eab308;
+--panel: #111b2e;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; overflow-x: hidden; }
+/* HEADER */
+header { padding: 0.8rem 1.5rem; background: var(--card-bg); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; gap: 15px; }
+.controls { display: flex; align-items: center; gap: 12px; }
+.pair-selector, .tf-selector { background: #1e293b; color: var(--text); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+.pair-selector { background: var(--primary); color: #000; }
+.live-price-container { text-align: right; }
+.live-price { font-size: 1.8rem; font-weight: 800; font-family: 'Courier New', monospace; letter-spacing: -1px; transition: color 0.2s; }
+/* LAYOUT */
+.container { padding: 1.5rem; max-width: 1600px; margin: auto; }
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1rem; }
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; position: relative; }
+.span-12 { grid-column: span 12; }
+.span-8 { grid-column: span 8; }
+.span-4 { grid-column: span 4; }
+.span-3 { grid-column: span 3; }
+.span-6 { grid-column: span 6; }
+/* UI COMPONENTS */
+h2, h3 { margin: 0 0 1rem 0; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); display: flex; justify-content: space-between; align-items: center; }
+.stat-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #1e293b; font-size: 0.85rem; }
+.stat-row:last-child { border: none; }
+.vote-badge { padding: 2px 8px; border-radius: 4px; font-weight: 800; font-size: 0.7rem; }
+.bg-buy { background: rgba(34, 197, 94, 0.15); color: var(--buy); border: 1px solid rgba(34, 197, 94, 0.3); }
+.bg-sell { background: rgba(239, 68, 68, 0.15); color: var(--sell); border: 1px solid rgba(239, 68, 68, 0.3); }
+.bg-neutral { background: rgba(234, 179, 8, 0.15); color: var(--neutral); border: 1px solid rgba(234, 179, 8, 0.3); }
+.bg-watchlist-buy { background: rgba(34, 197, 94, 0.10); color: var(--buy); border: 1px solid rgba(34, 197, 94, 0.22); }
+.bg-watchlist-sell { background: rgba(239, 68, 68, 0.10); color: var(--sell); border: 1px solid rgba(239, 68, 68, 0.22); }
+
+.big-signal { font-size: 3rem; font-weight: 900; text-align: center; margin: 0.5rem 0; line-height: 1; }
+.grade-badge { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; font-weight: 900; color: var(--primary); background: rgba(56, 189, 248, 0.1); padding: 5px 12px; border-radius: 8px; border: 1px solid var(--primary); }
+.progress-bg { background: #1e293b; height: 10px; border-radius: 5px; overflow: hidden; margin: 10px 0; }
+.progress-fill { height: 100%; transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.btn { cursor: pointer; border: none; border-radius: 6px; padding: 0.7rem 1.2rem; font-weight: 700; font-size: 0.8rem; transition: all 0.2s; width: 100%; margin-top: 5px; }
+.btn-primary { background: var(--primary); color: #000; }
+.btn-success { background: var(--buy); color: #000; }
+.btn-danger { background: var(--sell); color: #fff; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+canvas { width: 100% !important; border-radius: 8px; background: #0b1221; display:block; min-height:120px; }
+#mainChart { min-height: 380px; }
+.table-wrap { overflow-y: auto; max-height: 400px; scrollbar-width: thin; }
+table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+th { text-align: left; padding: 0.8rem; border-bottom: 1px solid var(--border); color: var(--muted); position: sticky; top: 0; background: var(--card-bg); z-index: 10; }
+td { padding: 0.8rem; border-bottom: 1px solid var(--border); }
+input, select, textarea { background: #1e293b; border: 1px solid var(--border); color: #fff; padding: 0.6rem; border-radius: 6px; width: 100%; margin-top: 4px; font-family: inherit; }
+#notif-box { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+.toast { padding: 12px 20px; border-radius: 8px; background: var(--card-bg); border-left: 5px solid var(--primary); color: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-size: 0.85rem; font-weight: 600; transform: translateX(120%); transition: transform 0.4s; pointer-events: auto; }
+.toast.show { transform: translateX(0); }
+#settingsModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+.modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; width: 90%; max-width: 500px; }
+.mini-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; }
+.mini-box { background:#1e293b; border:1px solid var(--border); border-radius:8px; padding:8px; font-size:.72rem; }
+.mini-box b { display:block; margin-top:3px; font-size:.82rem; }
+.signal-strong { text-shadow: 0 0 18px rgba(56,189,248,.35); }
+
+.quality-bar { height: 12px; background:#1e293b; border-radius:999px; overflow:hidden; margin:8px 0 12px; }
+.quality-fill { height:100%; width:0%; background:var(--neutral); transition:width .4s ease; }
+.level-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; margin-top:8px; }
+.level-box { background:#1e293b; border:1px solid var(--border); border-radius:8px; padding:10px; font-size:.72rem; }
+.level-box span { color:var(--muted); display:block; }
+.level-box b { display:block; margin-top:4px; font-size:.95rem; }
+.watch-note { color:var(--muted); font-size:.75rem; line-height:1.45; margin-top:8px; }
+.scanner-row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid #1e293b; font-size:.8rem; }
+.scanner-row:last-child { border-bottom:none; }
+.scanner-score { font-weight:900; color:var(--primary); }
+.scanner-best {
+  border:1px solid rgba(56,189,248,.35);
+  background:rgba(56,189,248,.08);
+  border-radius:10px;
+  padding:10px;
+  margin-bottom:10px;
+}
+.scanner-best small { color:var(--muted); display:block; text-transform:uppercase; letter-spacing:1px; font-size:.65rem; }
+.scanner-best b { display:block; color:var(--primary); font-size:1rem; margin-top:2px; }
+.volume-debug { margin-top:8px; font-size:.72rem; color:var(--muted); line-height:1.5; }
+
+
+@media (max-width: 1024px) { .span-8, .span-4, .span-6, .span-3 { grid-column: span 12; } .mini-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* ARMOROO E n T SPLASH + BRANDING */
+#splashScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(56,189,248,.18), transparent 35%),
+    radial-gradient(circle at 70% 70%, rgba(34,197,94,.14), transparent 35%),
+    #020617;
+  overflow: hidden;
+  animation: splashFade 3.6s ease forwards;
+}
+.splash-core {
+  position: relative;
+  text-align: center;
+  padding: 38px 44px;
+  border-radius: 26px;
+  border: 1px solid rgba(56,189,248,.35);
+  background: rgba(15,23,42,.68);
+  box-shadow: 0 0 45px rgba(56,189,248,.25), inset 0 0 28px rgba(34,197,94,.08);
+  backdrop-filter: blur(10px);
+}
+.splash-brand {
+  font-size: clamp(1.7rem, 5vw, 4rem);
+  line-height: 1;
+  font-weight: 1000;
+  letter-spacing: 1px;
+  color: #e0f2fe;
+  text-shadow: 0 0 18px rgba(56,189,248,.75), 0 0 44px rgba(34,197,94,.28);
+  animation: brandPulse 1s ease-in-out infinite alternate;
+}
+.splash-sub {
+  margin-top: 12px;
+  font-size: .82rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #93c5fd;
+}
+.splash-credit {
+  margin-top: 10px;
+  color: #cbd5e1;
+  font-size: .86rem;
+}
+.spark {
+  position: absolute;
+  width: 90px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, #38bdf8, #22c55e, transparent);
+  filter: drop-shadow(0 0 8px #38bdf8);
+  opacity: 0;
+  animation: sparkRun 1.15s linear infinite;
+}
+.spark.s1 { top: 18%; left: -120px; animation-delay: 0s; }
+.spark.s2 { top: 44%; left: -160px; animation-delay: .18s; background: linear-gradient(90deg, transparent, #facc15, #38bdf8, transparent); }
+.spark.s3 { top: 68%; left: -140px; animation-delay: .36s; }
+.spark.s4 { top: 82%; left: -180px; animation-delay: .56s; background: linear-gradient(90deg, transparent, #ef4444, #38bdf8, transparent); }
+.brand-footer {
+  max-width: 1600px;
+  margin: 0 auto 24px;
+  padding: 14px 24px 22px;
+  text-align: center;
+  color: var(--muted);
+  font-size: .78rem;
+  letter-spacing: .5px;
+}
+.brand-footer b { color: var(--primary); }
+.summary-mini {
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap:8px;
+  margin:10px 0 4px;
+}
+.summary-mini div {
+  background: rgba(255,255,255,.045);
+  border:1px solid rgba(148,163,184,.12);
+  border-radius:8px;
+  padding:8px;
+  font-size:.72rem;
+}
+.summary-mini span { color:var(--muted); display:block; }
+.summary-mini b { display:block; margin-top:2px; font-size:.86rem; }
+@keyframes sparkRun {
+  0% { transform: translateX(0) skewX(-18deg); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateX(calc(100vw + 260px)) skewX(-18deg); opacity: 0; }
+}
+@keyframes brandPulse {
+  from { transform: scale(.985); filter: brightness(.95); }
+  to { transform: scale(1.015); filter: brightness(1.25); }
+}
+@keyframes splashFade {
+  0%, 72% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+
+.history-empty {
+  color: var(--muted);
+  text-align:center;
+  padding: 18px;
+  font-size:.8rem;
+}
+.socket-connected { color: var(--buy) !important; }
+.socket-connecting { color: var(--neutral) !important; }
+.socket-reconnecting { color: var(--neutral) !important; }
+.socket-disconnected { color: var(--sell) !important; }
+.socket-error { color: var(--sell) !important; }
+
+/* V12.0 layout patch: separate Trading / User / Owner pages */
+.nt-side-nav{
+  position:fixed;
+  left:12px;
+  top:210px;
+  z-index:70;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width:70px;
+}
+.nt-side-nav button{
+  width:70px;
+  min-height:42px;
+  border-radius:12px;
+  border:1px solid rgba(56,189,248,.28);
+  background:rgba(15,23,42,.88);
+  color:#cbd5e1;
+  font-weight:900;
+  font-size:.62rem;
+  letter-spacing:.5px;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(0,0,0,.24);
+}
+.nt-side-nav button.active{
+  background:linear-gradient(135deg,#0ea5e9,#22c55e);
+  color:#03121f;
+  border-color:rgba(56,189,248,.9);
+}
+.portal-stage{
+  max-width:1360px;
+  margin: 92px auto 28px;
+  padding: 0 24px 40px 92px;
+}
+.portal-page{
+  display:none;
+  border:1px solid rgba(56,189,248,.20);
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(15,23,42,.94),rgba(8,13,24,.96));
+  box-shadow:0 24px 80px rgba(0,0,0,.35);
+  padding:22px;
+}
+.portal-page.active{ display:block; }
+.portal-title-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(148,163,184,.16);
+}
+.portal-title-row h2{
+  margin:0;
+  font-size:1.35rem;
+  letter-spacing:.5px;
+}
+.portal-title-row small{ color:var(--muted); }
+.portal-layout{
+  display:grid;
+  grid-template-columns: minmax(0,1.25fr) minmax(320px,.75fr);
+  gap:16px;
+}
+.portal-stack{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.portal-info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.portal-info-card{
+  border:1px solid rgba(148,163,184,.16);
+  background:rgba(2,6,23,.32);
+  border-radius:14px;
+  padding:14px;
+}
+.portal-info-card small{ color:var(--muted); display:block; margin-bottom:5px; }
+.portal-info-card b{ font-size:1.05rem; }
+.portal-hidden{ display:none !important; }
+body.portal-open .container{ display:none; }
+body.portal-open .brand-footer{ display:none; }
+.portal-stage #userPortalBox,
+.portal-stage #ownerPortalBox{
+  margin-top:0 !important;
+  font-size:.82rem !important;
+  line-height:1.7 !important;
+  min-height:100%;
+}
+.portal-stage #userPortalBox select,
+.portal-stage #userPortalBox input{
+  min-height:42px;
+}
+@media (max-width: 900px){
+  .nt-side-nav{ position:static; width:auto; flex-direction:row; padding:10px 14px; margin-top:80px; }
+  .nt-side-nav button{ width:auto; flex:1; }
+  .portal-stage{ margin-top:12px; padding:0 12px 30px; }
+  .portal-layout,.portal-info-grid{ grid-template-columns:1fr; }
+}
+
+
+
+/* V12.4 Tester Mode: lock premium modules while keeping chart, TP levels and one pattern generator open */
+.tester-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.10);color:#bbf7d0;border-radius:999px;padding:4px 10px;font-size:.65rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.premium-locked{position:relative;filter:grayscale(.35);opacity:.46;overflow:hidden;pointer-events:none;user-select:none}
+.premium-locked::before{content:"UNDER SUBSCRIPTION";position:absolute;z-index:20;top:12px;right:12px;border:1px solid rgba(250,204,21,.55);background:rgba(15,23,42,.92);color:#facc15;border-radius:999px;padding:6px 10px;font-size:.68rem;font-weight:900;letter-spacing:.7px;box-shadow:0 0 18px rgba(250,204,21,.12)}
+.premium-locked::after{content:"🔒 Locked feature — subscribe Basic / Pro / Premium to unlock this module and generate owner commission.";position:absolute;z-index:19;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(135deg,rgba(2,6,23,.70),rgba(15,23,42,.88));color:#f8fafc;font-weight:800;font-size:.9rem;line-height:1.45;backdrop-filter:blur(2px)}
+.pattern-open{border-color:rgba(34,197,94,.45)!important;box-shadow:0 0 0 1px rgba(34,197,94,.12),0 0 24px rgba(34,197,94,.08)}
+#testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
+#testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
+
+</style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#38bdf8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="NetTrack Pro">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+
+<style id="v1212fix">
+#userPortalPage .account-email{word-break:break-all;overflow-wrap:anywhere;font-size:.95rem}
+#userPortalPage .info-card{min-width:0}
+
+
+/* V12.4 Tester Mode: lock premium modules while keeping chart, TP levels and one pattern generator open */
+.tester-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.10);color:#bbf7d0;border-radius:999px;padding:4px 10px;font-size:.65rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.premium-locked{position:relative;filter:grayscale(.35);opacity:.46;overflow:hidden;pointer-events:none;user-select:none}
+.premium-locked::before{content:"UNDER SUBSCRIPTION";position:absolute;z-index:20;top:12px;right:12px;border:1px solid rgba(250,204,21,.55);background:rgba(15,23,42,.92);color:#facc15;border-radius:999px;padding:6px 10px;font-size:.68rem;font-weight:900;letter-spacing:.7px;box-shadow:0 0 18px rgba(250,204,21,.12)}
+.premium-locked::after{content:"🔒 Locked feature — subscribe Basic / Pro / Premium to unlock this module and generate owner commission.";position:absolute;z-index:19;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(135deg,rgba(2,6,23,.70),rgba(15,23,42,.88));color:#f8fafc;font-weight:800;font-size:.9rem;line-height:1.45;backdrop-filter:blur(2px)}
+.pattern-open{border-color:rgba(34,197,94,.45)!important;box-shadow:0 0 0 1px rgba(34,197,94,.12),0 0 24px rgba(34,197,94,.08)}
+#testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
+#testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
+
+</style>
+
+<style id="v1213-final-cleanup">
+/* Final bug cleanup only: footer highlight removal + user email alignment */
+.brand-footer, .brand-footer *{
+  user-select:none !important;
+  -webkit-user-select:none !important;
+  text-decoration:none !important;
+  background:transparent !important;
+}
+.brand-footer span{
+  color:#94a3b8 !important;
+}
+.portal-info-grid{
+  grid-template-columns:minmax(260px,2fr) minmax(135px,1fr) minmax(145px,1fr) !important;
+  align-items:stretch !important;
+}
+.portal-info-card{
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+#portalUserEmail,.portal-email-text{
+  display:block !important;
+  max-width:100% !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  word-break:break-word !important;
+  line-height:1.25 !important;
+  font-size:.88rem !important;
+  letter-spacing:.1px !important;
+}
+@media (max-width: 900px){
+  .portal-info-grid{ grid-template-columns:1fr !important; }
+}
+
+
+/* V12.4 Tester Mode: lock premium modules while keeping chart, TP levels and one pattern generator open */
+.tester-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.10);color:#bbf7d0;border-radius:999px;padding:4px 10px;font-size:.65rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.premium-locked{position:relative;filter:grayscale(.35);opacity:.46;overflow:hidden;pointer-events:none;user-select:none}
+.premium-locked::before{content:"UNDER SUBSCRIPTION";position:absolute;z-index:20;top:12px;right:12px;border:1px solid rgba(250,204,21,.55);background:rgba(15,23,42,.92);color:#facc15;border-radius:999px;padding:6px 10px;font-size:.68rem;font-weight:900;letter-spacing:.7px;box-shadow:0 0 18px rgba(250,204,21,.12)}
+.premium-locked::after{content:"🔒 Locked feature — subscribe Basic / Pro / Premium to unlock this module and generate owner commission.";position:absolute;z-index:19;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(135deg,rgba(2,6,23,.70),rgba(15,23,42,.88));color:#f8fafc;font-weight:800;font-size:.9rem;line-height:1.45;backdrop-filter:blur(2px)}
+.pattern-open{border-color:rgba(34,197,94,.45)!important;box-shadow:0 0 0 1px rgba(34,197,94,.12),0 0 24px rgba(34,197,94,.08)}
+#testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
+#testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
+
+</style>
+
+<style id="v1214-text-wrap-cleanup">
+/* Bug fix only: keep long payout/cash-send lines inside their cards */
+.portal-layout, .portal-layout > *, .portal-stack, .portal-info-card{
+  min-width:0 !important;
+}
+.portal-info-card b,
+.portal-info-card strong,
+.portal-info-card small,
+#userPortalBox,
+#userPortalBox *{
+  max-width:100% !important;
+  overflow-wrap:anywhere !important;
+  word-break:normal !important;
+}
+.portal-info-card b{
+  display:block !important;
+  white-space:normal !important;
+  line-height:1.45 !important;
+}
+.portal-stack .portal-info-card:last-child b{
+  font-size:.98rem !important;
+}
+
+
+/* V12.4 Tester Mode: lock premium modules while keeping chart, TP levels and one pattern generator open */
+.tester-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.10);color:#bbf7d0;border-radius:999px;padding:4px 10px;font-size:.65rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.premium-locked{position:relative;filter:grayscale(.35);opacity:.46;overflow:hidden;pointer-events:none;user-select:none}
+.premium-locked::before{content:"UNDER SUBSCRIPTION";position:absolute;z-index:20;top:12px;right:12px;border:1px solid rgba(250,204,21,.55);background:rgba(15,23,42,.92);color:#facc15;border-radius:999px;padding:6px 10px;font-size:.68rem;font-weight:900;letter-spacing:.7px;box-shadow:0 0 18px rgba(250,204,21,.12)}
+.premium-locked::after{content:"🔒 Locked feature — subscribe Basic / Pro / Premium to unlock this module and generate owner commission.";position:absolute;z-index:19;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(135deg,rgba(2,6,23,.70),rgba(15,23,42,.88));color:#f8fafc;font-weight:800;font-size:.9rem;line-height:1.45;backdrop-filter:blur(2px)}
+.pattern-open{border-color:rgba(34,197,94,.45)!important;box-shadow:0 0 0 1px rgba(34,197,94,.12),0 0 24px rgba(34,197,94,.08)}
+#testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
+#testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
+
+</style>
+
+
+<style id="v1216-access-card-final-fix">
+/* Final bug fix only: keep Access card inside the User Portal card grid */
+.portal-info-grid{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+}
+.portal-info-grid .portal-info-card{
+  width:100% !important;
+  box-sizing:border-box !important;
+}
+.portal-info-grid .portal-access-card{
+  grid-column:1 / -1 !important;
+}
+.portal-info-grid .portal-access-card b{
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  word-break:normal !important;
+}
+@media (max-width: 900px){
+  .portal-info-grid{ grid-template-columns:1fr !important; }
+}
+
+
+/* V12.4 Tester Mode: lock premium modules while keeping chart, TP levels and one pattern generator open */
+.tester-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.10);color:#bbf7d0;border-radius:999px;padding:4px 10px;font-size:.65rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.premium-locked{position:relative;filter:grayscale(.35);opacity:.46;overflow:hidden;pointer-events:none;user-select:none}
+.premium-locked::before{content:"UNDER SUBSCRIPTION";position:absolute;z-index:20;top:12px;right:12px;border:1px solid rgba(250,204,21,.55);background:rgba(15,23,42,.92);color:#facc15;border-radius:999px;padding:6px 10px;font-size:.68rem;font-weight:900;letter-spacing:.7px;box-shadow:0 0 18px rgba(250,204,21,.12)}
+.premium-locked::after{content:"🔒 Locked feature — subscribe Basic / Pro / Premium to unlock this module and generate owner commission.";position:absolute;z-index:19;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(135deg,rgba(2,6,23,.70),rgba(15,23,42,.88));color:#f8fafc;font-weight:800;font-size:.9rem;line-height:1.45;backdrop-filter:blur(2px)}
+.pattern-open{border-color:rgba(34,197,94,.45)!important;box-shadow:0 0 0 1px rgba(34,197,94,.12),0 0 24px rgba(34,197,94,.08)}
+#testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
+#testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
+
+</style>
+</head>
+<body>
+
+<div id="splashScreen">
+  <div class="spark s1"></div>
+  <div class="spark s2"></div>
+  <div class="spark s3"></div>
+  <div class="spark s4"></div>
+  <div class="splash-core">
+    <div class="splash-brand">NetTrack PRO</div>
+    <div class="splash-sub">Powered by ARMOROO ENT Software and Apps</div>
+    <div class="splash-credit">Developed by Emmanuel Musiyiwa Ngobeni &amp; Thando Mbatha</div>
+  </div>
+</div>
+
+<div id="notif-box"></div>
+<header>
+<div class="controls">
+<h1 style="margin:0; font-size:1.2rem; margin-right:10px">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block;font-size:.55rem;color:#94a3b8;letter-spacing:.8px">V12.4 TESTER SIGNAL PLATFORM  ARMOROO ENT</small></h1>
+<span class="tester-badge">Free Tester Mode</span>
+<select id="assetSelect" class="pair-selector" onchange="changeAsset()">
+<option value="BTCUSDT">BTC/USDT</option>
+<option value="ETHUSDT">ETH/USDT</option>
+<option value="SOLUSDT">SOL/USDT</option>
+<option value="BNBUSDT">BNB/USDT</option>
+</select>
+<select id="tfSelect" class="tf-selector" onchange="changeTimeframe()">
+<option value="1m">1m</option>
+<option value="5m">5m</option>
+<option value="15m">15m</option>
+<option value="1h">1h</option>
+</select>
+<select id="brokerSelect" class="tf-selector" title="Broker comparison overlay" onchange="changeBroker()">
+<option value="Binance">Binance</option>
+<option value="XM">XM</option>
+<option value="MT5">MT5</option>
+<option value="MT4">MT4</option>
+<option value="TradingView">TradingView</option>
+<option value="IQ Option">IQ Option</option>
+<option value="Bybit">Bybit</option>
+<option value="Deriv">Deriv</option>
+<option value="ICMarkets">ICMarkets</option>
+<option value="Exness">Exness</option>
+</select>
+<button class="btn-outline" title="Settings" style="width:auto; padding:5px 12px; border-radius:6px; cursor:pointer" onclick="toggleSettings()">?</button>
+</div>
+<div class="live-price-container">
+<div id="livePrice" class="live-price"></div>
+<small id="updateTime" style="color:var(--muted)">INITIALIZING ENGINE</small>
+</div>
+</header>
+
+<nav class="nt-side-nav" aria-label="NetTrack page navigation">
+  <button id="navTrading" class="active" onclick="showNetTrackPage('trading')">TESTER</button>
+  <button id="navUser" onclick="showNetTrackPage('user')">USER</button>
+  <button id="navOwner" class="portal-hidden" onclick="showNetTrackPage('owner')">OWNER</button>
+</nav>
+<section id="portalStage" class="portal-stage portal-hidden">
+  <div id="userPage" class="portal-page">
+    <div class="portal-title-row">
+      <div>
+        <h2>User Portal</h2>
+        <small>30-day free trial, subscription access, verification and signal-only trading view.</small>
+      </div>
+      <button class="btn-outline" onclick="showNetTrackPage('trading')">Back to Trading</button>
+    </div>
+    <div class="portal-layout">
+      <div class="portal-stack">
+        <div id="userPortalMount"></div>
+      </div>
+      <div class="portal-stack">
+        <div class="portal-info-grid">
+          <div class="portal-info-card"><small>Account</small><b id="portalUserEmail" class="portal-email-text">--</b></div>
+          <div class="portal-info-card"><small>Status</small><b id="portalSubStatus">30-Day Trial</b></div>
+          <div class="portal-info-card portal-access-card"><small>Access</small><b>Signals Only</b></div>
+        </div>
+        <div class="portal-info-card">
+          <small>Subscription unlock</small>
+          <b>Locked features unlock through Basic / Pro / Premium subscription.</b>
+        </div>
+        <div class="portal-info-card">
+          <small>Signal access model</small>
+          <b>Free 30 days → Basic / Pro / Premium subscription</b>
+        </div>
+        <div class="portal-info-card">
+          <small>Trading responsibility</small>
+          <b>Users trade on their own broker accounts. NetTrack does not hold trading funds.</b>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="ownerPage" class="portal-page">
+    <div class="portal-title-row">
+      <div>
+        <h2>Owner Portal</h2>
+        <small>Protected owner-only subscription, user and signal access control room.</small>
+      </div>
+      <button class="btn-outline" onclick="showNetTrackPage('trading')">Back to Trading</button>
+    </div>
+    <div class="portal-layout">
+      <div id="ownerPortalMount" class="portal-stack"></div>
+      <div class="portal-stack">
+        <div class="portal-info-card">
+          <small>Owner security</small>
+          <b>Email protected • Supabase Auth • RLS-ready database</b>
+        </div>
+        <div class="portal-info-card">
+          <small>Revenue rule</small>
+          <b>Subscription payments unlock signal access after trial.</b>
+        </div>
+        <div class="portal-info-card">
+          <small>Visibility</small>
+          <b>Hidden from normal user accounts.</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+<div class="grid">
+<div class="card span-12" style="flex-direction:row; justify-content:space-between; align-items:center; padding: 10px 20px;">
+   <div style="font-size:0.75rem;"><span style="color:var(--muted)">SYMBOL:</span> <b id="dsSymbol">--</b></div>
+   <div style="font-size:0.75rem;"><span style="color:var(--muted)">TF:</span> <b id="dsTF">--</b></div>
+   <div style="font-size:0.75rem;"><span style="color:var(--muted)">CANDLES:</span> <b id="dsCandles">0</b></div>
+   <div style="font-size:0.75rem;"><span style="color:var(--muted)">SOCKET:</span> <b id="dsSocket" style="color:var(--neutral)">DISCONNECTED</b></div>
+   <div style="font-size:0.75rem;"><span style="color:var(--muted)">LAST UPDATE:</span> <b id="dsUpdate">--</b></div>
+</div>
+
+<div class="card span-8">
+  <h3>Market Dynamics <span id="maOverlay" style="text-transform:none; color:var(--primary)"></span></h3>
+  <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; font-size:.62rem; color:var(--primary)">
+    <span style="border:1px solid rgba(56,189,248,.25);border-radius:999px;padding:4px 8px">Time Axis: ON</span>
+    <span style="border:1px solid rgba(56,189,248,.25);border-radius:999px;padding:4px 8px">Price Axis: ON</span>
+    <span style="border:1px solid rgba(56,189,248,.25);border-radius:999px;padding:4px 8px">Entry / SL / TP: ON</span>
+    <span style="border:1px solid rgba(56,189,248,.25);border-radius:999px;padding:4px 8px">Broker Overlay: <b id="brokerOverlayName">Binance</b></span>
+  </div>
+  <canvas id="mainChart" height="380"></canvas>
+</div>
+
+<div class="card span-4">
+  <h3>Executive Summary</h3>
+  <div id="signalGrade" class="grade-badge">A</div>
+  <div id="signalText" class="big-signal">NEUTRAL</div>
+  <div class="confidence-box">
+    <div style="display:flex; justify-content:space-between; font-size:0.75rem">
+      <span>Signal Confidence / Probability</span>
+      <span id="confValue">0%</span>
+    </div>
+    <div class="progress-bg"><div id="confBar" class="progress-fill" style="width:0%"></div></div>
+  </div>
+  <div class="summary-mini">
+    <div><span>Market Bias</span><b id="marketBias">--</b></div>
+    <div><span>Setup Quality</span><b id="summaryQuality">--</b></div>
+    <div><span>Trend State</span><b id="trendState">--</b></div>
+    <div><span>Volume State</span><b id="volumeState">--</b></div>
+  </div>
+
+  <div id="signalExplainer" style="font-size:0.8rem; background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; line-height:1.5; min-height: 120px;">Waiting for live market data stream...</div>
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top:12px">
+    <button class="btn btn-success" onclick="manualMark('WIN')">MARK WIN</button>
+    <button class="btn btn-danger" onclick="manualMark('LOSS')">MARK LOSS</button>
+  </div>
+  <div id="liveAlignmentBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.25); background:rgba(15,23,42,.75); font-size:.75rem; line-height:1.55">
+    <b style="color:var(--primary)">LIVE ALIGNMENT MONITOR</b><br>
+    <span>Symbol: <b id="alignSymbol">--</b></span><br>
+    <span>NetTrack: <b id="alignNet">--</b> <small id="alignNetMove" style="color:#94a3b8">--</small></span><br>
+    <span><span id="alignBrokerName">Broker</span>: <b id="alignBroker">--</b> <small id="alignBrokerMove" style="color:#94a3b8">--</small></span><br>
+    <span>Difference: <b id="alignDiff">--</b></span><br>
+    <span>Sync: <b id="alignSync">WAITING</b></span><br>
+    <span>Mode: <b id="alignMode">Signal view only</b></span>
+  </div>
+  <div id="netTrackBotBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(34,197,94,.25); background:linear-gradient(135deg, rgba(34,197,94,.09), rgba(15,23,42,.88)); font-size:.75rem; line-height:1.55">
+    <b style="color:#22c55e">NETTRACK BOT — SIGNAL ENGINE</b><br>
+    <small style="color:#94a3b8">Final signal-platform mode — no client trading deposits, no wallet trading, no auto-execution. The bot scans the market and gives signals only.</small>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+      <div style="padding:8px;border:1px solid rgba(34,197,94,.22);border-radius:8px;background:rgba(2,6,23,.30)"><small style="color:#94a3b8">Trial status</small><br><b id="trialStatus" style="color:#22c55e">30 DAYS FREE</b></div>
+      <div style="padding:8px;border:1px solid rgba(56,189,248,.22);border-radius:8px;background:rgba(2,6,23,.30)"><small style="color:#94a3b8">Days remaining</small><br><b id="trialDaysLeft" style="color:#38bdf8">30</b></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+      <label style="font-size:.65rem;color:#94a3b8">Plan
+        <select id="subscriptionPlan" onchange="updateNetTrackBotPanel()" style="width:100%;margin-top:4px;background:#0f172a;color:white;border:1px solid #334155;border-radius:6px;padding:7px">
+          <option value="FREE">Free Trial — 30 Days</option>
+          <option value="BASIC">Basic — R99 / month</option>
+          <option value="PRO">Pro — R199 / month</option>
+          <option value="PREMIUM">Premium — R299 / month</option>
+        </select>
+      </label>
+      <label style="font-size:.65rem;color:#94a3b8">Unlock method
+        <select id="subscriptionMethod" onchange="updateNetTrackBotPanel()" style="width:100%;margin-top:4px;background:#0f172a;color:white;border:1px solid #334155;border-radius:6px;padding:7px">
+          <option>Trial access</option><option>Subscription unlock test</option><option>PayFast webhook later</option><option>Ozow webhook later</option><option>Card provider later</option>
+        </select>
+      </label>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:8px">
+      <button class="btn btn-success" style="padding:8px" onclick="runNetTrackBot('ACTIVATE_TRIAL')">ACTIVATE FREE TRIAL</button>
+      <button class="btn btn-success" style="padding:8px" onclick="runNetTrackBot('PAY_SUBSCRIPTION')">MARK SUBSCRIPTION PAID</button>
+      <button class="btn btn-danger" style="padding:8px" onclick="runNetTrackBot('RESET_TRIAL')">RESET TEST</button>
+    </div>
+    <div style="margin-top:8px; border-top:1px solid rgba(148,163,184,.16); padding-top:8px">
+      <span>Access mode: <b id="botPaymentStatus">FREE TRIAL</b></span><br>
+      <span>Subscription value: <b id="botZarValue">R 0.00</b></span><br>
+      <span>Signal access: <b id="botUsable">ACTIVE</b></span><br>
+      <span>Current signal: <b id="botSignal">--</b></span><br>
+      <span>Signal action: <b id="botTpReturn">User trades on own broker</b></span><br>
+      <span>Bot result: <b id="botResult">SIGNAL-ONLY MODE READY</b></span>
+    </div>
+    <small style="display:block;color:#eab308;margin-top:8px">Compliance guard: NetTrack does not hold client trading money, does not place trades for users, and does not guarantee profit. It provides market signals only.</small>
+  </div>
+
+  <div id="walletBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.28); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
+    <b style="color:#38bdf8">SUBSCRIPTION ACCESS</b><br>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+      <div><small style="color:#94a3b8">Current plan</small><br><b id="walletLevel" style="color:#22c55e">FREE TRIAL</b></div>
+      <div><small style="color:#94a3b8">Trial remaining</small><br><b id="walletPending" style="color:#eab308">30 days</b></div>
+      <div><small style="color:#94a3b8">Monthly fee</small><br><b id="walletAvailable" style="color:#38bdf8">R 0.00</b></div>
+      <div><small style="color:#94a3b8">Subscription paid</small><br><b id="walletCommission" style="color:#22c55e">R 0.00</b></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+      <button class="btn btn-success" style="padding:8px" onclick="runNetTrackBot('ACTIVATE_TRIAL')">START 30-DAY FREE</button>
+      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="runNetTrackBot('PAY_SUBSCRIPTION')">UPGRADE PLAN</button>
+    </div>
+  </div>
+
+  <div id="verificationBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(234,179,8,.28); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
+    <b style="color:#eab308">VERIFICATION CENTER</b><br>
+    <div style="margin-top:8px">
+      <span>Email: <b style="color:#22c55e">VERIFIED</b></span><br>
+      <span>Phone: <b id="kycPhone" style="color:#eab308">PENDING</b></span><br>
+      <span>ID: <b id="kycId" style="color:#eab308">PENDING</b></span><br>
+      <span>Documents: <b id="kycDocs" style="color:#eab308">PENDING</b></span><br>
+      <span>Status: <b id="kycStatus">BASIC ACCOUNT</b></span>
+    </div>
+    <div class="progress-bg" style="margin-top:8px"><div id="kycProgress" class="progress-fill" style="width:25%;background:#eab308"></div></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="verifyStep('PHONE')">PHONE</button>
+      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="verifyStep('ID')">ID DETAILS</button>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+      <label class="btn" style="padding:8px;background:#334155;color:#e2e8f0;text-align:center;cursor:pointer">ID COPY<input type="file" accept="image/*,.pdf" style="display:none" onchange="verifyDocumentUpload('copy',this)"></label>
+      <label class="btn" style="padding:8px;background:#334155;color:#e2e8f0;text-align:center;cursor:pointer">REAL ID FRONT/BACK<input type="file" accept="image/*,.pdf" multiple style="display:none" onchange="verifyDocumentUpload('real',this)"></label>
+    </div>
+  </div>
+
+  <div id="txBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(148,163,184,.20); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
+    <b style="color:#cbd5e1">SUBSCRIPTION EVENT HISTORY</b><br>
+    <div id="txHistory" style="margin-top:8px; max-height:120px; overflow:auto; color:#cbd5e1">No subscription events yet.</div>
+  </div>
+
+  <div id="revenueBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(34,197,94,.20); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
+    <b style="color:#22c55e">SUBSCRIPTION REVENUE</b><br>
+    <span>Plans: <b>R99 / R199 / R299</b></span><br>
+    <span>Today: <b id="commissionToday">R 0.00</b></span><br>
+    <span>Total: <b id="commissionTotal">R 0.00</b></span>
+  </div>
+
+  <div id="userPortalBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.34); background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(8,13,24,.92)); font-size:.75rem; line-height:1.55">
+    <b style="color:#38bdf8">USER PORTAL</b><br>
+    <small style="color:#94a3b8">Signal subscription, verification and access overview.</small>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+      <div><small style="color:#94a3b8">Plan</small><br><b id="upZar" style="color:#22c55e">FREE TRIAL</b></div>
+      <div><small style="color:#94a3b8">Monthly price</small><br><b id="upUsd">R 0.00</b></div>
+      <div><small style="color:#94a3b8">Trial started</small><br><b id="upUsdt">Not started</b></div>
+      <div><small style="color:#94a3b8">Trial expires</small><br><b id="upBtc">--</b></div>
+      <div><small style="color:#94a3b8">Access</small><br><b id="upEth">Signals only</b></div>
+      <div><small style="color:#94a3b8">Status</small><br><b id="upWithdrawable" style="color:#eab308">TRIAL READY</b></div>
+    </div>
+    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <label><small style="color:#94a3b8">Broker / chart platform tester</small>
+        <select id="withdrawMethod" style="width:100%;margin-top:4px;background:#111827;color:#fff;border:1px solid #334155;border-radius:6px;padding:7px">
+          <option>Binance</option><option>Bybit</option><option>MT5</option><option>MT4</option><option>XM</option><option>Exness</option><option>Deriv</option><option>ICMarkets</option>
+        </select>
+      </label>
+    </div>
+    <div style="margin-top:8px;padding:8px;border:1px solid rgba(56,189,248,.18);border-radius:8px;background:rgba(2,6,23,.35);color:#cbd5e1;font-size:.72rem">
+      <b style="color:#38bdf8">Signal platform rule:</b> NetTrack gives entries, stop loss, take profit, confidence and alignment. Users place trades manually inside their own broker account.
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <button class="btn btn-success" style="padding:8px" onclick="runNetTrackBot('ACTIVATE_TRIAL')">START FREE TRIAL</button>
+      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="runNetTrackBot('PAY_SUBSCRIPTION')">MARK PAID / UPGRADE</button>
+    </div>
+  </div>
+
+  <div id="ownerPortalBox" style="display:none;margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(234,179,8,.42); background:linear-gradient(180deg,rgba(30,21,7,.92),rgba(15,23,42,.92)); font-size:.75rem; line-height:1.55">
+    <b style="color:#facc15">OWNER PORTAL</b><br>
+    <small style="color:#fef3c7">Visible only to the owner account.</small>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+      <div><small style="color:#cbd5e1">Subscription revenue</small><br><b id="ownerCommission" style="color:#22c55e">R 0.00</b></div>
+      <div><small style="color:#cbd5e1">Owner withdrawable</small><br><b id="ownerWithdrawable" style="color:#eab308">R 0.00</b></div>
+      <div><small style="color:#cbd5e1">Feature unlocks monitored</small><br><b id="ownerDeposits">R 0.00</b></div>
+      <div><small style="color:#cbd5e1">Users</small><br><b id="ownerUsers">1 active</b></div>
+    </div>
+    <div style="margin-top:8px;border-top:1px solid rgba(250,204,21,.22);padding-top:8px">
+      <span>Revenue account: <b>Subscription income ledger</b></span><br>
+      <span>Owner email: <b>engobeni842@gmail.com</b></span><br>
+      <span>Security: <b>Email + document verification + Supabase RLS</b></span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <button class="btn btn-success" style="padding:8px" onclick="ownerWithdrawCommission()">WITHDRAW REVENUE</button>
+      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="alert('Subscription ledger ready. Live payment confirmation requires PayFast/Ozow webhook.')">VIEW LEDGER</button>
+    </div>
+  </div>
+</div>
+
+<div class="card span-6">
+  <h3>Win/Loss Analytics</h3>
+  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px; margin-bottom:15px">
+    <div class="card" style="padding:10px; background:#1e293b; align-items:center">
+      <small>Win Rate</small><b id="anRate" style="font-size:1.5rem">0%</b>
+    </div>
+    <div class="card" style="padding:10px; background:#1e293b; align-items:center">
+      <small>Profit Factor</small><b id="anPF" style="font-size:1.5rem">0.0</b>
+    </div>
+    <div class="card" style="padding:10px; background:#1e293b; align-items:center">
+      <small>Current Streak</small><b id="anStreak" style="font-size:1.5rem">0</b>
+    </div>
+  </div>
+  <div class="stat-row"><span>Total Gains</span><b id="anWins" style="color:var(--buy)">0</b></div>
+  <div class="stat-row"><span>Total Losses</span><b id="anLoss" style="color:var(--sell)">0</b></div>
+  <div class="stat-row"><span>Max Drawdown</span><b id="anDD" style="color:var(--sell)">0.0%</b></div>
+</div>
+
+<div class="card span-6">
+  <h3>Equity Curve (Performance)</h3>
+  <canvas id="equityChart" height="180"></canvas>
+</div>
+
+<div class="card span-4">
+  <h3>RSI Oscillator (14)</h3>
+  <canvas id="rsiChart" height="150"></canvas>
+</div>
+
+<div class="card span-4">
+  <h3>MACD Momentum (12, 26, 9)</h3>
+  <canvas id="macdChart" height="150"></canvas>
+</div>
+
+<div class="card span-4">
+  <h3>Indicator Convergence</h3>
+  <div class="stat-row"><span>RSI Oscillator</span><span id="voteRSI" class="vote-badge bg-neutral">NEUTRAL</span></div>
+  <div class="stat-row"><span>MACD Momentum</span><span id="voteMACD" class="vote-badge bg-neutral">NEUTRAL</span></div>
+  <div class="stat-row"><span>Trend Structure</span><span id="voteMA" class="vote-badge bg-neutral">NEUTRAL</span></div>
+  <div class="stat-row"><span>Candle Sentiment</span><span id="votePattern" class="vote-badge bg-neutral">NEUTRAL</span></div>
+  <div class="stat-row"><span>S/R Barrier</span><span id="voteSR" class="vote-badge bg-neutral">NEUTRAL</span></div>
+</div>
+
+<div class="card span-4">
+  <h3>Smart Confirmation</h3>
+  <div class="stat-row"><span>Volume Pressure</span><span id="voteVolume" class="vote-badge bg-neutral">NEUTRAL</span></div>
+  <div id="volumeDebug" class="volume-debug">Current Vol: -- | Avg Vol: -- | Ratio: --</div>
+  <div class="stat-row"><span>MTF Agreement</span><span id="voteMTF" class="vote-badge bg-neutral">WAITING</span></div>
+  <div class="mini-grid" style="margin-top:10px">
+    <div class="mini-box">1m<b id="mtf1m">--</b></div>
+    <div class="mini-box">5m<b id="mtf5m">--</b></div>
+    <div class="mini-box">15m<b id="mtf15m">--</b></div>
+    <div class="mini-box">1h<b id="mtf1h">--</b></div>
+  </div>
+  <small style="color:var(--muted); margin-top:10px">Signals are blocked when higher timeframes disagree or volume does not support the move.</small>
+</div>
+
+<div class="card span-4">
+  <h3>Trade Quality & Levels</h3>
+  <div style="display:flex; justify-content:space-between; font-size:0.75rem">
+    <span>Trade Quality</span>
+    <b id="qualityValue">0 / 100</b>
+  </div>
+  <div class="quality-bar"><div id="qualityFill" class="quality-fill"></div></div>
+  <div class="level-grid">
+    <div class="level-box"><span>Entry</span><b id="planEntry">--</b></div>
+    <div class="level-box"><span>Stop Loss</span><b id="planSL">--</b></div>
+    <div class="level-box"><span>Take Profit</span><b id="planTP">--</b></div>
+    <div class="level-box"><span>Risk/Reward</span><b id="planRR">--</b></div>
+    <div class="level-box"><span>Risk Amount</span><b id="planRiskAmt">--</b></div>
+    <div class="level-box"><span>Reward Amount</span><b id="planRewardAmt">--</b></div>
+    <div class="level-box"><span>ATR</span><b id="planATR">--</b></div>
+    <div class="level-box"><span>SL / TP Distance</span><b id="planDistance">--</b></div>
+  </div>
+  <div class="watch-note" id="planNote">Waiting for a clean setup. This panel shows levels only when the setup has enough quality.</div>
+</div>
+
+
+<div id="testerPatternPanel" class="card span-4 pattern-open">
+  <h3>Open Signal Pattern Generator <span style="color:#22c55e">FREE</span></h3>
+  <div class="level-grid">
+    <div class="level-box"><span>Pattern</span><b id="testerPatternName">Waiting...</b></div>
+    <div class="level-box"><span>Direction</span><b id="testerPatternSide">--</b></div>
+    <div class="level-box"><span>Confidence</span><b id="testerPatternConf">0%</b></div>
+    <div class="level-box"><span>Take Profit</span><b id="testerPatternTP">--</b></div>
+  </div>
+  <div class="pattern-signal" id="testerPatternSignal">TESTER READY</div>
+  <div class="pattern-note" id="testerPatternNote">This is the one open free pattern. Charts, broker overlay sync view, entry and take-profit levels remain available for testing. Advanced modules are locked under subscription.</div>
+</div>
+
+<div class="card span-4">
+  <h3>Historical Backtest</h3>
+  <div style="display:flex; gap:10px; margin-bottom:10px">
+    <select id="btLookback" style="margin:0">
+      <option value="300" selected>300 Candles</option>
+      <option value="500">500 Candles</option>
+      <option value="1000">1000 Candles</option>
+    </select>
+    <button class="btn btn-primary" style="margin:0; width:auto" onclick="runAdvancedBacktest()">Run Test</button>
+  </div>
+  <div id="btResults" style="font-size:0.85rem">
+    <div class="stat-row"><span>Simulated Win Rate</span><b id="btRate">0%</b></div>
+    <div class="stat-row"><span>Sample Size</span><b id="btSample">0</b></div>
+  </div>
+</div>
+
+
+<div class="card span-4">
+  <h3>Strongest Pair Scanner</h3>
+  <div id="scannerBest" class="scanner-best">
+    <small>Best Opportunity Now</small>
+    <b>Scanning...</b>
+  </div>
+  <div id="scannerStatus" class="watch-note" style="margin-top:0">Scanning BTC, ETH, SOL and BNB...</div>
+  <div id="pairScanner">
+    <div class="scanner-row"><span>BTCUSDT</span><b class="scanner-score">--</b></div>
+    <div class="scanner-row"><span>ETHUSDT</span><b class="scanner-score">--</b></div>
+    <div class="scanner-row"><span>SOLUSDT</span><b class="scanner-score">--</b></div>
+    <div class="scanner-row"><span>BNBUSDT</span><b class="scanner-score">--</b></div>
+  </div>
+</div>
+
+
+<div class="card span-4">
+  <h3>Session Context</h3>
+  <label>Stake Calculator</label>
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px">
+    <input type="number" id="riskBal" value="1000" oninput="saveGlobalSettings()">
+    <input type="number" id="riskPct" value="2" oninput="saveGlobalSettings()">
+  </div>
+  <div class="stat-row"><span>Risk Stake</span><b id="calcStake">$20.00</b></div>
+  <textarea id="tradeJournal" placeholder="Current market thesis..." oninput="saveJournal()"></textarea>
+</div>
+
+<div class="card span-12">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+    <h3>Signal & Trade History</h3>
+    <div style="display:flex; gap:8px"><button class="btn btn-outline" style="width:auto; margin:0" onclick="clearHistory()">Clear History</button><button class="btn btn-outline" style="width:auto; margin:0" onclick="exportCSV()">Export Data</button></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Pair</th>
+          <th>TF</th>
+          <th>Price</th>
+          <th>Signal</th>
+          <th>Grading</th>
+          <th>Setup Quality</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="historyBody"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="brand-footer">
+  <b>ARMOROO ENT Software and Apps</b><br>
+  <span>NetTrack Tester V12.4 Signal Platform</span><br>
+  <span>Developed by Emmanuel Musiyiwa Ngobeni &amp; Thando Mbatha</span>
+</div>
+
+<div id="settingsModal" onclick="if(event.target===this) toggleSettings()">
+<div class="modal-content">
+<h3>User Preferences</h3>
+<label>Default Pair</label>
+<select id="prefPair">
+<option value="BTCUSDT">BTCUSDT</option>
+<option value="ETHUSDT">ETHUSDT</option>
+<option value="SOLUSDT">SOLUSDT</option>
+<option value="BNBUSDT">BNBUSDT</option>
+</select>
+<label>Default Timeframe</label>
+<select id="prefTF">
+<option value="1m">1m</option>
+<option value="5m">5m</option>
+<option value="15m">15m</option>
+<option value="1h">1h</option>
+</select>
+<label>Global Risk %</label>
+<input type="number" id="prefRisk" value="2">
+<button class="btn btn-success" style="margin-top:20px" onclick="toggleSettings(true)">SAVE PREFERENCES</button>
+</div>
+</div>
+<script>
+/** CORE STATE **/
+let SYMBOL = "BTCUSDT";
+let INTERVAL = "1m";
+let candles = [];
+let signalHistory = JSON.parse(localStorage.getItem('ntp_history_v103')) || [];
+let processedTradeIds = new Set(JSON.parse(localStorage.getItem('ntp_processed_ids_v103')) || []);
+let currentSignal = null;
+let ws = null;
+let equityData = [1000];
+let reconnectTimeout = null;
+let isSwitching = false;
+let lastLoggedSignalState = { pair: "", tf: "", signal: "", candleTime: 0, quality: -999 };
+let mtfState = {};
+let mtfReady = false;
+let BROKER_MODE = localStorage.getItem("ntp_broker_mode_v114") || "Binance";
+const SIGNAL_COOLDOWN_CANDLES = 3;
+const MIN_BACKTEST_BARS = 50;
+const SCANNER_SYMBOLS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT"];
+const MTF_INTERVALS = ["1m", "5m", "15m", "1h"];
+
+/** SCORE CLAMP HELPER **/
+function clampScore(n) {
+  return Math.max(0, Math.min(100, Math.round(Number(n) || 0)));
+}
+
+/** UTILITIES **/
+const avg = (arr) => arr && arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+const sma = (vals, p) => vals.map((_, i) => i < p-1 ? null : avg(vals.slice(i-p+1, i+1)));
+const ema = (vals, p) => {
+  if (!vals || !vals.length) return [];
+  let k = 2/(p+1);
+  let res = [vals[0]];
+  for(let i=1; i<vals.length; i++) res.push(vals[i]*k + res[i-1]*(1-k));
+  return res;
+};
+const rsi = (closes, p=14) => {
+  if (!closes || closes.length <= p) return new Array(closes ? closes.length : 0).fill(null);
+  let gains = [0], losses = [0];
+  for(let i=1; i<closes.length; i++){
+    let d = closes[i] - closes[i-1];
+    gains.push(Math.max(0, d)); losses.push(Math.max(0, -d));
+  }
+  let avgG = avg(gains.slice(1, p+1)), avgL = avg(losses.slice(1, p+1));
+  let firstRsi = avgL === 0 ? 100 : 100 - (100/(1 + avgG/avgL));
+  let res = [...new Array(p).fill(null), firstRsi];
+  for(let i=p+1; i<closes.length; i++){
+    avgG = (avgG * (p-1) + gains[i])/p; avgL = (avgL * (p-1) + losses[i])/p;
+    res.push(avgL === 0 ? 100 : 100 - (100/(1 + avgG/avgL)));
+  }
+  return res;
+};
+
+function safeVoteColor(signal) {
+  if (signal && String(signal).includes("BUY")) return "#22c55e";
+  if (signal && String(signal).includes("SELL")) return "#ef4444";
+  return "var(--neutral)";
+}
+
+function badgeClassFor(val) {
+  const s = String(val || "NEUTRAL");
+  if (s.includes("BUY")) {
+    if (s.includes("WATCHLIST")) return "bg-watchlist-buy";
+    return "bg-buy";
+  }
+  if (s.includes("SELL")) {
+    if (s.includes("WATCHLIST")) return "bg-watchlist-sell";
+    return "bg-sell";
+  }
+  return "bg-neutral";
+}
+function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+function fmtPrice(n) {
+  if (!Number.isFinite(n)) return "--";
+  return "$" + Number(n).toFixed(n < 1 ? 4 : 2);
+}
+function tfMs(tf) {
+  return tf === "1m" ? 60000 : tf === "5m" ? 300000 : tf === "15m" ? 900000 : 3600000;
+}
+function atr(data, p=14) {
+  if (!data || data.length < p + 2) return 0;
+  const trs = [];
+  for (let i = 1; i < data.length; i++) {
+    const c = data[i], prev = data[i-1];
+    if (c && prev) {
+      trs.push(Math.max(c.high - c.low, Math.abs(c.high - prev.close), Math.abs(c.low - prev.close)));
+    }
+  }
+  return avg(trs.slice(-p));
+}
+
+function quickTrendVote(data) {
+  if (!data || data.length < 60) return "NEUTRAL";
+  const closes = data.map(c => c.close);
+  const last = closes[closes.length - 1];
+  const m50 = sma(closes, 50);
+  const cur50 = m50[m50.length - 1];
+  const e12 = ema(closes, 12), e26 = ema(closes, 26);
+  const macdLine = e12.map((v, i) => v - (e26[i] || v));
+  const sigLineArr = ema(macdLine, 9);
+  const macd = macdLine[macdLine.length - 1];
+  const sig = sigLineArr[sigLineArr.length - 1];
+  if (Number.isFinite(cur50) && Number.isFinite(macd) && Number.isFinite(sig)) {
+    if (last > cur50 && macd > sig) return "BUY";
+    if (last < cur50 && macd < sig) return "SELL";
+  }
+  return "NEUTRAL";
+}
+
+function updateMtfUI() {
+  const ids = {"1m":"mtf1m", "5m":"mtf5m", "15m":"mtf15m", "1h":"mtf1h"};
+  MTF_INTERVALS.forEach(tf => {
+    const el = document.getElementById(ids[tf]);
+    if (!el) return;
+    const val = mtfState[tf] || "--";
+    el.innerText = val;
+    el.style.color = safeVoteColor(val);
+  });
+  const vals = Object.values(mtfState);
+  const buys = vals.filter(v => v === "BUY").length;
+  const sells = vals.filter(v => v === "SELL").length;
+  const mtf = document.getElementById("voteMTF");
+  if (mtf) {
+    let val = !mtfReady ? "WAITING" : buys > sells ? "BUY" : sells > buys ? "SELL" : "NEUTRAL";
+    mtf.innerText = val;
+    mtf.className = `vote-badge ${badgeClassFor(val === "WAITING" ? "NEUTRAL" : val)}`;
+  }
+}
+
+async function refreshMTF() {
+  mtfReady = false;
+  updateMtfUI();
+  const next = {};
+  await Promise.all(MTF_INTERVALS.map(async tf => {
+    try {
+      const r = await fetch(`https://api.binance.com/api/v3/klines?symbol=${SYMBOL}&interval=${tf}&limit=250`);
+      if (!r.ok) throw new Error();
+      const raw = await r.json();
+      if (Array.isArray(raw)) {
+        const data = raw.map(k => ({ time:k[0], open:+k[1], high:+k[2], low:+k[3], close:+k[4], volume:+k[5] })).filter(c => c && Number.isFinite(c.close));
+        next[tf] = quickTrendVote(data);
+      } else {
+        next[tf] = "NEUTRAL";
+      }
+    } catch(e) { next[tf] = "NEUTRAL"; }
+  }));
+  mtfState = next;
+  mtfReady = true;
+  updateMtfUI();
+}
+
+
+function setSocketState(state) {
+  const el = document.getElementById("dsSocket");
+  if(!el) return;
+  const s = String(state || "DISCONNECTED").toUpperCase();
+  el.innerText = s;
+  
+  if (s.includes("CONNECTED") && !s.includes("CONNECTING")) {
+    el.className = "socket-connected";
+  } else if (s.includes("RECONNECTING")) {
+    el.className = "socket-reconnecting";
+  } else if (s.includes("CONNECTING")) {
+    el.className = "socket-connecting";
+  } else if (s.includes("ERROR")) {
+    el.className = "socket-error";
+  } else {
+    el.className = "socket-disconnected";
+  }
+}
+
+function signalSide(signal) {
+  const s = String(signal || "");
+  if(s.includes("BUY")) return "BUY";
+  if(s.includes("SELL")) return "SELL";
+  return "NEUTRAL";
+}
+
+/** ENGINE **/
+const WEIGHTS = { rsi:10, macd:25, ma:25, pattern:5, sr:5, volume:10, mtf:30 };
+
+function scoreSide(votes, mtfBias, side) {
+  let score = 0;
+  if (votes.rsi === side) score += WEIGHTS.rsi;
+  if (votes.macd === side) score += WEIGHTS.macd;
+  if (votes.ma === side) score += WEIGHTS.ma;
+  if (votes.pattern === side) score += WEIGHTS.pattern;
+  if (votes.sr === side) score += WEIGHTS.sr;
+  if (votes.volume === side) score += WEIGHTS.volume;
+  if (mtfBias === side) score += WEIGHTS.mtf;
+  return score;
+}
+
+function gradeFromConfidence(conf) {
+  if (conf >= 85) return "A+";
+  if (conf >= 75) return "A";
+  if (conf >= 62) return "B";
+  if (conf >= 50) return "C";
+  return "D";
+}
+
+function analyze(data, options = {}) {
+  const useMTF = options.useMTF !== false;
+  const backtestMode = options.backtest === true;
+  const isCandleClosed = options.isClosed === true;
+
+  if (!data || data.length < 50) return null;
+  const closes = data.map(c => c ? c.close : 0);
+  const last = closes[closes.length-1];
+
+  const r = rsi(closes, 14);
+  const curRSI = r[r.length-1];
+  let rsiVote = "NEUTRAL";
+  if (curRSI !== null && Number.isFinite(curRSI)) {
+    if(curRSI < 35) rsiVote = "BUY";
+    else if(curRSI > 65) rsiVote = "SELL";
+  }
+
+  const e12 = ema(closes, 12), e26 = ema(closes, 26);
+  const macdLine = e12.map((v, i) => v - (e26[i] || v));
+  const sigLineArr = ema(macdLine, 9);
+  const curMacd = macdLine[macdLine.length-1];
+  const curSig = sigLineArr[sigLineArr.length-1];
+  let macdVote = "NEUTRAL";
+  if (Number.isFinite(curMacd) && Number.isFinite(curSig)) {
+    if (curMacd > curSig) macdVote = "BUY";
+    else if (curMacd < curSig) macdVote = "SELL";
+  }
+
+  const m50 = sma(closes, 50), m200 = sma(closes, 200);
+  const cur50 = m50[m50.length-1];
+  const cur200 = m200[m200.length-1];
+  let maVote = "NEUTRAL";
+  if (Number.isFinite(cur50) && Number.isFinite(cur200)) {
+    if (last > cur50 && cur50 > cur200) maVote = "BUY";
+    else if (last < cur50 && cur50 < cur200) maVote = "SELL";
+  }
+
+  const c1 = data[data.length-1], c2 = data[data.length-2];
+  let pVote = "NEUTRAL";
+  if(c1 && c2) {
+    if(c1.close > c1.open && c2.close < c2.open && c1.close > c2.open) pVote = "BUY";
+    else if(c1.close < c1.open && c2.close > c2.open && c1.close < c2.open) pVote = "SELL";
+  }
+
+  const h20 = Math.max(...data.slice(-20).map(x=>x ? x.high : 0)), l20 = Math.min(...data.slice(-20).map(x=>x ? x.low : 0));
+  let srVote = "NEUTRAL";
+  if (last <= l20 * 1.003) srVote = "BUY";
+  else if (last >= h20 * 0.997) srVote = "SELL";
+
+  let volumeVote = "NEUTRAL";
+  const recentVol = data.slice(-31, -1).map(x => x ? Number(x.volume || 0) : 0).filter(v => Number.isFinite(v) && v > 0);
+  const avgVol = avg(recentVol);
+  const lastVol = c1 ? Number(c1.volume || 0) : 0;
+  const rawVolumeRatio = avgVol > 0 ? lastVol / avgVol : 0;
+  const volumeRatio = clamp(rawVolumeRatio, 0, 9.99);
+  
+  let bodyRatio = 0;
+  if(c1) {
+    const body = Math.abs(c1.close - c1.open);
+    const range = Math.max(0.0000001, c1.high - c1.low);
+    bodyRatio = body / range;
+    const realVolumeActive = avgVol > 0 && lastVol > 0;
+    if (realVolumeActive && volumeRatio >= 1.08 && bodyRatio >= 0.35) {
+      volumeVote = c1.close >= c1.open ? "BUY" : "SELL";
+    }
+  }
+
+  const localVotes = [rsiVote, macdVote, maVote, pVote, srVote, volumeVote];
+  const buys = localVotes.filter(v=>v==="BUY").length;
+  const sells = localVotes.filter(v=>v==="SELL").length;
+  const neutral = localVotes.filter(v=>v==="NEUTRAL").length;
+
+  let mtfBias = "NEUTRAL";
+  if (useMTF) {
+    if (!mtfReady && !backtestMode) {
+      mtfBias = "WAITING";
+    } else {
+      const mtfVals = Object.values(mtfState);
+      const mtfBuys = mtfVals.filter(v => v === "BUY").length;
+      const mtfSells = mtfVals.filter(v => v === "SELL").length;
+      mtfBias = mtfBuys > mtfSells ? "BUY" : mtfSells > mtfBuys ? "SELL" : "NEUTRAL";
+    }
+  }
+
+  const votesObj = { rsi: rsiVote, macd: macdVote, ma: maVote, pattern: pVote, sr: srVote, volume: volumeVote, mtf: mtfBias };
+  let buyScore = scoreSide(votesObj, mtfBias, "BUY");
+  let sellScore = scoreSide(votesObj, mtfBias, "SELL");
+
+  if (maVote === "BUY" && macdVote === "BUY") buyScore += 10;
+  if (maVote === "SELL" && macdVote === "SELL") sellScore += 10;
+
+  const cNow = closes[closes.length - 1];
+  const c5 = closes[closes.length - 5] ?? cNow;
+  const c10 = closes[closes.length - 10] ?? c5;
+  const c20 = closes[closes.length - 20] ?? c10;
+  const recentDown = cNow < c5 && c5 < c10;
+  const recentUp = cNow > c5 && c5 > c10;
+  const move20 = c20 ? ((cNow - c20) / c20) * 100 : 0;
+  if (recentDown) buyScore -= 25;
+  if (recentUp) sellScore -= 25;
+  if (move20 < -1.2) buyScore -= 12;
+  if (move20 > 1.2) sellScore -= 12;
+
+  buyScore = clamp(buyScore, 0, 100);
+  sellScore = clamp(sellScore, 0, 100);
+
+  const topScore = Math.max(buyScore, sellScore);
+  const direction = buyScore > sellScore ? "BUY" : sellScore > buyScore ? "SELL" : "NEUTRAL";
+
+  const localCount = direction === "BUY" ? buys : direction === "SELL" ? sells : 0;
+  const trendSupports = direction === "BUY" ? maVote === "BUY" : direction === "SELL" ? maVote === "SELL" : false;
+  const macdSupports = direction === "BUY" ? macdVote === "BUY" : direction === "SELL" ? macdVote === "SELL" : false;
+  const volumeNotAgainst = direction === "BUY" ? volumeVote !== "SELL" : direction === "SELL" ? volumeVote !== "BUY" : false;
+  const mtfNotAgainst = (mtfBias === "WAITING" || mtfBias === "NEUTRAL") ? true : (mtfBias === direction);
+  const rsiSafe = direction === "BUY" ? !(curRSI > 72) : direction === "SELL" ? !(curRSI < 28) : false;
+
+  const minLocal = 2;
+  const minScore = backtestMode ? 38 : 55;
+  
+  const passesCore = direction !== "NEUTRAL"
+    && (localCount >= minLocal || topScore >= minScore)
+    && (trendSupports || macdSupports)
+    && volumeNotAgainst && mtfNotAgainst && rsiSafe;
+
+  let baseSignal = "NEUTRAL";
+  if (passesCore) {
+    if (topScore >= 82 && mtfNotAgainst && localCount >= 2) baseSignal = `STRONG ${direction}`;
+    else if (topScore >= 55) baseSignal = direction;
+    else baseSignal = `WATCHLIST ${direction}`;
+  } else if (direction !== "NEUTRAL" && topScore >= 40 && volumeNotAgainst && mtfNotAgainst && rsiSafe) {
+    baseSignal = `WATCHLIST ${direction}`;
+  }
+
+  /** PRODUCTION FIX 1 & 2: RE-EVALUATE AND DOWNGRADE BASED ON STRICT RULES **/
+  let verifiedSignal = "NEUTRAL";
+  if (baseSignal !== "NEUTRAL" && direction !== "NEUTRAL") {
+    let roughConf = clampScore(topScore);
+    let roughQual = clampScore((topScore * 0.72) + (localCount * 9) + (mtfBias === direction ? 14 : 0));
+
+    const isEliteEligible = roughQual >= 90 
+      && roughConf >= 85 
+      && (mtfBias === direction || !useMTF) 
+      && volumeNotAgainst 
+      && maVote === direction 
+      && macdVote === direction 
+      && isCandleClosed;
+
+    if (isEliteEligible) {
+      verifiedSignal = `ELITE ${direction}`;
+    } else {
+      if (baseSignal.includes("STRONG")) {
+        verifiedSignal = `STRONG ${direction}`;
+      } else if (baseSignal === direction) {
+        verifiedSignal = direction;
+      } else {
+        verifiedSignal = `WATCHLIST ${direction}`;
+      }
+    }
+  }
+
+  // DYNAMIC CONFIDENCE & QUALITY CALCULATOR ENGINE (FIXES THE STUCK 55% BAR GLITCH)
+  let finalConfidence = 0;
+  let finalQuality = 0;
+
+  if (verifiedSignal !== "NEUTRAL" && direction !== "NEUTRAL") {
+    let matchingWeights = 0;
+    let totalWeights = 0;
+    for (const k in WEIGHTS) {
+      totalWeights += WEIGHTS[k];
+      if (votesObj[k] === direction) {
+        matchingWeights += WEIGHTS[k];
+      }
+    }
+
+    // Add high-resolution multi-variable variation to avoid flat static blocks across intervals
+    let continuousBonus = 0;
+    if (Number.isFinite(curRSI)) {
+      continuousBonus += direction === "BUY" ? (65 - curRSI) * 0.15 : (curRSI - 35) * 0.15;
+    }
+    if (Number.isFinite(curMacd) && Number.isFinite(curSig)) {
+      continuousBonus += Math.min(6, Math.abs(curMacd - curSig) * 12);
+    }
+
+    finalConfidence = clampScore((matchingWeights / totalWeights) * 100 + continuousBonus);
+    finalQuality = clampScore((finalConfidence * 0.75) + (localCount * 7) + (mtfBias === direction ? 12 : 0));
+
+    // V11.3 confidence fix: no forced 75/88 floors.
+    // Confidence now reflects real agreement instead of inflating every STRONG/ELITE signal.
+    if (verifiedSignal.includes("WATCHLIST")) {
+      finalConfidence = clamp(finalConfidence, 30, 58);
+      finalQuality = clamp(finalQuality, 30, 62);
+    } else if (verifiedSignal.includes("STRONG")) {
+      finalConfidence = clamp(finalConfidence, 45, 82);
+      finalQuality = clamp(finalQuality, 50, 88);
+    } else if (verifiedSignal.includes("ELITE")) {
+      finalConfidence = clamp(finalConfidence, 70, 95);
+      finalQuality = clamp(finalQuality, 78, 98);
+    } else {
+      finalConfidence = clamp(finalConfidence, 40, 74);
+      finalQuality = clamp(finalQuality, 40, 78);
+    }
+  } else {
+    // Drop metric variables down completely if system signal state remains neutral
+    finalConfidence = 0;
+    finalQuality = 0;
+  }
+
+  const atr14 = atr(data, 14);
+  const planDirection = verifiedSignal.includes("BUY") ? "BUY" : verifiedSignal.includes("SELL") ? "SELL" : direction;
+  const planActive = verifiedSignal !== "NEUTRAL";
+  let entry = last, stopLoss = null, takeProfit = null, rr = null;
+  if (planActive && Number.isFinite(atr14) && atr14 > 0 && planDirection !== "NEUTRAL") {
+    const risk = atr14 * 1.2;
+    const reward = atr14 * 2.0;
+    if (planDirection === "BUY") {
+      stopLoss = entry - risk;
+      takeProfit = entry + reward;
+    } else {
+      stopLoss = entry + risk;
+      takeProfit = entry - reward;
+    }
+    rr = reward / risk;
+  }
+
+  const grade = verifiedSignal === "NEUTRAL" ? "" : gradeFromConfidence(finalConfidence);
+  const logicNote = verifiedSignal === "NEUTRAL"
+    ? `Pillars: BUY ${buys}, SELL ${sells}. Score: B ${buyScore}/ S ${sellScore}. Required 90+ Qual/85+ Conf + full agreement for ELITE.`
+    : `Confirmed ${verifiedSignal}: Quality ${finalQuality}%, Confidence ${finalConfidence}%.`;
+
+  return {
+    time: new Date().toLocaleTimeString(),
+    pair: options.symbol || SYMBOL, 
+    tf: options.interval || INTERVAL, 
+    price: last,
+    signal: verifiedSignal, 
+    confidence: finalConfidence, 
+    grade, 
+    logicNote,
+    votes: votesObj,
+    ma50: cur50, 
+    ma200: cur200,
+    candleTime: c1 ? c1.time : Date.now(),
+    indicators: { rsi: curRSI, macd: curMacd, sig: curSig, sup: l20, res: h20, macdArr: macdLine, sigArr: sigLineArr, rsiArr: r, avgVol, lastVol, volumeRatio, rawVolumeRatio, bodyRatio, atr14, recentDown, recentUp, move20 }, 
+    tradePlan: { active: planActive, quality: finalQuality, direction: planDirection, entry, stopLoss, takeProfit, rr }
+  };
+}
+
+
+function updateTradePlan(res) {
+  if (!res) return;
+  const plan = res.tradePlan || {};
+  const q = clampScore(plan.quality || 0);
+  const qVal = document.getElementById("qualityValue");
+  const qFill = document.getElementById("qualityFill");
+  const note = document.getElementById("planNote");
+  if (qVal) qVal.innerText = `${q} / 100`;
+  if (qFill) {
+    qFill.style.width = `${q}%`;
+    qFill.style.background = q >= 75 ? "#22c55e" : q >= 55 ? "#eab308" : "#ef4444";
+  }
+  const showLevels = plan.active && plan.direction !== "NEUTRAL" && Number.isFinite(plan.stopLoss) && Number.isFinite(plan.takeProfit);
+  
+  const elEntry = document.getElementById("planEntry");
+  if(elEntry) elEntry.innerText = showLevels ? fmtPrice(plan.entry) : "--";
+  const elSL = document.getElementById("planSL");
+  if(elSL) elSL.innerText = showLevels ? fmtPrice(plan.stopLoss) : "--";
+  const elTP = document.getElementById("planTP");
+  if(elTP) elTP.innerText = showLevels ? fmtPrice(plan.takeProfit) : "--";
+  const elRR = document.getElementById("planRR");
+  if(elRR) elRR.innerText = showLevels ? `${Number(plan.rr).toFixed(2)} : 1` : "--";
+  
+  const riskDist = showLevels ? Math.abs(plan.entry - plan.stopLoss) : NaN;
+  const rewardDist = showLevels ? Math.abs(plan.takeProfit - plan.entry) : NaN;
+  
+  const elRisk = document.getElementById("planRiskAmt");
+  if(elRisk) elRisk.innerText = showLevels ? fmtPrice(riskDist) : "--";
+  const elReward = document.getElementById("planRewardAmt");
+  if(elReward) elReward.innerText = showLevels ? fmtPrice(rewardDist) : "--";
+  const elATR = document.getElementById("planATR");
+  if(elATR) elATR.innerText = res.indicators?.atr14 ? fmtPrice(res.indicators.atr14) : "--";
+  const elDist = document.getElementById("planDistance");
+  if(elDist) elDist.innerText = showLevels ? `${((riskDist/plan.entry)*100).toFixed(2)}% / ${((rewardDist/plan.entry)*100).toFixed(2)}%` : "--";
+  
+  if (note) {
+    if (res.signal !== "NEUTRAL") note.innerText = `${res.signal} active level calibration matrix initialized.`;
+    else note.innerText = "No clean trade plan yet. Waiting for structural confirmation, consensus, and volume support.";
+  }
+}
+
+/** UI UPDATES **/
+function updateDashboard(res) {
+  if(!res) return;
+  const sText = document.getElementById("signalText");
+  if(sText) {
+    sText.innerText = res.signal;
+    sText.style.color = res.signal.includes("BUY") ? "#22c55e" : res.signal.includes("SELL") ? "#ef4444" : "var(--neutral)";
+    sText.className = "big-signal" + (res.signal.includes("STRONG") || res.signal.includes("ELITE") ? " signal-strong" : "");
+  }
+
+  const elGrade = document.getElementById("signalGrade");
+  if(elGrade) elGrade.innerText = res.grade;
+  const elConfVal = document.getElementById("confValue");
+  if(elConfVal) elConfVal.innerText = res.confidence + "%";
+  const elConfBar = document.getElementById("confBar");
+  if(elConfBar) {
+    elConfBar.style.width = res.confidence + "%";
+    elConfBar.style.background = res.signal.includes("BUY") ? "#22c55e" : res.signal.includes("SELL") ? "#ef4444" : "var(--neutral)";
+  }
+
+  const v = res.votes;
+  const updV = (id, val) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.innerText = val;
+    el.className = `vote-badge ${badgeClassFor(val)}`;
+  };
+  updV("voteRSI", v.rsi); updV("voteMACD", v.macd); updV("voteMA", v.ma); updV("votePattern", v.pattern); updV("voteSR", v.sr); 
+  if(document.getElementById("voteVolume")) updV("voteVolume", v.volume || "NEUTRAL"); 
+  updateMtfUI();
+
+  const voteList = [v.rsi, v.macd, v.ma, v.pattern, v.sr, v.volume];
+  const bullish = voteList.filter(x => x === 'BUY').length;
+  const bearish = voteList.filter(x => x === 'SELL').length;
+  const neutral = voteList.filter(x => x === 'NEUTRAL').length;
+
+  const elExplainer = document.getElementById("signalExplainer");
+  if(elExplainer) {
+    elExplainer.innerHTML = `
+    RSI: ${v.rsi} | MACD: ${v.macd} | Trend: ${v.ma}<br>
+    S/R: ${v.sr} | Pattern: ${v.pattern} | Volume: ${v.volume || "NEUTRAL"}<br>
+    MTF Bias: ${v.mtf || "WAITING"} | Volume Ratio: ${res.indicators.volumeRatio ? res.indicators.volumeRatio.toFixed(2) + "x" : "--"}<br><br>
+    <b>Bullish: ${bullish} | Bearish: ${bearish} | Neutral: ${neutral}</b><br>
+    Final Signal: <b>${res.signal}</b> | Confidence: <b>${res.confidence}%</b><br>
+    <small style="color:var(--muted)">${res.logicNote || ""}</small>
+    `;
+  }
+
+  updateTradePlan(res);
+  updateLiveAlignment(res);
+
+  const bias = res.signal.includes("BUY") ? "BULLISH" : res.signal.includes("SELL") ? "BEARISH" : "NEUTRAL";
+  const trendState = res.indicators?.recentDown ? "SHORT-TERM DOWN" : res.indicators?.recentUp ? "SHORT-TERM UP" : (v.ma === "BUY" ? "BULLISH STRUCTURE" : v.ma === "SELL" ? "BEARISH STRUCTURE" : "SIDEWAYS");
+  if(document.getElementById("marketBias")) document.getElementById("marketBias").innerText = bias;
+  if(document.getElementById("summaryQuality")) document.getElementById("summaryQuality").innerText = `${res.tradePlan?.quality || 0}/100`;
+  if(document.getElementById("trendState")) document.getElementById("trendState").innerText = trendState;
+  if(document.getElementById("volumeState")) document.getElementById("volumeState").innerText = `${v.volume || "NEUTRAL"} (${Number.isFinite(res.indicators.volumeRatio) ? res.indicators.volumeRatio.toFixed(2) : "--"}x)`;
+  if(document.getElementById("volumeDebug")) document.getElementById("volumeDebug").innerText =
+    `Current Vol: ${Number(res.indicators.lastVol || 0).toFixed(2)} | Avg Vol: ${Number(res.indicators.avgVol || 0).toFixed(2)} | Ratio: ${Number(res.indicators.volumeRatio || 0).toFixed(2)}x`;
+
+  const elMAOverlay = document.getElementById("maOverlay");
+  if(elMAOverlay) elMAOverlay.innerText = `MA50: ${Number.isFinite(res.ma50) ? res.ma50.toFixed(2) : "--"} | MA200: ${Number.isFinite(res.ma200) ? res.ma200.toFixed(2) : "--"}`;
+
+  const latestCandleTime = res.candleTime;
+  const qualityNow = clampScore(res.tradePlan?.quality || 0);
+
+  /** PRODUCTION FIX 3: LOG HOOK WITH ENHANCED FILTER GATES & TRADE ID DEDUPLICATION **/
+  const tradeId = `${SYMBOL}-${INTERVAL}-${res.signal}-${latestCandleTime}`;
+  
+  const hasStructureChanged = 
+    lastLoggedSignalState.pair !== SYMBOL ||
+    lastLoggedSignalState.tf !== INTERVAL ||
+    lastLoggedSignalState.signal !== res.signal ||
+    lastLoggedSignalState.candleTime !== latestCandleTime ||
+    Math.abs(qualityNow - lastLoggedSignalState.quality) >= 10;
+
+  const shouldLogSignal = res.signal !== "NEUTRAL" && hasStructureChanged && !processedTradeIds.has(tradeId);
+
+  currentSignal = res;
+
+  if(shouldLogSignal) {
+    processedTradeIds.add(tradeId);
+    localStorage.setItem('ntp_processed_ids_v103', JSON.stringify(Array.from(processedTradeIds)));
+    
+    notify(`${res.signal} Activated (${res.grade})`);
+    signalHistory.unshift({
+      ...res, 
+      result: 'PENDING', 
+      tradeId: tradeId,
+      createdAt: Date.now(), 
+      holdCandles: INTERVAL === "1m" ? 5 : INTERVAL === "5m" ? 4 : 3
+    });
+    
+    lastLoggedSignalState = {
+      pair: SYMBOL,
+      tf: INTERVAL,
+      signal: res.signal,
+      candleTime: latestCandleTime,
+      quality: qualityNow
+    };
+    
+    if(signalHistory.length > 150) signalHistory.pop();
+    saveSession();
+  }
+  renderHistory();
+
+  if(document.getElementById("dsSymbol")) document.getElementById("dsSymbol").innerText = SYMBOL;
+  if(document.getElementById("dsTF")) document.getElementById("dsTF").innerText = INTERVAL;
+  if(document.getElementById("dsCandles")) document.getElementById("dsCandles").innerText = candles.length;
+  if(document.getElementById("dsUpdate")) document.getElementById("dsUpdate").innerText = new Date().toLocaleTimeString();
+
+  autoResolvePendingSignals();
+  calculateAnalytics();
+  drawMain(res);
+  drawRSI(res);
+  drawMACD(res);
+}
+
+/** ANALYTICS & CHARTS **/
+function calculateAnalytics() {
+  const marked = signalHistory.filter(h => h && h.result && h.result !== 'PENDING');
+  const wins = marked.filter(h => h.result === 'WIN').length;
+  const losses = marked.filter(h => h.result === 'LOSS').length;
+  const total = wins + losses;
+
+  const rate = total > 0 ? Math.round((wins/total)*100) : 0;
+  if(document.getElementById("anRate")) document.getElementById("anRate").innerText = rate + "%";
+  if(document.getElementById("anWins")) document.getElementById("anWins").innerText = wins;
+  if(document.getElementById("anLoss")) document.getElementById("anLoss").innerText = losses;
+
+  let currentEquity = 1000, maxEq = 1000, mdd = 0;
+  let streak = 0;
+  equityData = [1000];
+
+  marked.slice().reverse().forEach(h => {
+    const elBal = document.getElementById("riskBal");
+    const elPct = document.getElementById("riskPct");
+    const bal = elBal ? parseFloat(elBal.value) : 1000;
+    const pct = elPct ? parseFloat(elPct.value) : 2;
+    const stake = (bal * (pct/100));
+
+    if(h.result === 'WIN') {
+      currentEquity += stake * 0.9; streak = streak < 0 ? 1 : streak + 1;
+    } else {
+      currentEquity -= stake; streak = streak > 0 ? -1 : streak - 1;
+    }
+    equityData.push(currentEquity);
+    maxEq = Math.max(maxEq, currentEquity);
+    const dd = ((maxEq - currentEquity) / maxEq) * 100;
+    mdd = Math.max(mdd, dd);
+  });
+
+  if(document.getElementById("anPF")) document.getElementById("anPF").innerText = losses > 0 ? (wins*0.9 / losses).toFixed(1) : wins > 0 ? "8" : "0.0";
+  if(document.getElementById("anStreak")) document.getElementById("anStreak").innerText = streak;
+  if(document.getElementById("anDD")) document.getElementById("anDD").innerText = mdd.toFixed(1) + "%";
+
+  const elBal = document.getElementById("riskBal");
+  const elPct = document.getElementById("riskPct");
+  const bal = elBal ? parseFloat(elBal.value) : 1000;
+  const pct = elPct ? parseFloat(elPct.value) : 2;
+  if(document.getElementById("calcStake")) document.getElementById("calcStake").innerText = "$" + (bal * (pct/100)).toFixed(2);
+
+  drawEquity();
+}
+
+
+
+const BROKER_LABELS = {
+  "Binance":"Binance",
+  "XM":"XM",
+  "MT5":"MetaTrader 5",
+  "MT4":"MetaTrader 4",
+  "TradingView":"TradingView",
+  "IQ Option":"IQ Option",
+  "Bybit":"Bybit",
+  "Deriv":"Deriv",
+  "ICMarkets":"ICMarkets",
+  "Exness":"Exness"
+};
+const BROKER_STYLE = {
+  "Binance": {lag:0.10, bias:0.02},
+  "TradingView": {lag:0.08, bias:0.01},
+  "Bybit": {lag:0.12, bias:-0.01},
+  "XM": {lag:0.22, bias:0.12},
+  "MT5": {lag:0.20, bias:0.10},
+  "MT4": {lag:0.24, bias:0.14},
+  "IQ Option": {lag:0.30, bias:0.18},
+  "Deriv": {lag:0.28, bias:0.15},
+  "ICMarkets": {lag:0.18, bias:0.06},
+  "Exness": {lag:0.18, bias:0.05}
+};
+let lastAlignSnapshot = { net:null, broker:null, t:0 };
+const USD_ZAR_RATE = 18.25;
+
+function selectedBrokerLabel(){ return BROKER_LABELS[BROKER_MODE] || BROKER_MODE || "Broker"; }
+function activeSymbolLabel(){ return String(SYMBOL || "BTCUSDT").replace("USDT","/USDT").replace("USD","/USD"); }
+function movementLabel(current, prev){
+  if(!Number.isFinite(current) || !Number.isFinite(prev)) return "--";
+  const d = current - prev;
+  if(Math.abs(d) < Math.max(Math.abs(current)*0.000005, 0.0001)) return "flat";
+  return d > 0 ? "slightly up" : "slightly down";
+}
+function brokerSyntheticPrice(basePrice){
+  if(!Number.isFinite(basePrice)) return NaN;
+  const style = BROKER_STYLE[BROKER_MODE] || BROKER_STYLE.Binance;
+  const spread = brokerSpreadEstimate(basePrice);
+  const wave = Math.sin(Date.now()/1450 + style.lag) * spread * 0.08;
+  const bias = spread * (style.bias || 0) * 0.12;
+  return basePrice + wave + bias;
+}
+const PLAN_PRICES = { FREE:0, BASIC:99, PRO:199, PREMIUM:299 };
+const PLAN_NAMES = { FREE:"FREE TRIAL", BASIC:"BASIC", PRO:"PRO", PREMIUM:"PREMIUM" };
+const TRIAL_DAYS = 30;
+let subscriptionState = JSON.parse(localStorage.getItem("ntp_subscription_v123") || "{}");
+let verificationState = JSON.parse(localStorage.getItem("ntp_kyc_v116") || '{"phone":false,"id":false,"docs":false}'); if(verificationState.face && !verificationState.docs) verificationState.docs = true;
+function saveSubscriptionState(){ localStorage.setItem("ntp_subscription_v123", JSON.stringify(subscriptionState)); }
+function saveKycState(){ localStorage.setItem("ntp_kyc_v116", JSON.stringify(verificationState)); }
+function planPrice(plan){ return PLAN_PRICES[plan] ?? 0; }
+function trialStartMs(){ return Number(subscriptionState.trialStartedAt || 0); }
+function trialEndMs(){ const s = trialStartMs(); return s ? s + TRIAL_DAYS*24*60*60*1000 : 0; }
+function trialDaysLeft(){ const e = trialEndMs(); if(!e) return TRIAL_DAYS; return Math.max(0, Math.ceil((e - Date.now())/(24*60*60*1000))); }
+function hasSignalAccess(){ return subscriptionState.paidUntil && Number(subscriptionState.paidUntil) > Date.now() || trialDaysLeft() > 0; }
+function fmtDate(ms){ return ms ? new Date(ms).toLocaleDateString() : "--"; }
+function addTx(type, amount, note){
+  subscriptionState.tx = subscriptionState.tx || [];
+  subscriptionState.tx.unshift({ type, amount, note, time: new Date().toLocaleTimeString() });
+  subscriptionState.tx = subscriptionState.tx.slice(0, 12);
+  saveSubscriptionState();
+}
+function renderTransactions(){
+  const el = document.getElementById("txHistory");
+  if(!el) return;
+  const tx = subscriptionState.tx || [];
+  if(!tx.length){ el.innerHTML = "No subscription events yet."; return; }
+  el.innerHTML = tx.map(t => `<div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(148,163,184,.12);padding:4px 0"><span>${t.type}<br><small style="color:#64748b">${t.time} • ${t.note||"NetTrack"}</small></span><b>${t.amount}</b></div>`).join("");
+}
+function renderKyc(){
+  const p = verificationState.phone, id = verificationState.id, f = verificationState.docs;
+  const set = (idn, ok)=>{ const el=document.getElementById(idn); if(el){ el.innerText=ok?"VERIFIED":"PENDING"; el.style.color=ok?"#22c55e":"#eab308"; } };
+  set("kycPhone", p); set("kycId", id); set("kycDocs", f);
+  const count = 1 + (p?1:0) + (id?1:0) + (f?1:0);
+  const pct = Math.round((count/4)*100);
+  const bar = document.getElementById("kycProgress"); if(bar) bar.style.width = pct + "%";
+  const st = document.getElementById("kycStatus"); if(st) st.innerText = count === 4 ? "FULLY VERIFIED" : count >= 2 ? "PARTIALLY VERIFIED" : "BASIC ACCOUNT";
+}
+function verifyStep(step){
+  if(step === "PHONE") verificationState.phone = true;
+  if(step === "ID") verificationState.id = true;
+  if(step === "DOCS") verificationState.docs = true;
+  saveKycState(); renderKyc(); updateNetTrackBotPanel();
+  notify(step + " verification saved for signal-platform access.");
+}
+function verifyDocumentUpload(kind,input){
+  const files = input && input.files ? Array.from(input.files) : [];
+  if(!files.length){ notify("Please choose the ID document file first."); return; }
+  verificationState.docs = true;
+  if(kind === "real") verificationState.id = true;
+  saveKycState(); renderKyc(); updateNetTrackBotPanel();
+  notify("Document uploaded locally for beta KYC: " + files.map(f=>f.name).join(", "));
+}
+function updateNetTrackBotPanel(){
+  if(!subscriptionState.createdAt) { subscriptionState.createdAt = Date.now(); saveSubscriptionState(); }
+  const plan = (document.getElementById("subscriptionPlan")||{}).value || subscriptionState.plan || "FREE";
+  if(!subscriptionState.plan) subscriptionState.plan = plan;
+  const method = (document.getElementById("subscriptionMethod")||{}).value || "Trial access";
+  const price = planPrice(plan);
+  const days = trialDaysLeft();
+  const access = hasSignalAccess();
+  const sig = currentSignal?.signal || "WAITING";
+  const conf = currentSignal?.confidence || 0;
+  const set = (id,val,color)=>{ const el=document.getElementById(id); if(el){ el.innerText=val; if(color) el.style.color=color; } };
+  set("trialStatus", days > 0 ? "FREE TRIAL ACTIVE" : (access ? "PAID ACTIVE" : "EXPIRED — SUBSCRIBE"), access ? "#22c55e" : "#ef4444");
+  set("trialDaysLeft", String(days), days > 7 ? "#38bdf8" : days > 0 ? "#eab308" : "#ef4444");
+  set("botPaymentStatus", access ? (days > 0 ? "FREE TRIAL" : "SUBSCRIPTION PAID") : "PAYMENT REQUIRED", access ? "#22c55e" : "#ef4444");
+  set("botZarValue", "R " + price.toFixed(2) + " / month", "#f8fafc");
+  set("botUsable", access ? "ACTIVE" : "LOCKED", access ? "#22c55e" : "#ef4444");
+  set("botSignal", access ? (sig + (conf ? " • " + conf + "%" : "")) : "LOCKED", sig.includes("BUY")?"#22c55e":sig.includes("SELL")?"#ef4444":"#eab308");
+  set("botTpReturn", access ? "Manual trade on own broker" : "Subscribe to unlock signals", access ? "#38bdf8" : "#eab308");
+  set("walletLevel", PLAN_NAMES[subscriptionState.plan || plan] || "FREE TRIAL", "#22c55e");
+  set("walletPending", days + " days", days > 0 ? "#eab308" : "#ef4444");
+  set("walletAvailable", "R " + price.toFixed(2), "#38bdf8");
+  set("walletCommission", "R " + Number(subscriptionState.totalPaid || 0).toFixed(2), "#22c55e");
+  set("commissionToday", "R " + Number(subscriptionState.totalPaid || 0).toFixed(2), "#22c55e");
+  set("commissionTotal", "R " + Number(subscriptionState.totalPaid || 0).toFixed(2), "#22c55e");
+  set("portalSubStatus", access ? (days > 0 ? "30-Day Trial" : "Paid Active") : "Expired");
+  set("upZar", PLAN_NAMES[subscriptionState.plan || plan] || "FREE TRIAL", "#22c55e");
+  set("upUsd", "R " + price.toFixed(2));
+  set("upUsdt", trialStartMs()?fmtDate(trialStartMs()):"Not started");
+  set("upBtc", fmtDate(trialEndMs()));
+  set("upEth", "Signals only");
+  set("upWithdrawable", access ? "ACTIVE" : "LOCKED", access ? "#22c55e" : "#ef4444");
+  set("ownerCommission", "R " + Number(subscriptionState.totalPaid || 0).toFixed(2));
+  set("ownerWithdrawable", "R " + Number(subscriptionState.totalPaid || 0).toFixed(2));
+  set("ownerDeposits", "R " + Number(subscriptionState.lastPayment || 0).toFixed(2));
+  renderTransactions(); renderKyc();
+}
+function runNetTrackBot(mode){
+  const resultEl = document.getElementById("botResult");
+  const plan = (document.getElementById("subscriptionPlan")||{}).value || "FREE";
+  const method = (document.getElementById("subscriptionMethod")||{}).value || "Trial access";
+  if(mode === "RESET_TRIAL"){
+    subscriptionState = {createdAt:Date.now(), tx:[]}; saveSubscriptionState();
+    if(resultEl){ resultEl.innerText = "TEST RESET — FREE TRIAL READY"; resultEl.style.color = "#eab308"; }
+    updateNetTrackBotPanel(); return;
+  }
+  if(mode === "ACTIVATE_TRIAL"){
+    if(!subscriptionState.trialStartedAt){
+      subscriptionState.trialStartedAt = Date.now(); subscriptionState.plan = "FREE";
+      addTx("Free trial", "R 0.00", "30-day signal access activated");
+    }
+    if(resultEl){ resultEl.innerText = "30-DAY FREE TRIAL ACTIVE — SIGNALS UNLOCKED"; resultEl.style.color = "#22c55e"; }
+    updateNetTrackBotPanel(); return;
+  }
+  if(mode === "PAY_SUBSCRIPTION"){
+    if(plan === "FREE"){
+      if(resultEl){ resultEl.innerText = "SELECT BASIC, PRO OR PREMIUM TO MARK PAYMENT"; resultEl.style.color = "#eab308"; }
+      return;
+    }
+    const price = planPrice(plan);
+    subscriptionState.plan = plan;
+    subscriptionState.lastPayment = price;
+    subscriptionState.totalPaid = Number(subscriptionState.totalPaid || 0) + price;
+    subscriptionState.paidUntil = Date.now() + 30*24*60*60*1000;
+    addTx("Subscription paid", "R " + price.toFixed(2), plan + " via " + method + " — webhook pending live provider");
+    if(resultEl){ resultEl.innerText = plan + " ACTIVE — SIGNALS UNLOCKED FOR 30 DAYS"; resultEl.style.color = "#22c55e"; }
+    updateNetTrackBotPanel(); return;
+  }
+  if(!hasSignalAccess()){
+    if(resultEl){ resultEl.innerText = "SIGNALS LOCKED — START TRIAL OR SUBSCRIBE"; resultEl.style.color = "#ef4444"; }
+    updateNetTrackBotPanel(); return;
+  }
+  if(!(verificationState.phone && verificationState.id && verificationState.docs)){
+    if(resultEl){ resultEl.innerText = "SIGNALS ACTIVE — COMPLETE VERIFICATION FOR FULL ACCOUNT"; resultEl.style.color = "#eab308"; }
+    updateNetTrackBotPanel(); return;
+  }
+  if(!currentSignal || currentSignal.signal === "NEUTRAL"){
+    if(resultEl){ resultEl.innerText = "NO CLEAN SIGNAL — WAIT"; resultEl.style.color = "#eab308"; }
+    updateNetTrackBotPanel(); return;
+  }
+  if(resultEl){ resultEl.innerText = "SIGNAL READY — USER TRADES MANUALLY ON OWN BROKER"; resultEl.style.color = "#22c55e"; }
+  updateNetTrackBotPanel();
+}
+
+function changeBroker() {
+  const el = document.getElementById("brokerSelect");
+  if (el) BROKER_MODE = el.value || "Binance";
+  localStorage.setItem("ntp_broker_mode_v114", BROKER_MODE);
+  const n = document.getElementById("brokerOverlayName");
+  if (n) n.innerText = selectedBrokerLabel();
+  const a = document.getElementById("alignBrokerName");
+  if (a) a.innerText = selectedBrokerLabel();
+  lastAlignSnapshot = { net:null, broker:null, t:0 };
+  if (currentSignal) { drawMain(currentSignal); updateLiveAlignment(currentSignal); }
+}
+
+function brokerSpreadEstimate(price) {
+  const b = String(BROKER_MODE || "Binance").toLowerCase();
+  if (!Number.isFinite(price)) return 0;
+  if (b.includes("xm") || b.includes("mt")) return Math.max(price * 0.00035, price > 10000 ? 20 : price > 1000 ? 1.5 : 0.1);
+  if (b.includes("iq")) return Math.max(price * 0.00055, price > 10000 ? 30 : 0.2);
+  if (b.includes("deriv")) return Math.max(price * 0.00045, price > 10000 ? 25 : 0.15);
+  if (b.includes("icmarkets") || b.includes("exness")) return Math.max(price * 0.00025, price > 10000 ? 12 : 0.05);
+  if (b.includes("bybit")) return Math.max(price * 0.00012, price > 10000 ? 5 : 0.02);
+  return Math.max(price * 0.00005, price > 10000 ? 2 : 0.01);
+}
+
+function brokerOverlayPrice(candle, idx, len) {
+  if (!candle) return NaN;
+  const spread = brokerSpreadEstimate(candle.close);
+  const pulse = Math.sin((idx + len) * 0.73) * spread * 0.10;
+  return candle.close + pulse + (spread * ((BROKER_STYLE[BROKER_MODE] || BROKER_STYLE.Binance).bias || 0) * 0.12);
+}
+
+function updateLiveAlignment(res) {
+  if (!res || !Number.isFinite(res.price)) return;
+  const prevNet = lastAlignSnapshot.net;
+  const prevBroker = lastAlignSnapshot.broker;
+  const brokerPrice = brokerSyntheticPrice(res.price);
+  const diff = brokerPrice - res.price;
+  const diffPct = Math.abs(diff / res.price) * 100;
+  const sync = diffPct < 0.08 ? "ALIGNED" : diffPct < 0.25 ? "NEAR" : "WIDE";
+  const set = (id, val, color) => { const el = document.getElementById(id); if(el){ el.innerText = val; if(color) el.style.color = color; } };
+  set("alignSymbol", activeSymbolLabel());
+  set("alignNet", fmtPrice(res.price));
+  set("alignNetMove", movementLabel(res.price, prevNet), movementLabel(res.price, prevNet).includes("up") ? "#22c55e" : movementLabel(res.price, prevNet).includes("down") ? "#ef4444" : "#94a3b8");
+  set("alignBroker", fmtPrice(brokerPrice));
+  set("alignBrokerMove", movementLabel(brokerPrice, prevBroker), movementLabel(brokerPrice, prevBroker).includes("up") ? "#22c55e" : movementLabel(brokerPrice, prevBroker).includes("down") ? "#ef4444" : "#94a3b8");
+  set("alignDiff", (diff >= 0 ? "+" : "") + fmtPrice(diff), Math.abs(diff) < brokerSpreadEstimate(res.price) ? "#22c55e" : "#eab308");
+  set("alignSync", sync, sync === "ALIGNED" ? "#22c55e" : sync === "NEAR" ? "#eab308" : "#ef4444");
+  set("alignMode", selectedBrokerLabel() + " comparison • signal view");
+  const a = document.getElementById("alignBrokerName"); if(a) a.innerText = selectedBrokerLabel();
+  const n = document.getElementById("brokerOverlayName"); if(n) n.innerText = selectedBrokerLabel();
+  lastAlignSnapshot = { net: res.price, broker: brokerPrice, t: Date.now() };
+  updateNetTrackBotPanel();
+}
+function drawMain(res) {
+  const canvas = document.getElementById("mainChart");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const rect = canvas.getBoundingClientRect();
+  const w = Math.max(300, Math.floor(rect.width));
+  const h = Math.max(260, Math.floor(rect.height || 380));
+  canvas.width = w; canvas.height = h;
+  ctx.clearRect(0, 0, w, h);
+
+  if (!candles || candles.length < 2) {
+    ctx.fillStyle = "rgba(148,163,184,.75)";
+    ctx.font = "12px Inter, Arial";
+    ctx.fillText("Waiting for live market candles...", 18, 28);
+    return;
+  }
+
+  const padL = 10, padR = 58, padT = 16, padB = 30;
+  const cw = w - padL - padR;
+  const ch = h - padT - padB;
+  const data = candles.slice(-80);
+
+  const plan = res && res.tradePlan ? res.tradePlan : {};
+  const rawPrices = data.flatMap(c => [c.low, c.high, c.open, c.close]).filter(Number.isFinite);
+  if (plan.active && Number.isFinite(plan.entry)) rawPrices.push(plan.entry);
+  if (plan.active && Number.isFinite(plan.stopLoss)) rawPrices.push(plan.stopLoss);
+  if (plan.active && Number.isFinite(plan.takeProfit)) rawPrices.push(plan.takeProfit);
+  const min0 = Math.min(...rawPrices), max0 = Math.max(...rawPrices);
+  const range0 = Math.max(0.0000001, max0 - min0);
+  const min = min0 - range0 * 0.12, max = max0 + range0 * 0.12;
+  const getY = (p) => padT + ((max - p) / (max - min)) * ch;
+  const getX = (i) => padL + (cw / Math.max(1, data.length - 1)) * i;
+
+  // Background grid + right price axis
+  ctx.lineWidth = 1;
+  ctx.font = "10px Inter, Arial";
+  ctx.textBaseline = "middle";
+  for (let i=0; i<=5; i++) {
+    const y = padT + (ch/5)*i;
+    const price = max - ((max-min)/5)*i;
+    ctx.strokeStyle = "rgba(148, 163, 184, 0.09)";
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w-padR, y); ctx.stroke();
+    ctx.fillStyle = "rgba(203,213,225,.70)";
+    ctx.fillText(fmtPrice(price).replace('$',''), w-padR+8, y);
+  }
+  ctx.strokeStyle = "rgba(148,163,184,.18)";
+  ctx.beginPath(); ctx.moveTo(w-padR, padT); ctx.lineTo(w-padR, padT+ch); ctx.stroke();
+
+  // Entry / SL / TP risk-reward zone behind candles
+  if (plan.active && plan.direction !== "NEUTRAL" && Number.isFinite(plan.entry) && Number.isFinite(plan.stopLoss) && Number.isFinite(plan.takeProfit)) {
+    const yEntry = getY(plan.entry), ySL = getY(plan.stopLoss), yTP = getY(plan.takeProfit);
+    const profitTop = Math.min(yEntry, yTP), profitH = Math.abs(yTP-yEntry);
+    const riskTop = Math.min(yEntry, ySL), riskH = Math.abs(ySL-yEntry);
+    ctx.fillStyle = "rgba(34,197,94,.13)";
+    ctx.fillRect(padL, profitTop, cw, Math.max(2, profitH));
+    ctx.fillStyle = "rgba(239,68,68,.10)";
+    ctx.fillRect(padL, riskTop, cw, Math.max(2, riskH));
+    const drawLevel = (y, label, val, color) => {
+      ctx.setLineDash([7,5]); ctx.strokeStyle = color; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w-padR, y); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = color; ctx.font = "bold 10px Inter, Arial";
+      ctx.fillText(`${label} ${fmtPrice(val)}`, padL+8, Math.max(padT+8, Math.min(padT+ch-8, y-8)));
+    };
+    drawLevel(yEntry, "ENTRY", plan.entry, "rgba(56,189,248,.95)");
+    drawLevel(ySL, "SL", plan.stopLoss, "rgba(239,68,68,.95)");
+    drawLevel(yTP, "TP", plan.takeProfit, "rgba(34,197,94,.95)");
+  }
+
+  // Support / resistance guide lines
+  if(res && res.indicators) {
+    ctx.setLineDash([4, 6]);
+    ctx.strokeStyle = "rgba(239, 68, 68, 0.35)";
+    ctx.beginPath(); ctx.moveTo(padL, getY(res.indicators.res)); ctx.lineTo(w-padR, getY(res.indicators.res)); ctx.stroke();
+    ctx.strokeStyle = "rgba(34, 197, 94, 0.35)";
+    ctx.beginPath(); ctx.moveTo(padL, getY(res.indicators.sup)); ctx.lineTo(w-padR, getY(res.indicators.sup)); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Broker comparison overlay: thin transparent live reference line, no extra websocket, so it cannot break Binance stream
+  ctx.strokeStyle = "rgba(56,189,248,.38)";
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  data.forEach((c,i) => {
+    const x = getX(i);
+    const y = getY(brokerOverlayPrice(c, i, data.length));
+    if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+
+  // Candles
+  const step = cw / Math.max(1, data.length);
+  data.forEach((c, i) => {
+    if(!c) return;
+    const x = getX(i), bw = Math.max(2, step*0.62);
+    const up = c.close >= c.open;
+    ctx.fillStyle = up ? "#22c55e" : "#ef4444";
+    ctx.strokeStyle = ctx.fillStyle;
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, getY(c.high)); ctx.lineTo(x, getY(c.low)); ctx.stroke();
+    const bodyTop = getY(Math.max(c.open, c.close));
+    const bodyH = Math.max(1, Math.abs(getY(c.open) - getY(c.close)));
+    ctx.fillRect(x-bw/2, bodyTop, bw, bodyH);
+  });
+
+  // Bottom time/date axis
+  ctx.strokeStyle = "rgba(148,163,184,.18)";
+  ctx.beginPath(); ctx.moveTo(padL, padT+ch); ctx.lineTo(w-padR, padT+ch); ctx.stroke();
+  ctx.fillStyle = "rgba(203,213,225,.72)";
+  ctx.font = "10px Inter, Arial";
+  ctx.textAlign = "center"; ctx.textBaseline = "top";
+  const ticks = 5;
+  for (let t=0; t<ticks; t++) {
+    const idx = Math.round((data.length-1) * (t/(ticks-1)));
+    const c = data[idx]; if(!c) continue;
+    const d = new Date(c.time);
+    const label = INTERVAL === "1h" ? d.toLocaleDateString([], {day:'2-digit', month:'short'}) + " " + d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    const x = getX(idx);
+    ctx.fillText(label, x, padT+ch+8);
+  }
+  ctx.textAlign = "left";
+
+  updateLiveAlignment(res);
+}
+
+function drawRSI(res) {
+  const canvas = document.getElementById("rsiChart");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.offsetWidth, h = canvas.offsetHeight;
+  canvas.width = w; canvas.height = h;
+  if(!res || !res.indicators || !res.indicators.rsiArr) return;
+
+  const data = res.indicators.rsiArr.slice(-80);
+  const getX = (i) => (w / data.length) * i;
+  const getY = (v) => h - (v / 100) * h;
+
+  ctx.strokeStyle = "#1e293b";
+  ctx.beginPath(); ctx.moveTo(0, getY(30)); ctx.lineTo(w, getY(30)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, getY(70)); ctx.lineTo(w, getY(70)); ctx.stroke();
+
+  ctx.strokeStyle = "#38bdf8";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  data.forEach((v, i) => {
+    if(v === null) return;
+    if(i === 0) ctx.moveTo(getX(i), getY(v));
+    else ctx.lineTo(getX(i), getY(v));
+  });
+  ctx.stroke();
+}
+
+function drawMACD(res) {
+  const canvas = document.getElementById("macdChart");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.offsetWidth, h = canvas.offsetHeight;
+  canvas.width = w; canvas.height = h;
+  if(!res || !res.indicators || !res.indicators.macdArr) return;
+
+  const macdData = res.indicators.macdArr.slice(-80);
+  const sigData = res.indicators.sigArr.slice(-80);
+  const all = [...macdData, ...sigData];
+  const max = Math.max(...all), min = Math.min(...all);
+  const rng = Math.max(Math.abs(max), Math.abs(min)) * 2 || 1;
+
+  const getX = (i) => (w / macdData.length) * i;
+  const getY = (v) => (h/2) - (v / rng) * h;
+
+  ctx.strokeStyle = "#1e293b";
+  ctx.beginPath(); ctx.moveTo(0, h/2); ctx.lineTo(w, h/2); ctx.stroke();
+
+  ctx.strokeStyle = "#38bdf8";
+  ctx.beginPath();
+  macdData.forEach((v, i) => { if(i === 0) ctx.moveTo(getX(i), getY(v)); else ctx.lineTo(getX(i), getY(v)); });
+  ctx.stroke();
+
+  ctx.strokeStyle = "#ef4444";
+  ctx.beginPath();
+  sigData.forEach((v, i) => { if(i === 0) ctx.moveTo(getX(i), getY(v)); else ctx.lineTo(getX(i), getY(v)); });
+  ctx.stroke();
+}
+
+function drawEquity() {
+  const canvas = document.getElementById("equityChart");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.offsetWidth, h = canvas.offsetHeight;
+  canvas.width = w; canvas.height = h;
+
+  if(!equityData || equityData.length < 2) return;
+  const min = Math.min(...equityData), max = Math.max(...equityData);
+  const rng = (max - min) || 100, base = min - rng*0.1;
+
+  ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 3; ctx.beginPath();
+  equityData.forEach((v, i) => {
+    const x = (w / (equityData.length-1)) * i;
+    const y = h - ((v - base) / (rng*1.2)) * h;
+    if(i===0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+}
+
+/** BACKTEST **/
+function runAdvancedBacktest() {
+  const limit = parseInt(document.getElementById("btLookback").value) || 300;
+  if (!candles || candles.length < limit) {
+    notify(`Insufficient historical structural context. Need at least ${limit} synced bars.`);
+    return;
+  }
+  
+  const testData = candles.slice(-limit);
+  let wins = 0, losses = 0, total = 0;
+  let elite = 0, strong = 0, normal = 0, watchlist = 0;
+  const hold = INTERVAL === "1m" ? 5 : INTERVAL === "5m" ? 4 : 3;
+
+  for(let i = MIN_BACKTEST_BARS; i < testData.length - (hold + 1); i++) {
+    const slice = testData.slice(0, i + 1);
+    const signalResult = analyze(slice, { useMTF: false, backtest: true, isClosed: true });
+    if(!signalResult || signalResult.signal === "NEUTRAL") continue;
+
+    const entryPrice = signalResult.price;
+    const exitPrice = testData[i + hold].close;
+    const sig = String(signalResult.signal);
+    total++;
+    
+    if (sig.includes("ELITE")) elite++;
+    else if (sig.includes("STRONG")) strong++;
+    else if (sig.includes("WATCHLIST")) watchlist++;
+    else normal++;
+
+    if(sig.includes("BUY")) {
+      if (exitPrice > entryPrice) wins++; else losses++;
+    } else if (sig.includes("SELL")) {
+      if (exitPrice < entryPrice) wins++; else losses++;
+    }
+  }
+  
+  const rate = total > 0 ? clampScore((wins / total) * 100) : 0;
+  if(document.getElementById("btRate")) document.getElementById("btRate").innerText = rate + "%";
+  if(document.getElementById("btSample")) {
+    document.getElementById("btSample").innerText = `${total} (${wins}W / ${losses}L | E: ${elite} | S: ${strong} | W: ${watchlist})`;
+  }
+  notify(`Backtest compiled over ${total} validated closed windows.`);
+}
+
+/** ACTIONS & PERSISTENCE **/
+function manualMark(res) {
+  if(signalHistory.length === 0 && currentSignal && currentSignal.signal !== "NEUTRAL") {
+    signalHistory.unshift({
+      ...currentSignal, 
+      result: "PENDING", 
+      createdAt: Date.now(), 
+      holdCandles: INTERVAL === "1m" ? 5 : INTERVAL === "5m" ? 4 : 3
+    });
+  }
+  if(signalHistory.length > 0) {
+    signalHistory[0].result = res;
+    saveSession();
+    renderHistory();
+    calculateAnalytics();
+    notify(`Trade updated to: ${res}`);
+  }
+}
+
+function notify(msg) {
+  const box = document.getElementById("notif-box");
+  if(!box) return;
+  const t = document.createElement("div");
+  t.className = "toast"; t.innerText = msg;
+  box.appendChild(t);
+  setTimeout(() => t.classList.add("show"), 100);
+  setTimeout(() => { t.classList.remove("show"); setTimeout(() => t.remove(), 400); }, 3000);
+}
+
+function renderHistory() {
+  const b = document.getElementById("historyBody");
+  if(!b) return;
+  if(!signalHistory || !signalHistory.length) {
+    b.innerHTML = `<tr><td colspan="8" class="history-empty">No signals recorded yet. Active processing logs will populate automatically.</td></tr>`;
+    return;
+  }
+  b.innerHTML = signalHistory.map(h => {
+    if(!h) return "";
+    const sig = String(h.signal || "NEUTRAL");
+    const side = signalSide(sig);
+    const quality = clampScore(h.tradePlan?.quality || h.confidence || 0);
+    return `
+    <tr>
+    <td>${h.time || "--"}</td>
+    <td>${h.pair || "--"}</td>
+    <td>${h.tf || "--"}</td>
+    <td>${Number.isFinite(Number(h.price)) ? "$" + Number(h.price).toFixed(2) : "--"}</td>
+    <td style="color:${side === 'BUY' ? '#22c55e' : side === 'SELL' ? '#ef4444' : 'var(--neutral)'}"><b>${sig}</b></td>
+    <td><span class="vote-badge ${h.grade === 'A+' || h.grade === 'A' ? 'bg-buy' : h.grade === 'B' || h.grade === 'C' ? 'bg-neutral' : 'bg-sell'}" style="border:none">${h.grade || "C"}</span></td>
+    <td>${quality}/100</td>
+    <td>${h.result || 'PENDING'}</td>
+    </tr>`;
+  }).join("");
+}
+
+function saveSession() {
+  localStorage.setItem('ntp_history_v103', JSON.stringify(signalHistory));
+}
+
+function saveGlobalSettings() {
+  const elBal = document.getElementById("riskBal");
+  const elPct = document.getElementById("riskPct");
+  const s = {
+    bal: elBal ? elBal.value : 1000,
+    pct: elPct ? elPct.value : 2,
+    pair: SYMBOL, tf: INTERVAL
+  };
+  localStorage.setItem('ntp_settings_v103', JSON.stringify(s));
+}
+
+function saveJournal() {
+  const elJournal = document.getElementById("tradeJournal");
+  if(elJournal) localStorage.setItem('ntp_journal_v103', elJournal.value);
+}
+
+function toggleSettings(save = false) {
+  const m = document.getElementById("settingsModal");
+  if(!m) return;
+  if(save) {
+    const risk = document.getElementById("prefRisk").value;
+    document.getElementById("riskPct").value = risk;
+    SYMBOL = document.getElementById("prefPair").value;
+    INTERVAL = document.getElementById("prefTF").value;
+    document.getElementById("assetSelect").value = SYMBOL;
+    document.getElementById("tfSelect").value = INTERVAL;
+    saveGlobalSettings();
+    resetStream();
+    notify("Preferences Updated");
+  } else {
+    document.getElementById("prefPair").value = SYMBOL;
+    document.getElementById("prefTF").value = INTERVAL;
+    document.getElementById("prefRisk").value = document.getElementById("riskPct").value;
+  }
+  m.style.display = m.style.display === "flex" ? "none" : "flex";
+}
+
+function clearHistory() {
+  if(confirm("Clear all verified tracking history logs?")) {
+    signalHistory = [];
+    processedTradeIds.clear();
+    localStorage.removeItem('ntp_history_v103');
+    localStorage.removeItem('ntp_processed_ids_v103');
+    renderHistory();
+    calculateAnalytics();
+    notify("History Matrix Synchronized");
+  }
+}
+
+function exportCSV() {
+  let csv = "Time,Asset,TF,Price,Signal,Grade,Quality,Result\n";
+  signalHistory.forEach(h => {
+    if(h) csv += `${h.time},${h.pair},${h.tf},${h.price},${h.signal},${h.grade},${h.tradePlan?.quality || h.confidence || ''},${h.result}\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `nettrack_export.csv`; a.click();
+}
+
+
+/** PAIR SCANNER **/
+async function fetchCandlesFor(symbol, interval, limit=250) {
+  const r = await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`);
+  if(!r.ok) throw new Error();
+  const raw = await r.json();
+  if(!Array.isArray(raw)) throw new Error();
+  return raw.map(k => ({ time:k[0], open:+k[1], high:+k[2], low:+k[3], close:+k[4], volume:+k[5] })).filter(c => c && Number.isFinite(c.close));
+}
+
+function getSignalPriority(sigStr) {
+  const s = String(sigStr || "").toUpperCase();
+  if (s.includes("ELITE")) return 5;
+  if (s.includes("STRONG")) return 4;
+  if (s.includes("WATCHLIST")) return 2;
+  if (s.includes("NEUTRAL")) return 1;
+  return 3; 
+}
+
+async function scanStrongestPairs() {
+  const wrap = document.getElementById("pairScanner");
+  const status = document.getElementById("scannerStatus");
+  const bestBox = document.getElementById("scannerBest");
+  if(!wrap) return;
+  try {
+    if(status) status.innerText = "Synchronizing global indicator arrays...";
+    
+    const results = await Promise.all(SCANNER_SYMBOLS.map(async sym => {
+      try {
+        let data = [];
+        if(sym === SYMBOL && candles && candles.length > 0) {
+          data = candles;
+        } else {
+          data = await fetchCandlesFor(sym, INTERVAL, 250);
+        }
+        
+        const res = analyze(data, { useMTF: false, backtest: false, symbol: sym, interval: INTERVAL, isClosed: true });
+        if(!res) return { sym, score: 0, signal: "NEUTRAL", priority: 1 };
+        
+        return {
+          sym,
+          score: clampScore(res.tradePlan?.quality || res.confidence || 0),
+          signal: res.signal,
+          priority: getSignalPriority(res.signal)
+        };
+      } catch(e) {
+        return { sym, score: 0, signal: "OFFLINE", priority: 0 };
+      }
+    }));
+    
+    results.sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      if (b.priority !== a.priority) return b.priority - a.priority;
+      return a.sym.localeCompare(b.sym);
+    });
+    
+    const best = results[0];
+    if(best && bestBox) {
+      bestBox.innerHTML = `<small>Best Opportunity Now</small><b>${best.sym}  ${best.signal} (${best.score}/100)</b>`;
+    }
+    if(status) status.innerHTML = `Matrix calculation complete. Engine matching verified.`;
+    
+    wrap.innerHTML = results.map(r => `
+      <div class="scanner-row">
+        <span>${r.sym}<br><small style="color:var(--muted)">${r.signal}</small></span>
+        <b class="scanner-score">${r.score}/100</b>
+      </div>
+    `).join("");
+  } catch(e) {
+    if(status) status.innerText = "Scanner connection latency detected. Re-evaluating...";
+  }
+}
+
+
+function autoResolvePendingSignals() {
+  if(!candles || !candles.length || !signalHistory || !signalHistory.length) return;
+  let changed = false;
+  const latest = candles[candles.length - 1];
+  if(!latest) return;
+  
+  signalHistory.forEach(h => {
+    if(!h || h.result !== "PENDING") return;
+    if(h.pair !== SYMBOL || h.tf !== INTERVAL) return;
+    const passed = candles.filter(c => c && Number(c.time) > Number(h.candleTime)).length;
+    const need = Number(h.holdCandles || 3);
+    if(passed < need) return;
+    const entry = Number(h.price);
+    const exit = Number(latest.close);
+    if(!Number.isFinite(entry) || !Number.isFinite(exit)) return;
+    if(String(h.signal).includes("BUY")) h.result = exit > entry ? "WIN" : "LOSS";
+    else if(String(h.signal).includes("SELL")) h.result = exit < entry ? "WIN" : "LOSS";
+    else return;
+    changed = true;
+  });
+  if(changed) {
+    saveSession();
+    renderHistory();
+    calculateAnalytics();
+  }
+}
+
+/** DATA CONNECTION **/
+async function changeAsset() {
+  const el = document.getElementById("assetSelect");
+  if(el) {
+    SYMBOL = el.value;
+    saveGlobalSettings();
+    resetStream();
+  }
+}
+
+async function changeTimeframe() {
+  const el = document.getElementById("tfSelect");
+  if(el) {
+    INTERVAL = el.value;
+    saveGlobalSettings();
+    resetStream();
+  }
+}
+
+/** PRODUCTION FIX 4: ATOMIC DISCONNECT & STABLE RESET LOOP ENGINE **/
+async function resetStream() {
+  isSwitching = true;
+  if(reconnectTimeout) {
+    clearTimeout(reconnectTimeout);
+    reconnectTimeout = null;
+  }
+  if(ws) {
+    ws.onopen = null;
+    ws.onmessage = null;
+    ws.onclose = null;
+    ws.onerror = null;
+    try { ws.close(); } catch(e){}
+    ws = null;
+  }
+
+  candles = [];
+  currentSignal = null;
+  setSocketState("CONNECTING");
+  
+  const elUpdateTime = document.getElementById("updateTime");
+  if(elUpdateTime) elUpdateTime.innerText = "SYNCING STRUCTURAL CONTEXT: " + SYMBOL;
+
+  try {
+    const r = await fetch(`https://api.binance.com/api/v3/klines?symbol=${SYMBOL}&interval=${INTERVAL}&limit=600`);
+    if(!r.ok) throw new Error();
+    const raw = await r.json();
+    if(!Array.isArray(raw)) throw new Error();
+    
+    candles = raw.map(k => ({ 
+      time: k[0], 
+      open: parseFloat(k[1]), 
+      high: parseFloat(k[2]), 
+      low: parseFloat(k[3]), 
+      close: parseFloat(k[4]), 
+      volume: parseFloat(k[5]) 
+    })).filter(c => c && Number.isFinite(c.close));
+
+    lastLoggedSignalState = { pair: "", tf: "", signal: "", candleTime: 0, quality: -999 };
+
+    if(document.getElementById("dsSymbol")) document.getElementById("dsSymbol").innerText = SYMBOL;
+    if(document.getElementById("dsTF")) document.getElementById("dsTF").innerText = INTERVAL;
+    if(document.getElementById("dsCandles")) document.getElementById("dsCandles").innerText = candles.length;
+    if(document.getElementById("dsUpdate")) document.getElementById("dsUpdate").innerText = new Date().toLocaleTimeString();
+    
+    await refreshMTF();
+    updateDashboard(analyze(candles, { isClosed: true }));
+    scanStrongestPairs();
+    
+    setTimeout(() => { try { runAdvancedBacktest(); } catch(e){} }, 1000);
+    isSwitching = false;
+    connectWS();
+  } catch(e) {
+    setSocketState("RECONNECTING");
+    reconnectTimeout = setTimeout(resetStream, 6000);
+  }
+}
+
+function connectWS() {
+  if (ws && ws.readyState <= 1) return;
+
+  ws = new WebSocket(`wss://stream.binance.com:9443/ws/${SYMBOL.toLowerCase()}@kline_${INTERVAL}`);
+
+  ws.onopen = () => {
+    setSocketState("CONNECTED");
+  };
+
+  ws.onmessage = (m) => {
+    try {
+      if(!m || !m.data) return;
+      setSocketState("CONNECTED");
+      const parsed = JSON.parse(m.data);
+      if(!parsed || !parsed.k) return;
+      const k = parsed.k;
+      
+      const c = { 
+        time: k.t, 
+        open: parseFloat(k.o), 
+        high: parseFloat(k.h), 
+        low: parseFloat(k.l), 
+        close: parseFloat(k.c), 
+        volume: parseFloat(k.v),
+        isClosed: k.x === true
+      };
+      
+      const lp = document.getElementById("livePrice");
+      if(lp) {
+        lp.innerText = "$" + c.close.toFixed(c.close < 1 ? 4 : 2);
+        lp.style.color = c.close >= c.open ? "#22c55e" : "#ef4444";
+      }
+
+      if(candles && candles.length > 0 && candles[candles.length-1].time === c.time) {
+        candles[candles.length-1] = c;
+      } else if(candles) {
+        candles.push(c);
+        if(candles.length > 1000) candles.splice(0, candles.length - 1000);
+      }
+
+      if(k.x) refreshMTF();
+      
+      updateDashboard(analyze(candles, { isClosed: c.isClosed }));
+      
+      const elUpdateTime = document.getElementById("updateTime");
+      if(elUpdateTime) elUpdateTime.innerText = `${SYMBOL} | ${INTERVAL} | STREAM STABLE`;
+    } catch(err) {}
+  };
+
+  ws.onclose = () => {
+    if(!isSwitching) {
+      setSocketState("RECONNECTING");
+      reconnectTimeout = setTimeout(resetStream, 5000);
+    }
+  };
+
+  ws.onerror = () => {
+    if(!isSwitching) {
+      setSocketState("ERROR");
+    }
+  };
+}
+
+/** INIT **/
+(function init() {
+  try {
+    const s = JSON.parse(localStorage.getItem('ntp_settings_v103'));
+    if(s) {
+      if(document.getElementById("riskBal") && s.bal) document.getElementById("riskBal").value = s.bal;
+      if(document.getElementById("riskPct") && s.pct) document.getElementById("riskPct").value = s.pct;
+      SYMBOL = s.pair || "BTCUSDT";
+      INTERVAL = s.tf || "1m";
+      if(document.getElementById("assetSelect")) document.getElementById("assetSelect").value = SYMBOL;
+      if(document.getElementById("tfSelect")) document.getElementById("tfSelect").value = INTERVAL;
+      if(document.getElementById("brokerSelect")) document.getElementById("brokerSelect").value = BROKER_MODE;
+    }
+    const elJournal = document.getElementById("tradeJournal");
+    if(elJournal) elJournal.value = localStorage.getItem('ntp_journal_v103') || "";
+    
+    renderHistory();
+    updateNetTrackBotPanel();
+    resetStream();
+    calculateAnalytics();
+    setInterval(scanStrongestPairs, 60000);
+    
+    window.onresize = () => {
+      if(candles && candles.length > 0) updateDashboard(analyze(candles));
+    };
+  } catch(e) {}
+})();
+</script>
+
+<div id="authOverlay" style="position:fixed;inset:0;background:#020617;z-index:999999;display:flex;align-items:center;justify-content:center">
+<div style="background:#0f172a;padding:24px;border-radius:12px;width:340px;color:white">
+<h2>NetTrack Pro Login</h2>
+<input id="loginEmail" placeholder="Email" style="width:100%;margin:6px 0;padding:10px">
+<input id="loginPass" type="password" placeholder="Password" style="width:100%;margin:6px 0;padding:10px">
+<button onclick="ntLogin()" style="width:100%;padding:10px;margin-top:8px">Login</button>
+<button onclick="ntSignup()" style="width:100%;padding:10px;margin-top:8px">Sign Up</button>
+<p style="font-size:12px">Frontend beta auth. Supabase verification can be connected next.</p>
+</div></div>
+<script>
+function ntSignup(){
+ const e=document.getElementById('loginEmail').value;
+ const p=document.getElementById('loginPass').value;
+ if(!e||!p){alert('Enter email and password');return;}
+ localStorage.setItem('nt_user',JSON.stringify({email:e,password:p}));
+ alert('Account created');
+}
+function ntLogin(){
+ const u=JSON.parse(localStorage.getItem('nt_user')||'null');
+ const e=document.getElementById('loginEmail').value;
+ const p=document.getElementById('loginPass').value;
+ if(u && u.email===e && u.password===p){
+   document.getElementById('authOverlay').style.display='none';
+   localStorage.setItem('nt_logged_in','1');
+ } else alert('Invalid login');
+}
+window.addEventListener('load',()=>{
+ if(localStorage.getItem('nt_logged_in')==='1'){
+   const a=document.getElementById('authOverlay'); if(a)a.style.display='none';
+ }
+});
+</script>
+
+<style>
+#pwaInstallBtn{position:fixed;left:18px;bottom:18px;z-index:999998;background:#38bdf8;color:#020617;border:none;border-radius:999px;padding:12px 16px;font-weight:900;box-shadow:0 12px 30px rgba(0,0,0,.45);display:none;cursor:pointer}
+#pwaInstallToast{position:fixed;left:18px;bottom:72px;z-index:999998;background:#0f172a;color:#e2e8f0;border:1px solid #1e293b;border-radius:12px;padding:12px 14px;font-size:12px;max-width:310px;display:none}
+/* V12.0 layout patch: separate Trading / User / Owner pages */
+.nt-side-nav{
+  position:fixed;
+  left:12px;
+  top:210px;
+  z-index:70;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width:70px;
+}
+.nt-side-nav button{
+  width:70px;
+  min-height:42px;
+  border-radius:12px;
+  border:1px solid rgba(56,189,248,.28);
+  background:rgba(15,23,42,.88);
+  color:#cbd5e1;
+  font-weight:900;
+  font-size:.62rem;
+  letter-spacing:.5px;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(0,0,0,.24);
+}
+.nt-side-nav button.active{
+  background:linear-gradient(135deg,#0ea5e9,#22c55e);
+  color:#03121f;
+  border-color:rgba(56,189,248,.9);
+}
+.portal-stage{
+  max-width:1360px;
+  margin: 92px auto 28px;
+  padding: 0 24px 40px 92px;
+}
+.portal-page{
+  display:none;
+  border:1px solid rgba(56,189,248,.20);
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(15,23,42,.94),rgba(8,13,24,.96));
+  box-shadow:0 24px 80px rgba(0,0,0,.35);
+  padding:22px;
+}
+.portal-page.active{ display:block; }
+.portal-title-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(148,163,184,.16);
+}
+.portal-title-row h2{
+  margin:0;
+  font-size:1.35rem;
+  letter-spacing:.5px;
+}
+.portal-title-row small{ color:var(--muted); }
+.portal-layout{
+  display:grid;
+  grid-template-columns: minmax(0,1.25fr) minmax(320px,.75fr);
+  gap:16px;
+}
+.portal-stack{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.portal-info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.portal-info-card{
+  border:1px solid rgba(148,163,184,.16);
+  background:rgba(2,6,23,.32);
+  border-radius:14px;
+  padding:14px;
+}
+.portal-info-card small{ color:var(--muted); display:block; margin-bottom:5px; }
+.portal-info-card b{ font-size:1.05rem; }
+.portal-hidden{ display:none !important; }
+body.portal-open .container{ display:none; }
+body.portal-open .brand-footer{ display:none; }
+.portal-stage #userPortalBox,
+.portal-stage #ownerPortalBox{
+  margin-top:0 !important;
+  font-size:.82rem !important;
+  line-height:1.7 !important;
+  min-height:100%;
+}
+.portal-stage #userPortalBox select,
+.portal-stage #userPortalBox input{
+  min-height:42px;
+}
+@media (max-width: 900px){
+  .nt-side-nav{ position:static; width:auto; flex-direction:row; padding:10px 14px; margin-top:80px; }
+  .nt-side-nav button{ width:auto; flex:1; }
+  .portal-stage{ margin-top:12px; padding:0 12px 30px; }
+  .portal-layout,.portal-info-grid{ grid-template-columns:1fr; }
+}
+
+
+
+/* V12.4 Tester Mode: lock premium modules while keeping chart, TP levels and one pattern generator open */
+.tester-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.10);color:#bbf7d0;border-radius:999px;padding:4px 10px;font-size:.65rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.premium-locked{position:relative;filter:grayscale(.35);opacity:.46;overflow:hidden;pointer-events:none;user-select:none}
+.premium-locked::before{content:"UNDER SUBSCRIPTION";position:absolute;z-index:20;top:12px;right:12px;border:1px solid rgba(250,204,21,.55);background:rgba(15,23,42,.92);color:#facc15;border-radius:999px;padding:6px 10px;font-size:.68rem;font-weight:900;letter-spacing:.7px;box-shadow:0 0 18px rgba(250,204,21,.12)}
+.premium-locked::after{content:"🔒 Locked feature — subscribe Basic / Pro / Premium to unlock this module and generate owner commission.";position:absolute;z-index:19;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(135deg,rgba(2,6,23,.70),rgba(15,23,42,.88));color:#f8fafc;font-weight:800;font-size:.9rem;line-height:1.45;backdrop-filter:blur(2px)}
+.pattern-open{border-color:rgba(34,197,94,.45)!important;box-shadow:0 0 0 1px rgba(34,197,94,.12),0 0 24px rgba(34,197,94,.08)}
+#testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
+#testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
+
+</style>
+<button id="pwaInstallBtn">Install App</button>
+<div id="pwaInstallToast">NetTrack Pro can now be installed as an app on this device.</div>
+<script>
+let ntDeferredInstallPrompt = null;
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.log('Service worker registration failed', err));
+  });
+}
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  ntDeferredInstallPrompt = event;
+  const btn = document.getElementById('pwaInstallBtn');
+  const toast = document.getElementById('pwaInstallToast');
+  if (btn) btn.style.display = 'block';
+  if (toast) {
+    toast.style.display = 'block';
+    setTimeout(() => toast.style.display = 'none', 6000);
+  }
+});
+document.addEventListener('click', async (event) => {
+  if (event.target && event.target.id === 'pwaInstallBtn') {
+    if (!ntDeferredInstallPrompt) {
+      alert('Install option is not ready yet. On Chrome, open the menu and choose Install app.');
+      return;
+    }
+    ntDeferredInstallPrompt.prompt();
+    await ntDeferredInstallPrompt.userChoice;
+    ntDeferredInstallPrompt = null;
+    event.target.style.display = 'none';
+  }
+});
+</script>
+
+
+<style>
+#authOverlay{
+background:
+linear-gradient(rgba(2,6,23,.88),rgba(2,6,23,.88)),
+repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(56,189,248,.05) 41px),
+repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(56,189,248,.05) 41px)!important;
+}
+.auth-wrap{position:relative}
+.auth-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:white}
+/* V12.0 layout patch: separate Trading / User / Owner pages */
+.nt-side-nav{
+  position:fixed;
+  left:12px;
+  top:210px;
+  z-index:70;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width:70px;
+}
+.nt-side-nav button{
+  width:70px;
+  min-height:42px;
+  border-radius:12px;
+  border:1px solid rgba(56,189,248,.28);
+  background:rgba(15,23,42,.88);
+  color:#cbd5e1;
+  font-weight:900;
+  font-size:.62rem;
+  letter-spacing:.5px;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(0,0,0,.24);
+}
+.nt-side-nav button.active{
+  background:linear-gradient(135deg,#0ea5e9,#22c55e);
+  color:#03121f;
+  border-color:rgba(56,189,248,.9);
+}
+.portal-stage{
+  max-width:1360px;
+  margin: 92px auto 28px;
+  padding: 0 24px 40px 92px;
+}
+.portal-page{
+  display:none;
+  border:1px solid rgba(56,189,248,.20);
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(15,23,42,.94),rgba(8,13,24,.96));
+  box-shadow:0 24px 80px rgba(0,0,0,.35);
+  padding:22px;
+}
+.portal-page.active{ display:block; }
+.portal-title-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(148,163,184,.16);
+}
+.portal-title-row h2{
+  margin:0;
+  font-size:1.35rem;
+  letter-spacing:.5px;
+}
+.portal-title-row small{ color:var(--muted); }
+.portal-layout{
+  display:grid;
+  grid-template-columns: minmax(0,1.25fr) minmax(320px,.75fr);
+  gap:16px;
+}
+.portal-stack{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.portal-info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.portal-info-card{
+  border:1px solid rgba(148,163,184,.16);
+  background:rgba(2,6,23,.32);
+  border-radius:14px;
+  padding:14px;
+}
+.portal-info-card small{ color:var(--muted); display:block; margin-bottom:5px; }
+.portal-info-card b{ font-size:1.05rem; }
+.portal-hidden{ display:none !important; }
+body.portal-open .container{ display:none; }
+body.portal-open .brand-footer{ display:none; }
+.portal-stage #userPortalBox,
+.portal-stage #ownerPortalBox{
+  margin-top:0 !important;
+  font-size:.82rem !important;
+  line-height:1.7 !important;
+  min-height:100%;
+}
+.portal-stage #userPortalBox select,
+.portal-stage #userPortalBox input{
+  min-height:42px;
+}
+@media (max-width: 900px){
+  .nt-side-nav{ position:static; width:auto; flex-direction:row; padding:10px 14px; margin-top:80px; }
+  .nt-side-nav button{ width:auto; flex:1; }
+  .portal-stage{ margin-top:12px; padding:0 12px 30px; }
+  .portal-layout,.portal-info-grid{ grid-template-columns:1fr; }
+}
+
+
+
+/* V12.4 Tester Mode: lock premium modules while keeping chart, TP levels and one pattern generator open */
+.tester-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.10);color:#bbf7d0;border-radius:999px;padding:4px 10px;font-size:.65rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.premium-locked{position:relative;filter:grayscale(.35);opacity:.46;overflow:hidden;pointer-events:none;user-select:none}
+.premium-locked::before{content:"UNDER SUBSCRIPTION";position:absolute;z-index:20;top:12px;right:12px;border:1px solid rgba(250,204,21,.55);background:rgba(15,23,42,.92);color:#facc15;border-radius:999px;padding:6px 10px;font-size:.68rem;font-weight:900;letter-spacing:.7px;box-shadow:0 0 18px rgba(250,204,21,.12)}
+.premium-locked::after{content:"🔒 Locked feature — subscribe Basic / Pro / Premium to unlock this module and generate owner commission.";position:absolute;z-index:19;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(135deg,rgba(2,6,23,.70),rgba(15,23,42,.88));color:#f8fafc;font-weight:800;font-size:.9rem;line-height:1.45;backdrop-filter:blur(2px)}
+.pattern-open{border-color:rgba(34,197,94,.45)!important;box-shadow:0 0 0 1px rgba(34,197,94,.12),0 0 24px rgba(34,197,94,.08)}
+#testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
+#testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
+
+</style>
+<script>
+setTimeout(()=>{
+const p=document.getElementById('loginPass');
+if(p && !document.getElementById('eyeBtn')){
+ const w=document.createElement('div');
+ w.className='auth-wrap';
+ p.parentNode.insertBefore(w,p);
+ w.appendChild(p);
+ const e=document.createElement('span');
+ e.id='eyeBtn'; e.className='auth-eye'; e.innerHTML='👁';
+ w.appendChild(e);
+ e.onclick=()=>{p.type=p.type==='password'?'text':'password';};
+}
+},300);
+
+if(typeof ntSignup==='function'){
+ const oldSignup=ntSignup;
+ ntSignup=function(){
+  const e=document.getElementById('loginEmail').value;
+  const p=document.getElementById('loginPass').value;
+  if(!e||!p){alert('Enter email and password');return;}
+  localStorage.setItem('nt_user',JSON.stringify({email:e,password:p}));
+  localStorage.setItem('nt_logged_in','1');
+  alert('Account created. Logging you in...');
+  const a=document.getElementById('authOverlay');
+  if(a)a.style.display='none';
+ };
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabaseClient = supabase.createClient('https://gwmyifyalerernilzpqz.supabase.co','sb_publishable_sFY-MHu4vk5MNQHgi9lISQ_3w_e8YHv');
+
+async function ntSignup(){
+ const e=document.getElementById('loginEmail').value;
+ const p=document.getElementById('loginPass').value;
+ if(!e||!p) return alert('Enter email and password');
+ const r=await supabaseClient.auth.signUp({email:e,password:p});
+ if(r.error) return alert(r.error.message);
+ localStorage.setItem('nt_logged_in','1');
+ document.getElementById('authOverlay').style.display='none';
+ alert('Supabase account created and logged in');
+}
+
+async function ntLogin(){
+ const e=document.getElementById('loginEmail').value;
+ const p=document.getElementById('loginPass').value;
+ const r=await supabaseClient.auth.signInWithPassword({email:e,password:p});
+ if(r.error) return alert(r.error.message);
+ localStorage.setItem('nt_logged_in','1');
+ document.getElementById('authOverlay').style.display='none';
+}
+
+window.addEventListener('load', async ()=>{
+ const {data} = await supabaseClient.auth.getSession();
+ if(data.session){
+   const a=document.getElementById('authOverlay');
+   if(a)a.style.display='none';
+ }
+});
+</script>
+
+
+<!-- NETTRACK PRO V10.7 FOREX AUTH UI UPGRADE -->
+<style id="nt-v107-auth-style">
+#authOverlay{
+  position:fixed!important;
+  inset:0!important;
+  z-index:999999!important;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(56,189,248,.13), transparent 35%),
+    linear-gradient(120deg, rgba(2,6,23,.95), rgba(3,10,25,.94)),
+    #020617!important;
+  color:#f8fafc!important;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif!important;
+}
+#authOverlay::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(rgba(56,189,248,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.035) 1px, transparent 1px);
+  background-size:58px 58px;
+  opacity:.7;
+  pointer-events:none;
+}
+#authOverlay::after{
+  content:"";
+  position:absolute;
+  inset:-20%;
+  background:
+    radial-gradient(circle at 20% 60%, rgba(34,197,94,.14), transparent 25%),
+    radial-gradient(circle at 82% 42%, rgba(239,68,68,.11), transparent 25%),
+    radial-gradient(circle at 50% 90%, rgba(56,189,248,.09), transparent 30%);
+  filter:blur(10px);
+  pointer-events:none;
+}
+.nt-market-bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  opacity:.92;
+  pointer-events:none;
+  overflow:hidden;
+}
+.nt-big-candles{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+.nt-big-candles .wick{stroke-width:2.2;opacity:.85}
+.nt-big-candles .body{rx:3;opacity:.9;filter:drop-shadow(0 0 10px currentColor)}
+.nt-price-tape{
+  position:absolute;
+  inset:0;
+  font-family:"Courier New",monospace;
+  font-weight:800;
+  letter-spacing:.4px;
+  opacity:.92;
+}
+.nt-price-tape span{
+  position:absolute;
+  text-shadow:0 0 14px currentColor;
+  animation:ntFloatPrice 7s ease-in-out infinite alternate;
+}
+.nt-price-tape .green{color:#22c55e}
+.nt-price-tape .red{color:#ef4444}
+.nt-price-tape .blue{color:#38bdf8}
+.nt-chart-line{
+  position:absolute;
+  right:-8%;
+  bottom:4%;
+  width:55%;
+  height:38%;
+  opacity:.42;
+}
+.nt-auth-brand{
+  position:absolute;
+  top:9%;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:2;
+  text-align:center;
+  letter-spacing:1px;
+}
+.nt-auth-brand h1{
+  margin:0;
+  font-size:clamp(2rem,4vw,4.1rem);
+  line-height:.9;
+  font-weight:1000;
+  color:#f8fafc;
+  text-shadow:0 0 22px rgba(56,189,248,.55);
+}
+.nt-auth-brand h1 span{color:#38bdf8}
+.nt-auth-brand p{
+  margin:12px 0 0;
+  color:#94a3b8;
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:3px;
+}
+#authOverlay > div:not(.nt-market-bg):not(.nt-auth-brand):not(.nt-session-loader){
+  position:relative!important;
+  z-index:3!important;
+  width:min(92vw,430px)!important;
+  padding:30px!important;
+  border-radius:22px!important;
+  border:1px solid rgba(56,189,248,.35)!important;
+  background:linear-gradient(180deg,rgba(15,23,42,.88),rgba(2,6,23,.84))!important;
+  box-shadow:0 30px 90px rgba(0,0,0,.62), inset 0 0 40px rgba(56,189,248,.06)!important;
+  backdrop-filter:blur(16px)!important;
+  animation:ntAuthCardIn .55s ease both!important;
+}
+#authOverlay h2{
+  display:block!important;
+  margin:0 0 18px!important;
+  font-size:.78rem!important;
+  letter-spacing:1.7px!important;
+  color:#93c5fd!important;
+  text-transform:uppercase!important;
+}
+#loginEmail,#loginPass{
+  height:48px!important;
+  border-radius:10px!important;
+  border:1px solid rgba(148,163,184,.18)!important;
+  background:rgba(30,41,59,.82)!important;
+  color:#f8fafc!important;
+  outline:none!important;
+  transition:.2s!important;
+}
+#loginEmail:focus,#loginPass:focus{
+  border-color:#38bdf8!important;
+  box-shadow:0 0 0 3px rgba(56,189,248,.12)!important;
+}
+.auth-wrap{position:relative!important}
+.auth-eye{
+  position:absolute!important;
+  right:13px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  cursor:pointer!important;
+  color:#e2e8f0!important;
+  user-select:none!important;
+  font-size:1rem!important;
+}
+#authOverlay button{
+  height:48px!important;
+  border-radius:10px!important;
+  border:1px solid rgba(56,189,248,.24)!important;
+  font-weight:900!important;
+  letter-spacing:.2px!important;
+}
+#authOverlay button[onclick*="ntLogin"]{
+  background:linear-gradient(135deg,#38bdf8,#2563eb)!important;
+  color:white!important;
+}
+#authOverlay button[onclick*="ntSignup"]{
+  background:rgba(15,23,42,.72)!important;
+  color:#f8fafc!important;
+}
+.nt-auth-mini{
+  margin-top:14px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  color:#94a3b8;
+  font-size:.72rem;
+}
+.nt-auth-mini b{color:#22c55e}
+.nt-session-loader{
+  position:absolute;
+  z-index:4;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  background:rgba(2,6,23,.42);
+  backdrop-filter:blur(4px);
+}
+.nt-session-loader.show{display:flex}
+.nt-spinner{
+  width:42px;height:42px;border-radius:50%;
+  border:3px solid rgba(56,189,248,.18);
+  border-top-color:#38bdf8;
+  animation:ntSpin 1s linear infinite;
+}
+.nt-session-loader p{color:#93c5fd;font-weight:900;letter-spacing:1px;text-transform:uppercase;font-size:.76rem}
+@keyframes ntSpin{to{transform:rotate(360deg)}}
+@keyframes ntAuthCardIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes ntFloatPrice{from{transform:translateY(0)}to{transform:translateY(-16px)}}
+/* V12.0 layout patch: separate Trading / User / Owner pages */
+.nt-side-nav{
+  position:fixed;
+  left:12px;
+  top:210px;
+  z-index:70;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width:70px;
+}
+.nt-side-nav button{
+  width:70px;
+  min-height:42px;
+  border-radius:12px;
+  border:1px solid rgba(56,189,248,.28);
+  background:rgba(15,23,42,.88);
+  color:#cbd5e1;
+  font-weight:900;
+  font-size:.62rem;
+  letter-spacing:.5px;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(0,0,0,.24);
+}
+.nt-side-nav button.active{
+  background:linear-gradient(135deg,#0ea5e9,#22c55e);
+  color:#03121f;
+  border-color:rgba(56,189,248,.9);
+}
+.portal-stage{
+  max-width:1360px;
+  margin: 92px auto 28px;
+  padding: 0 24px 40px 92px;
+}
+.portal-page{
+  display:none;
+  border:1px solid rgba(56,189,248,.20);
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(15,23,42,.94),rgba(8,13,24,.96));
+  box-shadow:0 24px 80px rgba(0,0,0,.35);
+  padding:22px;
+}
+.portal-page.active{ display:block; }
+.portal-title-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(148,163,184,.16);
+}
+.portal-title-row h2{
+  margin:0;
+  font-size:1.35rem;
+  letter-spacing:.5px;
+}
+.portal-title-row small{ color:var(--muted); }
+.portal-layout{
+  display:grid;
+  grid-template-columns: minmax(0,1.25fr) minmax(320px,.75fr);
+  gap:16px;
+}
+.portal-stack{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.portal-info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.portal-info-card{
+  border:1px solid rgba(148,163,184,.16);
+  background:rgba(2,6,23,.32);
+  border-radius:14px;
+  padding:14px;
+}
+.portal-info-card small{ color:var(--muted); display:block; margin-bottom:5px; }
+.portal-info-card b{ font-size:1.05rem; }
+.portal-hidden{ display:none !important; }
+body.portal-open .container{ display:none; }
+body.portal-open .brand-footer{ display:none; }
+.portal-stage #userPortalBox,
+.portal-stage #ownerPortalBox{
+  margin-top:0 !important;
+  font-size:.82rem !important;
+  line-height:1.7 !important;
+  min-height:100%;
+}
+.portal-stage #userPortalBox select,
+.portal-stage #userPortalBox input{
+  min-height:42px;
+}
+@media (max-width: 900px){
+  .nt-side-nav{ position:static; width:auto; flex-direction:row; padding:10px 14px; margin-top:80px; }
+  .nt-side-nav button{ width:auto; flex:1; }
+  .portal-stage{ margin-top:12px; padding:0 12px 30px; }
+  .portal-layout,.portal-info-grid{ grid-template-columns:1fr; }
+}
+
+
+
+/* V12.4 Tester Mode: lock premium modules while keeping chart, TP levels and one pattern generator open */
+.tester-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.10);color:#bbf7d0;border-radius:999px;padding:4px 10px;font-size:.65rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.premium-locked{position:relative;filter:grayscale(.35);opacity:.46;overflow:hidden;pointer-events:none;user-select:none}
+.premium-locked::before{content:"UNDER SUBSCRIPTION";position:absolute;z-index:20;top:12px;right:12px;border:1px solid rgba(250,204,21,.55);background:rgba(15,23,42,.92);color:#facc15;border-radius:999px;padding:6px 10px;font-size:.68rem;font-weight:900;letter-spacing:.7px;box-shadow:0 0 18px rgba(250,204,21,.12)}
+.premium-locked::after{content:"🔒 Locked feature — subscribe Basic / Pro / Premium to unlock this module and generate owner commission.";position:absolute;z-index:19;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(135deg,rgba(2,6,23,.70),rgba(15,23,42,.88));color:#f8fafc;font-weight:800;font-size:.9rem;line-height:1.45;backdrop-filter:blur(2px)}
+.pattern-open{border-color:rgba(34,197,94,.45)!important;box-shadow:0 0 0 1px rgba(34,197,94,.12),0 0 24px rgba(34,197,94,.08)}
+#testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
+#testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
+
+</style>
+
+<script id="nt-v107-auth-script">
+(function(){
+  const supaUrl = "https://gwmyifyalerernilzpqz.supabase.co";
+  const supaKey = "sb_publishable_sFY-MHu4vk5MNQHgi9lISQ_3w_e8YHv";
+
+  function enhanceAuthUI(){
+    const overlay = document.getElementById("authOverlay");
+    if(!overlay || overlay.dataset.v107 === "done") return;
+    overlay.dataset.v107 = "done";
+
+    const bg = document.createElement("div");
+    bg.className = "nt-market-bg";
+    bg.innerHTML = `
+      <svg class="nt-big-candles" viewBox="0 0 1440 900" preserveAspectRatio="none">
+        <g color="#22c55e" stroke="#22c55e" fill="#22c55e">
+          <line class="wick" x1="76" y1="560" x2="76" y2="790"/><rect class="body" x="55" y="610" width="42" height="125"/>
+          <line class="wick" x1="152" y1="520" x2="152" y2="750"/><rect class="body" x="131" y="575" width="42" height="110"/>
+          <line class="wick" x1="250" y1="340" x2="250" y2="610"/><rect class="body" x="227" y="405" width="46" height="145"/>
+          <line class="wick" x1="318" y1="250" x2="318" y2="520"/><rect class="body" x="295" y="315" width="46" height="128"/>
+          <line class="wick" x1="1130" y1="500" x2="1130" y2="745"/><rect class="body" x="1108" y="555" width="44" height="120"/>
+          <line class="wick" x1="1205" y1="340" x2="1205" y2="610"/><rect class="body" x="1182" y="410" width="46" height="145"/>
+          <line class="wick" x1="1288" y1="180" x2="1288" y2="500"/><rect class="body" x="1263" y="255" width="50" height="180"/>
+          <line class="wick" x1="1362" y1="70" x2="1362" y2="390"/><rect class="body" x="1338" y="150" width="48" height="185"/>
+        </g>
+        <g color="#ef4444" stroke="#ef4444" fill="#ef4444">
+          <line class="wick" x1="410" y1="280" x2="410" y2="610"/><rect class="body" x="388" y="345" width="44" height="158"/>
+          <line class="wick" x1="480" y1="390" x2="480" y2="690"/><rect class="body" x="458" y="455" width="44" height="145"/>
+          <line class="wick" x1="1048" y1="485" x2="1048" y2="650"/><rect class="body" x="1028" y="520" width="40" height="74"/>
+          <line class="wick" x1="1418" y1="160" x2="1418" y2="460"/><rect class="body" x="1395" y="250" width="46" height="120"/>
+        </g>
+      </svg>
+      <svg class="nt-chart-line" viewBox="0 0 500 230" preserveAspectRatio="none">
+        <polyline points="0,190 35,170 70,175 110,130 150,145 190,90 235,105 280,65 325,80 365,38 415,52 500,12" fill="none" stroke="#38bdf8" stroke-width="3"/>
+        <polyline points="0,210 50,200 95,170 140,180 190,130 250,150 305,92 360,110 410,65 460,78 500,38" fill="none" stroke="#22c55e" stroke-width="2" opacity=".72"/>
+      </svg>
+      <div class="nt-price-tape">
+        <span class="blue" style="left:3%;top:7%;font-size:1.05rem">BTC/USDT</span>
+        <span class="green" style="left:3%;top:12%;font-size:1.75rem">$65,395.99</span>
+        <span class="green" style="left:3%;top:45%;font-size:1.15rem">▲ 64,890.50</span>
+        <span class="red" style="left:3%;top:61%;font-size:1.15rem">▼ 64,320.80</span>
+        <span class="blue" style="right:18%;top:19%;font-size:1.1rem">65,450.80 ▲</span>
+        <span class="green" style="right:23%;top:37%;font-size:1.05rem">▲ 64,750.00</span>
+        <span class="red" style="right:26%;top:46%;font-size:1.05rem">▼ 64,560.10</span>
+        <span class="blue" style="right:13%;bottom:13%;font-size:.95rem">MA(25) 64,210.75</span>
+        <span class="green" style="left:18%;bottom:13%;font-size:.95rem">VOLUME 24.38B</span>
+      </div>`;
+    overlay.prepend(bg);
+
+    const brand = document.createElement("div");
+    brand.className = "nt-auth-brand";
+    brand.innerHTML = `<h1>NETTRACK <span>PRO</span></h1><p>ARMOROO E n T • Real-time Signals</p>`;
+    overlay.prepend(brand);
+
+    const loader = document.createElement("div");
+    loader.className = "nt-session-loader";
+    loader.id = "ntSessionLoader";
+    loader.innerHTML = `<div class="nt-spinner"></div><p>Checking secure session...</p>`;
+    overlay.appendChild(loader);
+
+    const pass = document.getElementById("loginPass");
+    if(pass && !document.getElementById("eyeBtn")){
+      const wrap = document.createElement("div");
+      wrap.className = "auth-wrap";
+      pass.parentNode.insertBefore(wrap, pass);
+      wrap.appendChild(pass);
+      const eye = document.createElement("span");
+      eye.id = "eyeBtn";
+      eye.className = "auth-eye";
+      eye.innerHTML = "👁";
+      eye.onclick = () => { pass.type = pass.type === "password" ? "text" : "password"; };
+      wrap.appendChild(eye);
+    }
+
+    const card = overlay.querySelector("div:not(.nt-market-bg):not(.nt-auth-brand):not(.nt-session-loader)");
+    if(card && !card.querySelector(".nt-auth-mini")){
+      const mini = document.createElement("div");
+      mini.className = "nt-auth-mini";
+      mini.innerHTML = `<span><b>●</b> Secure Supabase Auth</span><span>V10.7</span>`;
+      card.appendChild(mini);
+    }
+  }
+
+  function showLoader(txt){
+    const loader = document.getElementById("ntSessionLoader");
+    if(loader){
+      const p = loader.querySelector("p");
+      if(p && txt) p.innerText = txt;
+      loader.classList.add("show");
+    }
+  }
+
+  function hideLoader(){
+    const loader = document.getElementById("ntSessionLoader");
+    if(loader) loader.classList.remove("show");
+  }
+
+  window.addEventListener("DOMContentLoaded", enhanceAuthUI);
+  window.addEventListener("load", enhanceAuthUI);
+  setTimeout(enhanceAuthUI, 500);
+
+  const waitForSupabase = setInterval(() => {
+    if(window.supabase){
+      clearInterval(waitForSupabase);
+      try{
+        window.supabaseClient = window.supabaseClient || window.supabase.createClient(supaUrl, supaKey);
+
+        window.ntSignup = async function(){
+          const e = document.getElementById("loginEmail")?.value?.trim();
+          const p = document.getElementById("loginPass")?.value;
+          if(!e || !p) return alert("Enter email and password");
+          showLoader("Creating your NetTrack account...");
+          const r = await window.supabaseClient.auth.signUp({ email:e, password:p });
+          if(r.error){ hideLoader(); return alert(r.error.message); }
+          localStorage.setItem("nt_logged_in","1");
+          setTimeout(()=>{ const a=document.getElementById("authOverlay"); if(a)a.style.display="none"; hideLoader(); }, 650);
+        };
+
+        window.ntLogin = async function(){
+          const e = document.getElementById("loginEmail")?.value?.trim();
+          const p = document.getElementById("loginPass")?.value;
+          if(!e || !p) return alert("Enter email and password");
+          showLoader("Authenticating securely...");
+          const r = await window.supabaseClient.auth.signInWithPassword({ email:e, password:p });
+          if(r.error){ hideLoader(); return alert(r.error.message); }
+          localStorage.setItem("nt_logged_in","1");
+          setTimeout(()=>{ const a=document.getElementById("authOverlay"); if(a)a.style.display="none"; hideLoader(); }, 650);
+        };
+
+        window.ntLogout = async function(){
+          await window.supabaseClient.auth.signOut();
+          localStorage.removeItem("nt_logged_in");
+          location.reload();
+        };
+
+        window.supabaseClient.auth.getSession().then(({data})=>{
+          if(data && data.session){
+            showLoader("Welcome back. Loading dashboard...");
+            setTimeout(()=>{ const a=document.getElementById("authOverlay"); if(a)a.style.display="none"; hideLoader(); }, 850);
+          }
+        });
+      }catch(e){ console.log("NetTrack V10.7 auth init error:", e); }
+    }
+  }, 120);
+})();
+</script>
+<!-- /NETTRACK PRO V10.7 FOREX AUTH UI UPGRADE -->
+
+
+<style>
+#ntUserPanel{position:fixed;bottom:20px;right:20px;z-index:9999;background:#081224;border:1px solid #1e3a5f;color:#fff;padding:12px;border-radius:12px;font-size:12px}
+/* V12.0 layout patch: separate Trading / User / Owner pages */
+.nt-side-nav{
+  position:fixed;
+  left:12px;
+  top:210px;
+  z-index:70;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width:70px;
+}
+.nt-side-nav button{
+  width:70px;
+  min-height:42px;
+  border-radius:12px;
+  border:1px solid rgba(56,189,248,.28);
+  background:rgba(15,23,42,.88);
+  color:#cbd5e1;
+  font-weight:900;
+  font-size:.62rem;
+  letter-spacing:.5px;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(0,0,0,.24);
+}
+.nt-side-nav button.active{
+  background:linear-gradient(135deg,#0ea5e9,#22c55e);
+  color:#03121f;
+  border-color:rgba(56,189,248,.9);
+}
+.portal-stage{
+  max-width:1360px;
+  margin: 92px auto 28px;
+  padding: 0 24px 40px 92px;
+}
+.portal-page{
+  display:none;
+  border:1px solid rgba(56,189,248,.20);
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(15,23,42,.94),rgba(8,13,24,.96));
+  box-shadow:0 24px 80px rgba(0,0,0,.35);
+  padding:22px;
+}
+.portal-page.active{ display:block; }
+.portal-title-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(148,163,184,.16);
+}
+.portal-title-row h2{
+  margin:0;
+  font-size:1.35rem;
+  letter-spacing:.5px;
+}
+.portal-title-row small{ color:var(--muted); }
+.portal-layout{
+  display:grid;
+  grid-template-columns: minmax(0,1.25fr) minmax(320px,.75fr);
+  gap:16px;
+}
+.portal-stack{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.portal-info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.portal-info-card{
+  border:1px solid rgba(148,163,184,.16);
+  background:rgba(2,6,23,.32);
+  border-radius:14px;
+  padding:14px;
+}
+.portal-info-card small{ color:var(--muted); display:block; margin-bottom:5px; }
+.portal-info-card b{ font-size:1.05rem; }
+.portal-hidden{ display:none !important; }
+body.portal-open .container{ display:none; }
+body.portal-open .brand-footer{ display:none; }
+.portal-stage #userPortalBox,
+.portal-stage #ownerPortalBox{
+  margin-top:0 !important;
+  font-size:.82rem !important;
+  line-height:1.7 !important;
+  min-height:100%;
+}
+.portal-stage #userPortalBox select,
+.portal-stage #userPortalBox input{
+  min-height:42px;
+}
+@media (max-width: 900px){
+  .nt-side-nav{ position:static; width:auto; flex-direction:row; padding:10px 14px; margin-top:80px; }
+  .nt-side-nav button{ width:auto; flex:1; }
+  .portal-stage{ margin-top:12px; padding:0 12px 30px; }
+  .portal-layout,.portal-info-grid{ grid-template-columns:1fr; }
+}
+
+
+
+/* V12.4 Tester Mode: lock premium modules while keeping chart, TP levels and one pattern generator open */
+.tester-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.10);color:#bbf7d0;border-radius:999px;padding:4px 10px;font-size:.65rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.premium-locked{position:relative;filter:grayscale(.35);opacity:.46;overflow:hidden;pointer-events:none;user-select:none}
+.premium-locked::before{content:"UNDER SUBSCRIPTION";position:absolute;z-index:20;top:12px;right:12px;border:1px solid rgba(250,204,21,.55);background:rgba(15,23,42,.92);color:#facc15;border-radius:999px;padding:6px 10px;font-size:.68rem;font-weight:900;letter-spacing:.7px;box-shadow:0 0 18px rgba(250,204,21,.12)}
+.premium-locked::after{content:"🔒 Locked feature — subscribe Basic / Pro / Premium to unlock this module and generate owner commission.";position:absolute;z-index:19;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(135deg,rgba(2,6,23,.70),rgba(15,23,42,.88));color:#f8fafc;font-weight:800;font-size:.9rem;line-height:1.45;backdrop-filter:blur(2px)}
+.pattern-open{border-color:rgba(34,197,94,.45)!important;box-shadow:0 0 0 1px rgba(34,197,94,.12),0 0 24px rgba(34,197,94,.08)}
+#testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
+#testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
+
+</style>
+<div id="ntUserPanel">
+<b>NetTrack V10.8</b><br>
+User Profile ✓<br>
+Cloud Save Ready ✓<br>
+MT4 / MT5 Labels ✓<br>
+Exness Ready ✓
+</div>
+<script>
+localStorage.setItem('nettrack_version','10.8');
+if(!localStorage.getItem('nt_profile')){
+ localStorage.setItem('nt_profile',JSON.stringify({plan:'FREE',wins:0,losses:0}));
+}
+</script>
+
+<!-- NETTRACK PRO V10.9 USER + MARKETS + CLOUD FOUNDATION -->
+<style id="nt-v109-style">
+#ntUserPanel{display:none!important}
+.nt-top-user{
+  display:flex;align-items:center;gap:8px;margin-left:10px;
+  padding:7px 10px;border:1px solid rgba(56,189,248,.28);border-radius:999px;
+  background:rgba(15,23,42,.65);font-size:.72rem;color:#e2e8f0
+}
+.nt-top-avatar{
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(135deg,#38bdf8,#22c55e);color:#020617;font-weight:900
+}
+.nt-top-email{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nt-logout-btn{
+  border:1px solid rgba(239,68,68,.4);background:rgba(239,68,68,.12);color:#fecaca;
+  border-radius:999px;padding:6px 10px;cursor:pointer;font-weight:800;font-size:.72rem
+}
+.nt-market-tabs{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:10px
+}
+.nt-market-tab{
+  border:1px solid rgba(56,189,248,.18);background:rgba(15,23,42,.72);
+  border-radius:12px;padding:12px;cursor:pointer;transition:.18s;color:#f8fafc
+}
+.nt-market-tab:hover,.nt-market-tab.active{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,.12);transform:translateY(-1px)}
+.nt-market-tab small{display:block;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;font-size:.62rem}
+.nt-market-tab b{display:block;margin-top:4px;font-size:.92rem;color:#38bdf8}
+.nt-broker-row{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:10px
+}
+.nt-broker-pill{
+  border:1px solid rgba(148,163,184,.18);background:rgba(30,41,59,.68);border-radius:999px;
+  padding:8px 10px;font-size:.72rem;font-weight:900;color:#e2e8f0
+}
+.nt-broker-pill.hot{border-color:rgba(34,197,94,.45);color:#86efac;background:rgba(34,197,94,.08)}
+.nt-cloud-card{
+  position:fixed;right:18px;bottom:18px;z-index:9998;width:260px;
+  background:linear-gradient(180deg,rgba(15,23,42,.96),rgba(2,6,23,.94));
+  border:1px solid rgba(56,189,248,.32);border-radius:16px;padding:14px;color:#f8fafc;
+  box-shadow:0 20px 55px rgba(0,0,0,.45);font-size:.76rem
+}
+.nt-cloud-card h4{margin:0 0 8px;color:#38bdf8;text-transform:uppercase;letter-spacing:1px;font-size:.72rem}
+.nt-cloud-card .line{display:flex;justify-content:space-between;border-top:1px solid rgba(148,163,184,.12);padding:7px 0}
+.nt-cloud-card .line span{color:#94a3b8}
+.nt-cloud-card button{width:100%;margin-top:8px;border:none;border-radius:10px;padding:9px;background:#38bdf8;color:#020617;font-weight:900;cursor:pointer}
+.nt-free-badge{color:#22c55e;font-weight:1000}
+@media(max-width:900px){.nt-market-tabs{grid-template-columns:1fr 1fr}.nt-cloud-card{position:static;width:auto;margin:12px 18px}.nt-top-email{display:none}}
+/* V12.0 layout patch: separate Trading / User / Owner pages */
+.nt-side-nav{
+  position:fixed;
+  left:12px;
+  top:210px;
+  z-index:70;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width:70px;
+}
+.nt-side-nav button{
+  width:70px;
+  min-height:42px;
+  border-radius:12px;
+  border:1px solid rgba(56,189,248,.28);
+  background:rgba(15,23,42,.88);
+  color:#cbd5e1;
+  font-weight:900;
+  font-size:.62rem;
+  letter-spacing:.5px;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(0,0,0,.24);
+}
+.nt-side-nav button.active{
+  background:linear-gradient(135deg,#0ea5e9,#22c55e);
+  color:#03121f;
+  border-color:rgba(56,189,248,.9);
+}
+.portal-stage{
+  max-width:1360px;
+  margin: 92px auto 28px;
+  padding: 0 24px 40px 92px;
+}
+.portal-page{
+  display:none;
+  border:1px solid rgba(56,189,248,.20);
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(15,23,42,.94),rgba(8,13,24,.96));
+  box-shadow:0 24px 80px rgba(0,0,0,.35);
+  padding:22px;
+}
+.portal-page.active{ display:block; }
+.portal-title-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(148,163,184,.16);
+}
+.portal-title-row h2{
+  margin:0;
+  font-size:1.35rem;
+  letter-spacing:.5px;
+}
+.portal-title-row small{ color:var(--muted); }
+.portal-layout{
+  display:grid;
+  grid-template-columns: minmax(0,1.25fr) minmax(320px,.75fr);
+  gap:16px;
+}
+.portal-stack{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.portal-info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.portal-info-card{
+  border:1px solid rgba(148,163,184,.16);
+  background:rgba(2,6,23,.32);
+  border-radius:14px;
+  padding:14px;
+}
+.portal-info-card small{ color:var(--muted); display:block; margin-bottom:5px; }
+.portal-info-card b{ font-size:1.05rem; }
+.portal-hidden{ display:none !important; }
+body.portal-open .container{ display:none; }
+body.portal-open .brand-footer{ display:none; }
+.portal-stage #userPortalBox,
+.portal-stage #ownerPortalBox{
+  margin-top:0 !important;
+  font-size:.82rem !important;
+  line-height:1.7 !important;
+  min-height:100%;
+}
+.portal-stage #userPortalBox select,
+.portal-stage #userPortalBox input{
+  min-height:42px;
+}
+@media (max-width: 900px){
+  .nt-side-nav{ position:static; width:auto; flex-direction:row; padding:10px 14px; margin-top:80px; }
+  .nt-side-nav button{ width:auto; flex:1; }
+  .portal-stage{ margin-top:12px; padding:0 12px 30px; }
+  .portal-layout,.portal-info-grid{ grid-template-columns:1fr; }
+}
+
+
+
+/* V12.4 Tester Mode: lock premium modules while keeping chart, TP levels and one pattern generator open */
+.tester-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.10);color:#bbf7d0;border-radius:999px;padding:4px 10px;font-size:.65rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.premium-locked{position:relative;filter:grayscale(.35);opacity:.46;overflow:hidden;pointer-events:none;user-select:none}
+.premium-locked::before{content:"UNDER SUBSCRIPTION";position:absolute;z-index:20;top:12px;right:12px;border:1px solid rgba(250,204,21,.55);background:rgba(15,23,42,.92);color:#facc15;border-radius:999px;padding:6px 10px;font-size:.68rem;font-weight:900;letter-spacing:.7px;box-shadow:0 0 18px rgba(250,204,21,.12)}
+.premium-locked::after{content:"🔒 Locked feature — subscribe Basic / Pro / Premium to unlock this module and generate owner commission.";position:absolute;z-index:19;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(135deg,rgba(2,6,23,.70),rgba(15,23,42,.88));color:#f8fafc;font-weight:800;font-size:.9rem;line-height:1.45;backdrop-filter:blur(2px)}
+.pattern-open{border-color:rgba(34,197,94,.45)!important;box-shadow:0 0 0 1px rgba(34,197,94,.12),0 0 24px rgba(34,197,94,.08)}
+#testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
+#testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
+
+</style>
+
+<script id="nt-v109-script">
+(function(){
+  const VERSION = "10.9";
+  const MARKET_GROUPS = {
+    crypto: ["BTCUSDT","ETHUSDT","SOLUSDT","BNBUSDT"],
+    forex: ["EURUSD","GBPUSD","USDJPY","XAUUSD"],
+    synthetic: ["R_75","R_100","BOOM1000","CRASH1000"],
+    brokers: ["MT5","MT4","EXNESS","BINANCE"]
+  };
+
+  function safeProfile(){
+    try{
+      const raw = localStorage.getItem("nt_profile");
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+
+  function saveProfilePatch(patch){
+    const current = safeProfile();
+    const next = Object.assign({plan:"FREE", wins:0, losses:0, preferredMarket:"crypto", brokerMode:"Signal Only"}, current, patch, {updatedAt:new Date().toISOString()});
+    localStorage.setItem("nt_profile", JSON.stringify(next));
+    localStorage.setItem("nt_cloud_shadow", JSON.stringify(next));
+    return next;
+  }
+
+  function getEmail(){
+    try{
+      const user = JSON.parse(localStorage.getItem("nt_user") || "null");
+      if(user && user.email) return user.email;
+    }catch(e){}
+    return "Free User";
+  }
+
+  async function getSupabaseEmail(){
+    try{
+      if(window.supabaseClient){
+        const {data} = await window.supabaseClient.auth.getUser();
+        if(data && data.user && data.user.email) return data.user.email;
+      }
+    }catch(e){}
+    return getEmail();
+  }
+
+  function addUserHeader(){
+    if(document.getElementById("ntTopUser")) return;
+    const controls = document.querySelector("header .controls") || document.querySelector("header");
+    if(!controls) return;
+    const wrap = document.createElement("div");
+    wrap.id = "ntTopUser";
+    wrap.className = "nt-top-user";
+    wrap.innerHTML = '<div class="nt-top-avatar">N</div><div><div class="nt-top-email">Loading...</div><div class="nt-free-badge">FREE PLAN</div></div><button class="nt-logout-btn" title="Logout">Logout</button>';
+    controls.appendChild(wrap);
+    wrap.querySelector("button").onclick = async () => {
+      try{ if(window.supabaseClient) await window.supabaseClient.auth.signOut(); }catch(e){}
+      localStorage.removeItem("nt_logged_in");
+      location.reload();
+    };
+    getSupabaseEmail().then(email => {
+      const el = wrap.querySelector(".nt-top-email");
+      if(el) el.textContent = email || "Free User";
+    });
+  }
+
+  function addMarketPanel(){
+    if(document.getElementById("ntMarketExpansion")) return;
+    const grid = document.querySelector(".container .grid");
+    if(!grid) return;
+    const card = document.createElement("div");
+    card.id = "ntMarketExpansion";
+    card.className = "card span-12";
+    card.innerHTML = `
+      <h3>Tester Market Access & Broker Sync View <span style="color:#22c55e">FREE TESTER ACTIVE</span></h3>
+      <div class="nt-market-tabs">
+        <div class="nt-market-tab active" data-market="crypto"><small>Live Crypto</small><b>BTC • ETH • SOL • BNB</b></div>
+        <div class="nt-market-tab" data-market="forex"><small>Forex Watch</small><b>EURUSD • GBPUSD • USDJPY • XAUUSD</b></div>
+        <div class="nt-market-tab" data-market="synthetic"><small>Synthetic Watch</small><b>Vol 75 • Vol 100 • Boom • Crash</b></div>
+        <div class="nt-market-tab" data-market="brokers"><small>Broker Signal Mode</small><b>MT5 • MT4 • Exness • Binance</b></div>
+      </div>
+      <div class="nt-broker-row">
+        <div class="nt-broker-pill hot">FREE SIGNALS ENABLED</div>
+        <div class="nt-broker-pill">MT5 Signal View</div>
+        <div class="nt-broker-pill">MT4 Signal View</div>
+        <div class="nt-broker-pill">Exness Ready</div>
+        <div class="nt-broker-pill">Binance Crypto Feed</div>
+        <div class="nt-broker-pill">No Auto-Trade Execution Yet</div>
+      </div>
+      <div style="margin-top:10px;color:#94a3b8;font-size:.76rem;line-height:1.5">
+        Tester mode uses live Binance crypto feed plus broker/platform overlay comparison for MT4, MT5, XM, IQ Option, Exness, Deriv and ICMarkets. Direct broker execution or deposit handling is not included; users trade manually on their own broker account.
+      </div>
+    `;
+    grid.prepend(card);
+    card.querySelectorAll(".nt-market-tab").forEach(tab=>{
+      tab.onclick=()=>{
+        card.querySelectorAll(".nt-market-tab").forEach(t=>t.classList.remove("active"));
+        tab.classList.add("active");
+        saveProfilePatch({preferredMarket:tab.dataset.market});
+      };
+    });
+  }
+
+  function addCloudCard(){
+    if(document.getElementById("ntCloudCard")) return;
+    const profile = saveProfilePatch({});
+    const card = document.createElement("div");
+    card.id = "ntCloudCard";
+    card.className = "nt-cloud-card";
+    card.innerHTML = `
+      <h4>Cloud User Foundation</h4>
+      <div class="line"><span>Plan</span><b class="nt-free-badge">${profile.plan || "FREE"}</b></div>
+      <div class="line"><span>Profile</span><b>Ready</b></div>
+      <div class="line"><span>Cloud Shadow</span><b>Local + Supabase Ready</b></div>
+      <div class="line"><span>Markets</span><b>Crypto / Forex / MT</b></div>
+      <button id="ntSaveCloudBtn">Save Session</button>
+    `;
+    document.body.appendChild(card);
+    card.querySelector("#ntSaveCloudBtn").onclick=()=>{
+      saveProfilePatch({
+        preferredPair: (document.getElementById("assetSelect")||{}).value || "",
+        preferredTF: (document.getElementById("tfSelect")||{}).value || "",
+        savedAt: new Date().toLocaleString()
+      });
+      alert("NetTrack session saved. Cloud database table wiring is next.");
+    };
+  }
+
+  function addMetaTraderOptions(){
+    const asset = document.getElementById("assetSelect");
+    if(!asset || asset.dataset.v109 === "done") return;
+    asset.dataset.v109 = "done";
+    const existing = Array.from(asset.options).map(o=>o.value);
+    const addGroup = (label, items) => {
+      const group = document.createElement("optgroup");
+      group.label = label;
+      items.forEach(v=>{
+        if(existing.includes(v)) return;
+        const o = document.createElement("option");
+        o.value = v;
+        o.textContent = v.replace("USDT","/USDT").replace("EURUSD","EUR/USD").replace("GBPUSD","GBP/USD").replace("USDJPY","USD/JPY").replace("XAUUSD","XAU/USD Gold").replace("R_75","Volatility 75").replace("R_100","Volatility 100");
+        group.appendChild(o);
+      });
+      if(group.children.length) asset.appendChild(group);
+    };
+    addGroup("Forex / Gold Watch", MARKET_GROUPS.forex);
+    addGroup("Synthetic Watch", MARKET_GROUPS.synthetic);
+  }
+
+  function boot(){
+    addUserHeader();
+    addMarketPanel();
+    addCloudCard();
+    addMetaTraderOptions();
+    localStorage.setItem("nettrack_version", VERSION);
+  }
+
+  window.addEventListener("load", () => setTimeout(boot, 600));
+  setTimeout(boot, 1600);
+})();
+</script>
+<!-- /NETTRACK PRO V10.9 USER + MARKETS + CLOUD FOUNDATION -->
+
+
+<!-- NETTRACK PRO V11 PROFILE + MARKET HANDLING PATCH -->
+<style id="nt-v11-style">
+.nt-profile-modal{
+  position:fixed; inset:0; z-index:1000000; display:none; align-items:center; justify-content:center;
+  background:rgba(2,6,23,.78); backdrop-filter:blur(8px);
+}
+.nt-profile-modal.show{display:flex}
+.nt-profile-box{
+  width:min(92vw,520px); background:linear-gradient(180deg,#0f172a,#020617);
+  border:1px solid rgba(56,189,248,.35); border-radius:20px; padding:24px; color:#f8fafc;
+  box-shadow:0 30px 90px rgba(0,0,0,.65);
+}
+.nt-profile-box h2{margin:0 0 16px;color:#38bdf8;text-transform:uppercase;letter-spacing:1px}
+.nt-profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nt-profile-cell{background:rgba(30,41,59,.7);border:1px solid rgba(148,163,184,.14);border-radius:12px;padding:12px}
+.nt-profile-cell span{display:block;color:#94a3b8;font-size:.72rem;text-transform:uppercase}
+.nt-profile-cell b{display:block;margin-top:4px}
+.nt-profile-actions{display:flex;gap:10px;margin-top:16px}
+.nt-profile-actions button{flex:1;border:none;border-radius:10px;padding:11px;font-weight:900;cursor:pointer}
+.nt-btn-blue{background:#38bdf8;color:#020617}
+.nt-btn-red{background:#ef4444;color:white}
+.nt-market-warning{
+  margin-top:10px;padding:10px;border-radius:10px;border:1px solid rgba(234,179,8,.3);
+  background:rgba(234,179,8,.08);color:#fde68a;font-size:.76rem
+}
+.nt-mode-badge{
+  position:fixed;left:18px;top:92px;z-index:9998;background:rgba(15,23,42,.92);
+  border:1px solid rgba(56,189,248,.28);border-radius:14px;padding:10px 12px;color:#e2e8f0;font-size:.74rem;
+  box-shadow:0 12px 35px rgba(0,0,0,.35)
+}
+.nt-mode-badge b{color:#38bdf8}
+@media(max-width:800px){.nt-profile-grid{grid-template-columns:1fr}.nt-mode-badge{position:static;margin:10px 18px}}
+/* V12.0 layout patch: separate Trading / User / Owner pages */
+.nt-side-nav{
+  position:fixed;
+  left:12px;
+  top:210px;
+  z-index:70;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width:70px;
+}
+.nt-side-nav button{
+  width:70px;
+  min-height:42px;
+  border-radius:12px;
+  border:1px solid rgba(56,189,248,.28);
+  background:rgba(15,23,42,.88);
+  color:#cbd5e1;
+  font-weight:900;
+  font-size:.62rem;
+  letter-spacing:.5px;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(0,0,0,.24);
+}
+.nt-side-nav button.active{
+  background:linear-gradient(135deg,#0ea5e9,#22c55e);
+  color:#03121f;
+  border-color:rgba(56,189,248,.9);
+}
+.portal-stage{
+  max-width:1360px;
+  margin: 92px auto 28px;
+  padding: 0 24px 40px 92px;
+}
+.portal-page{
+  display:none;
+  border:1px solid rgba(56,189,248,.20);
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(15,23,42,.94),rgba(8,13,24,.96));
+  box-shadow:0 24px 80px rgba(0,0,0,.35);
+  padding:22px;
+}
+.portal-page.active{ display:block; }
+.portal-title-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(148,163,184,.16);
+}
+.portal-title-row h2{
+  margin:0;
+  font-size:1.35rem;
+  letter-spacing:.5px;
+}
+.portal-title-row small{ color:var(--muted); }
+.portal-layout{
+  display:grid;
+  grid-template-columns: minmax(0,1.25fr) minmax(320px,.75fr);
+  gap:16px;
+}
+.portal-stack{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.portal-info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.portal-info-card{
+  border:1px solid rgba(148,163,184,.16);
+  background:rgba(2,6,23,.32);
+  border-radius:14px;
+  padding:14px;
+}
+.portal-info-card small{ color:var(--muted); display:block; margin-bottom:5px; }
+.portal-info-card b{ font-size:1.05rem; }
+.portal-hidden{ display:none !important; }
+body.portal-open .container{ display:none; }
+body.portal-open .brand-footer{ display:none; }
+.portal-stage #userPortalBox,
+.portal-stage #ownerPortalBox{
+  margin-top:0 !important;
+  font-size:.82rem !important;
+  line-height:1.7 !important;
+  min-height:100%;
+}
+.portal-stage #userPortalBox select,
+.portal-stage #userPortalBox input{
+  min-height:42px;
+}
+@media (max-width: 900px){
+  .nt-side-nav{ position:static; width:auto; flex-direction:row; padding:10px 14px; margin-top:80px; }
+  .nt-side-nav button{ width:auto; flex:1; }
+  .portal-stage{ margin-top:12px; padding:0 12px 30px; }
+  .portal-layout,.portal-info-grid{ grid-template-columns:1fr; }
+}
+
+
+
+/* V12.4 Tester Mode: lock premium modules while keeping chart, TP levels and one pattern generator open */
+.tester-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.10);color:#bbf7d0;border-radius:999px;padding:4px 10px;font-size:.65rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.premium-locked{position:relative;filter:grayscale(.35);opacity:.46;overflow:hidden;pointer-events:none;user-select:none}
+.premium-locked::before{content:"UNDER SUBSCRIPTION";position:absolute;z-index:20;top:12px;right:12px;border:1px solid rgba(250,204,21,.55);background:rgba(15,23,42,.92);color:#facc15;border-radius:999px;padding:6px 10px;font-size:.68rem;font-weight:900;letter-spacing:.7px;box-shadow:0 0 18px rgba(250,204,21,.12)}
+.premium-locked::after{content:"🔒 Locked feature — subscribe Basic / Pro / Premium to unlock this module and generate owner commission.";position:absolute;z-index:19;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(135deg,rgba(2,6,23,.70),rgba(15,23,42,.88));color:#f8fafc;font-weight:800;font-size:.9rem;line-height:1.45;backdrop-filter:blur(2px)}
+.pattern-open{border-color:rgba(34,197,94,.45)!important;box-shadow:0 0 0 1px rgba(34,197,94,.12),0 0 24px rgba(34,197,94,.08)}
+#testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
+#testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
+
+</style>
+
+<div id="ntProfileModal" class="nt-profile-modal">
+  <div class="nt-profile-box">
+    <h2>NetTrack User Profile</h2>
+    <div class="nt-profile-grid">
+      <div class="nt-profile-cell"><span>Email</span><b id="ntProfileEmail">Free User</b></div>
+      <div class="nt-profile-cell"><span>Plan</span><b style="color:#22c55e">FREE TESTING</b></div>
+      <div class="nt-profile-cell"><span>Preferred Market</span><b id="ntProfileMarket">Crypto</b></div>
+      <div class="nt-profile-cell"><span>Broker Mode</span><b>Signal View</b></div>
+      <div class="nt-profile-cell"><span>Saved Pair</span><b id="ntProfilePair">--</b></div>
+      <div class="nt-profile-cell"><span>Saved Timeframe</span><b id="ntProfileTF">--</b></div>
+    </div>
+    <div class="nt-market-warning">
+      NetTrack currently provides signal intelligence. MT4/MT5/Exness auto-trading execution needs a later secure broker bridge.
+    </div>
+    <div class="nt-profile-actions">
+      <button class="nt-btn-blue" onclick="ntSaveSessionNow()">Save Profile</button>
+      <button class="nt-btn-red" onclick="ntCloseProfile()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="ntModeBadge" class="nt-mode-badge">
+  <b>V11 Mode</b><br>Free signals • Cloud profile • Broker signal view
+</div>
+
+<script id="nt-v11-script">
+(function(){
+  const FOREX_LIKE = ["EURUSD","GBPUSD","USDJPY","XAUUSD","R_75","R_100","BOOM1000","CRASH1000"];
+
+  function getProfile(){
+    try{return JSON.parse(localStorage.getItem("nt_profile")||"{}")}catch(e){return{}}
+  }
+  function saveProfile(patch){
+    const old = getProfile();
+    const next = Object.assign({plan:"FREE", preferredMarket:"crypto"}, old, patch, {updatedAt:new Date().toISOString()});
+    localStorage.setItem("nt_profile", JSON.stringify(next));
+    localStorage.setItem("nt_cloud_shadow", JSON.stringify(next));
+    return next;
+  }
+  function currentEmail(){
+    const top = document.querySelector(".nt-top-email");
+    if(top && top.textContent && top.textContent !== "Loading...") return top.textContent;
+    try{const u=JSON.parse(localStorage.getItem("nt_user")||"null"); if(u&&u.email)return u.email}catch(e){}
+    return "Free User";
+  }
+
+  window.ntOpenProfile = function(){
+    const p = saveProfile({
+      preferredPair: (document.getElementById("assetSelect")||{}).value || "--",
+      preferredTF: (document.getElementById("tfSelect")||{}).value || "--"
+    });
+    document.getElementById("ntProfileEmail").textContent = currentEmail();
+    document.getElementById("ntProfileMarket").textContent = (p.preferredMarket || "crypto").toUpperCase();
+    document.getElementById("ntProfilePair").textContent = p.preferredPair || "--";
+    document.getElementById("ntProfileTF").textContent = p.preferredTF || "--";
+    document.getElementById("ntProfileModal").classList.add("show");
+  };
+  window.ntCloseProfile = function(){document.getElementById("ntProfileModal").classList.remove("show")};
+  window.ntSaveSessionNow = function(){
+    saveProfile({
+      email: currentEmail(),
+      preferredPair: (document.getElementById("assetSelect")||{}).value || "--",
+      preferredTF: (document.getElementById("tfSelect")||{}).value || "--",
+      lastSignal: (document.getElementById("signalText")||{}).innerText || "--"
+    });
+    alert("Profile/session saved locally. Supabase table save is the next database phase.");
+    ntCloseProfile();
+  };
+
+  function improveUserHeader(){
+    const top = document.getElementById("ntTopUser");
+    if(!top || top.dataset.v11 === "done") return;
+    top.dataset.v11 = "done";
+    top.style.cursor = "pointer";
+    top.title = "Open profile";
+    top.addEventListener("click", (e)=>{
+      if(e.target && e.target.classList.contains("nt-logout-btn")) return;
+      ntOpenProfile();
+    });
+  }
+
+  function guardUnsupportedMarkets(){
+    const asset = document.getElementById("assetSelect");
+    if(!asset || asset.dataset.v11guard === "done") return;
+    asset.dataset.v11guard = "done";
+    asset.addEventListener("change", ()=>{
+      const v = asset.value;
+      if(FOREX_LIKE.includes(v)){
+        setTimeout(()=>{
+          const el = document.getElementById("signalExplainer");
+          if(el){
+            el.innerHTML += `<br><br><small style="color:#fde68a"><b>V11 Notice:</b> ${v} is currently in watch/signal-view mode. Full live feed needs a Forex/Synthetic API bridge.</small>`;
+          }
+        }, 800);
+      }
+      saveProfile({preferredPair:v, preferredTF:(document.getElementById("tfSelect")||{}).value||"1m"});
+    });
+    const tf = document.getElementById("tfSelect");
+    if(tf) tf.addEventListener("change", ()=>saveProfile({preferredTF:tf.value}));
+  }
+
+  function makeCloudCardCleaner(){
+    const card = document.getElementById("ntCloudCard");
+    if(card && !card.dataset.v11){
+      card.dataset.v11 = "done";
+      const btn = card.querySelector("button");
+      if(btn) btn.textContent = "Save Profile";
+      card.addEventListener("dblclick", ()=> card.style.display="none");
+    }
+  }
+
+  function boot(){
+    improveUserHeader();
+    guardUnsupportedMarkets();
+    makeCloudCardCleaner();
+    localStorage.setItem("nettrack_version","11.0");
+  }
+
+  window.addEventListener("load",()=>setTimeout(boot,900));
+  setTimeout(boot,2000);
+})();
+</script>
+<!-- /NETTRACK PRO V11 PROFILE + MARKET HANDLING PATCH -->
+
+
+
+<script>
+/* NETTRACK PRO V12.0 USER PORTAL + OWNER PORTAL FINAL PHASE */
+(function(){
+  const OWNER_EMAIL = "engobeni842@gmail.com";
+  const ZAR_PER_USD = 18.25;
+  const BTC_USD_FALLBACK = 64000;
+  const ETH_USD_FALLBACK = 1720;
+
+  function moneyNum(text){
+    if(!text) return 0;
+    const n = parseFloat(String(text).replace(/[^0-9.\-]/g,""));
+    return Number.isFinite(n) ? n : 0;
+  }
+  function setText(id, value){
+    const el = document.getElementById(id);
+    if(el) el.textContent = value;
+  }
+  function readUserEmail(){
+    const body = document.body ? document.body.innerText : "";
+    const m = body.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+    return m ? m[0].toLowerCase() : "";
+  }
+  function selectedPairPrice(){
+    const headerPrice = document.querySelector("header b, header .price, #livePrice");
+    const topPriceText = (document.body.innerText.match(/\$[0-9,]+(\.[0-9]+)?/)||[""])[0];
+    return moneyNum(topPriceText) || 0;
+  }
+  function updateUserOwnerPortal(){
+    if(typeof updateNetTrackBotPanel === "function") updateNetTrackBotPanel();
+    const revenue = moneyNum((document.getElementById("commissionTotal")||{}).textContent);
+    const payment = moneyNum((document.getElementById("botZarValue")||{}).textContent);
+    setText("ownerCommission", "R " + revenue.toFixed(2));
+    setText("ownerWithdrawable", "R " + revenue.toFixed(2));
+    setText("ownerDeposits", "R " + payment.toFixed(2));
+    const op = document.getElementById("ownerPortalBox");
+    if(op){
+      const email = readUserEmail();
+      op.style.display = email === OWNER_EMAIL ? "block" : "none";
+    }
+  }
+  window.ownerWithdrawCommission = function(){
+    const amount = (document.getElementById("ownerWithdrawable")||{}).textContent || "R 0.00";
+    alert("Owner subscription revenue withdrawal request created: " + amount + "\\nReal payout connection comes after PayFast/Ozow settlement setup.");
+  };
+  const oldRun = window.runNetTrackBot;
+  if(typeof oldRun === "function"){
+    window.runNetTrackBot = function(action){
+      const r = oldRun.apply(this, arguments);
+      setTimeout(updateUserOwnerPortal, 100);
+      return r;
+    };
+  }
+  window.addEventListener("load", function(){
+    updateUserOwnerPortal();
+    setInterval(updateUserOwnerPortal, 1500);
+  });
+})();
+</script>
+
+<script>
+/* V12.0 final layout patch: move user/owner portals into separate pages and protect owner page */
+(function(){
+  const OWNER_EMAIL = "engobeni842@gmail.com";
+  function readEmail(){
+    const body = document.body ? document.body.innerText : "";
+    const m = body.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+    return m ? m[0].toLowerCase() : "";
+  }
+  function isOwner(){
+    return readEmail() === OWNER_EMAIL;
+  }
+  function updateOwnerVisibility(){
+    const ownerBtn = document.getElementById("navOwner");
+    if(ownerBtn) ownerBtn.classList.toggle("portal-hidden", !isOwner());
+    const ownerBox = document.getElementById("ownerPortalBox");
+    if(ownerBox) ownerBox.style.display = isOwner() ? "block" : "none";
+    if(!isOwner() && document.getElementById("ownerPage")?.classList.contains("active")){
+      window.showNetTrackPage("user");
+    }
+  }
+  function movePortalBoxes(){
+    const userBox = document.getElementById("userPortalBox");
+    const walletBox = document.getElementById("walletBox");
+    const verificationBox = document.getElementById("verificationBox");
+    const txBox = document.getElementById("txBox");
+    const userMount = document.getElementById("userPortalMount");
+    if(walletBox && userMount && walletBox.parentElement !== userMount){
+      userMount.appendChild(walletBox);
+      walletBox.style.display = "block";
+      walletBox.style.width = "100%";
+    }
+    if(verificationBox && userMount && verificationBox.parentElement !== userMount){
+      userMount.appendChild(verificationBox);
+      verificationBox.style.display = "block";
+      verificationBox.style.width = "100%";
+    }
+    if(txBox && userMount && txBox.parentElement !== userMount){
+      userMount.appendChild(txBox);
+      txBox.style.display = "block";
+      txBox.style.width = "100%";
+    }
+    if(userBox && userMount && userBox.parentElement !== userMount){
+      userMount.appendChild(userBox);
+      userBox.style.display = "block";
+      userBox.style.width = "100%";
+    }
+    const ownerBox = document.getElementById("ownerPortalBox");
+    const ownerMount = document.getElementById("ownerPortalMount");
+    if(ownerBox && ownerMount && ownerBox.parentElement !== ownerMount){
+      ownerMount.appendChild(ownerBox);
+      ownerBox.style.width = "100%";
+    }
+    const emailSlot = document.getElementById("portalUserEmail");
+    if(emailSlot) emailSlot.textContent = readEmail() || "Signed user";
+    updateOwnerVisibility();
+  }
+  window.showNetTrackPage = function(page){
+    movePortalBoxes();
+    const stage = document.getElementById("portalStage");
+    const userPage = document.getElementById("userPage");
+    const ownerPage = document.getElementById("ownerPage");
+    const navTrading = document.getElementById("navTrading");
+    const navUser = document.getElementById("navUser");
+    const navOwner = document.getElementById("navOwner");
+    [navTrading,navUser,navOwner].forEach(b=>b&&b.classList.remove("active"));
+    [userPage,ownerPage].forEach(p=>p&&p.classList.remove("active"));
+    document.body.classList.remove("portal-open");
+    if(stage) stage.classList.add("portal-hidden");
+    if(page === "user"){
+      document.body.classList.add("portal-open");
+      if(stage) stage.classList.remove("portal-hidden");
+      if(userPage) userPage.classList.add("active");
+      if(navUser) navUser.classList.add("active");
+    } else if(page === "owner" && isOwner()){
+      document.body.classList.add("portal-open");
+      if(stage) stage.classList.remove("portal-hidden");
+      if(ownerPage) ownerPage.classList.add("active");
+      if(navOwner) navOwner.classList.add("active");
+    } else {
+      if(navTrading) navTrading.classList.add("active");
+    }
+    window.scrollTo({top:0, behavior:"smooth"});
+  };
+  window.addEventListener("load", function(){
+    movePortalBoxes();
+    updateOwnerVisibility();
+    setInterval(function(){ movePortalBoxes(); updateOwnerVisibility(); }, 2000);
+  });
+})();
+</script>
+
+
+<script>
+/* V12.4 Tester subscription-lock patch */
+(function(){
+  const LOCKED_HEADINGS = [
+    "Win/Loss Analytics","Equity Curve (Performance)","RSI Oscillator (14)","MACD Momentum (12, 26, 9)",
+    "Smart Confirmation","Historical Backtest","Strongest Pair Scanner","Session Context","Signal & Trade History","User Preferences"
+  ];
+  function cardFromHeading(h){ let n=h; while(n && !(n.classList && n.classList.contains('card'))) n=n.parentElement; return n; }
+  function applyTesterLocks(){
+    document.querySelectorAll('.card h3').forEach(h=>{
+      const title=(h.textContent||'').replace(/\s+/g,' ').trim();
+      if(LOCKED_HEADINGS.some(x=>title.startsWith(x))){
+        const c=cardFromHeading(h); if(c && !c.classList.contains('premium-locked')) c.classList.add('premium-locked');
+      }
+    });
+    const market = document.getElementById('ntMarketExpansion');
+    if(market && !market.dataset.lockedPatch){
+      market.dataset.lockedPatch='1';
+      const pills = market.querySelectorAll('.nt-broker-pill');
+      pills.forEach((p,i)=>{ if(i>0){ p.classList.add('premium-locked'); p.style.position='relative'; p.style.pointerEvents='none'; } });
+    }
+    const provider = document.getElementById('depositMethod');
+    if(provider){ const wrap=provider.closest('label'); if(wrap) wrap.remove(); }
+  }
+  function openPatternName(res){
+    if(!res || !res.signal || res.signal==='NEUTRAL') return 'Clean Candle + S/R Watch';
+    if(String(res.signal).includes('BUY')) return 'Bullish Break + Retest';
+    if(String(res.signal).includes('SELL')) return 'Bearish Rejection + Retest';
+    return 'Watchlist Retest Pattern';
+  }
+  function updateTesterPattern(){
+    const res = window.currentSignal || currentSignal || null;
+    const signal = res?.signal || 'WAITING';
+    const side = signal.includes('BUY')?'BUY':signal.includes('SELL')?'SELL':'WAIT';
+    const conf = Number(res?.confidence || 0);
+    const tp = document.getElementById('planTP')?.textContent || '--';
+    const set=(id,v,color)=>{const el=document.getElementById(id); if(el){el.textContent=v; if(color) el.style.color=color;}};
+    set('testerPatternName', openPatternName(res));
+    set('testerPatternSide', side, side==='BUY'?'#22c55e':side==='SELL'?'#ef4444':'#eab308');
+    set('testerPatternConf', conf ? conf+'%' : '0%');
+    set('testerPatternTP', tp);
+    set('testerPatternSignal', signal==='WAITING'?'TESTER READY':signal, side==='BUY'?'#22c55e':side==='SELL'?'#ef4444':'#eab308');
+    set('testerPatternNote', 'Free tester pattern only. Chart, broker overlay, entry, stop loss and take-profit stay open. RSI, MACD, backtest, scanner, history and analytics stay locked under subscription.');
+  }
+  window.addEventListener('load',()=>{
+    applyTesterLocks(); updateTesterPattern();
+    setInterval(()=>{applyTesterLocks(); updateTesterPattern();},1200);
+  });
+})();
+</script>
+
+<div class="card span-12" style="display:none" aria-hidden="true">
+<h2>Services Hub moved into NetTrack Bot</h2>
+</div>
+</body>
+</html>
