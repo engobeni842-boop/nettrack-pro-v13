@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NetTrack Tester V12.4 Signal Platform</title>
+<title>NetTrack Pro V13.1 Signal Platform</title>
 <style>
 :root {
 --bg: #050a14;
@@ -478,7 +478,7 @@ body.portal-open .brand-footer{ display:none; }
 <div id="notif-box"></div>
 <header>
 <div class="controls">
-<h1 style="margin:0; font-size:1.2rem; margin-right:10px">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block;font-size:.55rem;color:#94a3b8;letter-spacing:.8px">V12.4 TESTER SIGNAL PLATFORM  ARMOROO ENT</small></h1>
+<h1 style="margin:0; font-size:1.2rem; margin-right:10px">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block;font-size:.55rem;color:#94a3b8;letter-spacing:.8px">V13.1 SIGNAL PLATFORM  ARMOROO ENT</small></h1>
 <span class="tester-badge">Free Tester Mode</span>
 <select id="assetSelect" class="pair-selector" onchange="changeAsset()">
 <option value="BTCUSDT">BTC/USDT</option>
@@ -634,7 +634,7 @@ body.portal-open .brand-footer{ display:none; }
   </div>
   <div id="netTrackBotBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(34,197,94,.25); background:linear-gradient(135deg, rgba(34,197,94,.09), rgba(15,23,42,.88)); font-size:.75rem; line-height:1.55">
     <b style="color:#22c55e">NETTRACK BOT — SIGNAL ENGINE</b><br>
-    <small style="color:#94a3b8">Final signal-platform mode — no client trading deposits, no wallet trading, no auto-execution. The bot scans the market and gives signals only.</small>
+    <small style="color:#94a3b8">Final signal-platform mode — no client fund custody, no wallet trading, no auto-execution. The bot scans the market and gives signals only.</small>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
       <div style="padding:8px;border:1px solid rgba(34,197,94,.22);border-radius:8px;background:rgba(2,6,23,.30)"><small style="color:#94a3b8">Trial status</small><br><b id="trialStatus" style="color:#22c55e">30 DAYS FREE</b></div>
       <div style="padding:8px;border:1px solid rgba(56,189,248,.22);border-radius:8px;background:rgba(2,6,23,.30)"><small style="color:#94a3b8">Days remaining</small><br><b id="trialDaysLeft" style="color:#38bdf8">30</b></div>
@@ -667,7 +667,7 @@ body.portal-open .brand-footer{ display:none; }
       <span>Signal action: <b id="botTpReturn">User trades on own broker</b></span><br>
       <span>Bot result: <b id="botResult">SIGNAL-ONLY MODE READY</b></span>
     </div>
-    <small style="display:block;color:#eab308;margin-top:8px">Compliance guard: NetTrack does not hold client trading money, does not place trades for users, and does not guarantee profit. It provides market signals only.</small>
+    <small style="display:block;color:#eab308;margin-top:8px">Compliance guard: NetTrack does not hold client funds, does not place trades for users, and does not guarantee profit. It provides market signals only.</small>
   </div>
 
   <div id="walletBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.28); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
@@ -749,7 +749,7 @@ body.portal-open .brand-footer{ display:none; }
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
       <div><small style="color:#cbd5e1">Subscription revenue</small><br><b id="ownerCommission" style="color:#22c55e">R 0.00</b></div>
       <div><small style="color:#cbd5e1">Owner withdrawable</small><br><b id="ownerWithdrawable" style="color:#eab308">R 0.00</b></div>
-      <div><small style="color:#cbd5e1">Feature unlocks monitored</small><br><b id="ownerDeposits">R 0.00</b></div>
+      <div><small style="color:#cbd5e1">Feature unlocks monitored</small><br><b id="ownerPayments">R 0.00</b></div>
       <div><small style="color:#cbd5e1">Users</small><br><b id="ownerUsers">1 active</b></div>
     </div>
     <div style="margin-top:8px;border-top:1px solid rgba(250,204,21,.22);padding-top:8px">
@@ -925,7 +925,7 @@ body.portal-open .brand-footer{ display:none; }
 
 <div class="brand-footer">
   <b>ARMOROO ENT Software and Apps</b><br>
-  <span>NetTrack Tester V12.4 Signal Platform</span><br>
+  <span>NetTrack Pro V13.1 Signal Platform</span><br>
   <span>Developed by Emmanuel Musiyiwa Ngobeni &amp; Thando Mbatha</span>
 </div>
 
@@ -1734,7 +1734,7 @@ function updateNetTrackBotPanel(){
   set("upWithdrawable", access ? "ACTIVE" : "LOCKED", access ? "#22c55e" : "#ef4444");
   set("ownerCommission", "R " + Number(subscriptionState.totalPaid || 0).toFixed(2));
   set("ownerWithdrawable", "R " + Number(subscriptionState.totalPaid || 0).toFixed(2));
-  set("ownerDeposits", "R " + Number(subscriptionState.lastPayment || 0).toFixed(2));
+  set("ownerPayments", "R " + Number(subscriptionState.lastPayment || 0).toFixed(2));
   renderTransactions(); renderKyc();
 }
 function runNetTrackBot(mode){
@@ -3678,7 +3678,7 @@ body.portal-open .brand-footer{ display:none; }
         <div class="nt-broker-pill">No Auto-Trade Execution Yet</div>
       </div>
       <div style="margin-top:10px;color:#94a3b8;font-size:.76rem;line-height:1.5">
-        Tester mode uses live Binance crypto feed plus broker/platform overlay comparison for MT4, MT5, XM, IQ Option, Exness, Deriv and ICMarkets. Direct broker execution or deposit handling is not included; users trade manually on their own broker account.
+        Tester mode uses live Binance crypto feed plus broker/platform overlay comparison for MT4, MT5, XM, IQ Option, Exness, Deriv and ICMarkets. Direct broker execution or client fund handling is not included; users trade manually on their own broker account.
       </div>
     `;
     grid.prepend(card);
@@ -4058,7 +4058,7 @@ body.portal-open .brand-footer{ display:none; }
     const payment = moneyNum((document.getElementById("botZarValue")||{}).textContent);
     setText("ownerCommission", "R " + revenue.toFixed(2));
     setText("ownerWithdrawable", "R " + revenue.toFixed(2));
-    setText("ownerDeposits", "R " + payment.toFixed(2));
+    setText("ownerPayments", "R " + payment.toFixed(2));
     const op = document.getElementById("ownerPortalBox");
     if(op){
       const email = readUserEmail();
@@ -4067,7 +4067,7 @@ body.portal-open .brand-footer{ display:none; }
   }
   window.ownerWithdrawCommission = function(){
     const amount = (document.getElementById("ownerWithdrawable")||{}).textContent || "R 0.00";
-    alert("Owner subscription revenue withdrawal request created: " + amount + "\\nReal payout connection comes after PayFast/Ozow settlement setup.");
+    alert("Owner subscription revenue payout request created: " + amount + "\\nReal payout connection comes after PayFast settlement setup.");
   };
   const oldRun = window.runNetTrackBot;
   if(typeof oldRun === "function"){
@@ -4231,5 +4231,286 @@ body.portal-open .brand-footer{ display:none; }
 <div class="card span-12" style="display:none" aria-hidden="true">
 <h2>Services Hub moved into NetTrack Bot</h2>
 </div>
+
+
+<!-- NETTRACK PRO V13.1 STABILITY + SIGNAL LIMIT + CLEAN USER/PAYMENT PATCH -->
+<style id="nt-v131-final-style">
+  /* White, clean auth card requested */
+  #authOverlay{background:#f8fafc!important;color:#0f172a!important;}
+  #authOverlay::before,#authOverlay::after{opacity:.12!important;}
+  #authOverlay > div:not(.nt-market-bg):not(.nt-auth-brand):not(.nt-session-loader){
+    background:#ffffff!important;color:#0f172a!important;border:1px solid #dbeafe!important;
+    box-shadow:0 24px 80px rgba(15,23,42,.18)!important;
+  }
+  #authOverlay h2,#authOverlay .nt-auth-mini,#authOverlay p{color:#0f172a!important;}
+  #authOverlay input{background:#f1f5f9!important;color:#0f172a!important;border:1px solid #cbd5e1!important;}
+  #authOverlay input::placeholder{color:#64748b!important;}
+  #authOverlay .auth-eye{color:#0f172a!important;}
+  #authOverlay button{border-radius:8px!important;font-weight:900!important;}
+  .nt-google-btn,.nt-email-label{
+    width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;padding:10px;border-radius:8px;
+    border:1px solid #cbd5e1;background:#fff;color:#0f172a;font-weight:900;cursor:pointer;
+  }
+  .nt-email-label{background:#e0f2fe;color:#075985;cursor:default;}
+  .nt-g-logo{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#fff;font-weight:900;color:#4285f4;border:1px solid #e2e8f0;}
+  #testerPatternPanel .nt-pattern-action{margin-top:10px;display:grid;grid-template-columns:1fr;gap:8px}
+  #testerPatternPanel .nt-pattern-generate{background:#22c55e;color:#02140a;border:0;border-radius:10px;padding:12px;font-weight:1000;cursor:pointer;box-shadow:0 0 20px rgba(34,197,94,.18)}
+  #testerPatternPanel .nt-pattern-quota{font-size:.75rem;color:#eab308;background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.22);border-radius:8px;padding:8px;line-height:1.45}
+  #verificationBox,.face-verification,.deposit-box,[data-feature="deposit"],[data-feature="face"]{display:none!important;}
+</style>
+<script id="nt-v131-final-patch">
+(function(){
+  const PATCH_VERSION = "13.1";
+  const OWNER_EMAIL = "engobeni842@gmail.com";
+  const CRYPTO = new Set(["BTCUSDT","ETHUSDT","SOLUSDT","BNBUSDT"]);
+  const FOREX = new Set(["EURUSD","GBPUSD","USDJPY","XAUUSD"]);
+  const SYNTH = new Set(["R_75","R_100","BOOM1000","CRASH1000"]);
+  const DISPLAY = {
+    BTCUSDT:"BTC/USDT", ETHUSDT:"ETH/USDT", SOLUSDT:"SOL/USDT", BNBUSDT:"BNB/USDT",
+    EURUSD:"EUR/USD", GBPUSD:"GBP/USD", USDJPY:"USD/JPY", XAUUSD:"XAU/USD Gold",
+    R_75:"Volatility 75", R_100:"Volatility 100", BOOM1000:"BOOM1000", CRASH1000:"CRASH1000"
+  };
+  const PRICE_BASE = { BTCUSDT:61700, ETHUSDT:3400, SOLUSDT:145, BNBUSDT:562, EURUSD:1.086, GBPUSD:1.274, USDJPY:159.2, XAUUSD:2320, R_75:100000, R_100:85000, BOOM1000:10400, CRASH1000:9200 };
+  let ntStableTimer = null;
+  let ntSessionNonce = 0;
+
+  function byId(id){ return document.getElementById(id); }
+  function setText(id,val,color){ const el=byId(id); if(el){ el.textContent=val; if(color) el.style.color=color; } }
+  function isCrypto(sym){ return CRYPTO.has(sym); }
+  function isForex(sym){ return FOREX.has(sym); }
+  function isSynth(sym){ return SYNTH.has(sym); }
+  function marketKind(sym){ return isCrypto(sym)?"crypto":isForex(sym)?"forex":isSynth(sym)?"synthetic":"watch"; }
+  function label(sym){ return DISPLAY[sym] || String(sym||"BTCUSDT").replace("USDT","/USDT").replace("USD","/USD"); }
+  function cleanSym(sym){ return String(sym||"BTCUSDT").replace(/[^A-Z0-9_]/g,""); }
+  function decimalsFor(sym){ return ["EURUSD","GBPUSD"].includes(sym)?5:(sym==="USDJPY"?3:(sym==="XAUUSD"?2:(sym.includes("USDT")?2:2))); }
+  function formatPrice(sym,price){ const d=decimalsFor(sym); return (sym.includes("USD")||sym.includes("USDT")||sym==="XAUUSD"?"$":"") + Number(price||0).toFixed(d); }
+  function seedFrom(sym){ return [...String(sym)].reduce((a,c)=>a+c.charCodeAt(0),0); }
+  function tfMs(){ const map={"1m":60000,"5m":300000,"15m":900000,"1h":3600000}; return map[INTERVAL]||60000; }
+
+  function ensureAssets(){
+    const select = byId("assetSelect"); if(!select) return;
+    const groups = [
+      ["Live Crypto",[["BTCUSDT","BTC/USDT"],["ETHUSDT","ETH/USDT"],["SOLUSDT","SOL/USDT"],["BNBUSDT","BNB/USDT"]]],
+      ["Forex / Gold Watch",[["EURUSD","EUR/USD"],["GBPUSD","GBP/USD"],["USDJPY","USD/JPY"],["XAUUSD","XAU/USD Gold"]]],
+      ["Synthetic Watch",[["R_75","Volatility 75"],["R_100","Volatility 100"],["BOOM1000","BOOM1000"],["CRASH1000","CRASH1000"]]]
+    ];
+    const cur = cleanSym(select.value || SYMBOL || "BTCUSDT");
+    select.innerHTML = groups.map(([g,opts])=>`<optgroup label="${g}">${opts.map(([v,t])=>`<option value="${v}">${t}</option>`).join("")}</optgroup>`).join("");
+    select.value = DISPLAY[cur] ? cur : "BTCUSDT";
+  }
+
+  function chooseBrokerFor(sym){
+    const brokerSelect = byId("brokerSelect");
+    let wanted = "Binance";
+    if(isForex(sym)) wanted = "TradingView";
+    if(isSynth(sym)) wanted = "Deriv";
+    BROKER_MODE = wanted;
+    if(brokerSelect) brokerSelect.value = wanted;
+    try{ localStorage.setItem("ntp_broker_mode_v114", wanted); }catch(e){}
+    const a=byId("alignBrokerName"); if(a) a.textContent=wanted;
+    const b=byId("brokerOverlayName"); if(b) b.textContent=wanted;
+  }
+
+  function hardResetUi(sym){
+    setText("dsSymbol", label(sym)); setText("dsTF", INTERVAL); setText("dsCandles","0");
+    setText("alignSymbol", label(sym)); setText("alignNet","--"); setText("alignBroker","--"); setText("alignDiff","--"); setText("alignSync","WAITING","#eab308");
+    setText("signalText","WAITING","#eab308"); setText("confValue","0%"); setText("marketBias","--"); setText("trendState","--");
+    const bar=byId("confBar"); if(bar) bar.style.width="0%";
+    const expl=byId("signalExplainer"); if(expl) expl.innerHTML = `Loading fresh ${label(sym)} market context. Previous symbol state cleared.`;
+    const up=byId("updateTime"); if(up) up.textContent = "SYNCING STRUCTURAL CONTEXT: " + label(sym);
+  }
+
+  function syntheticCandles(sym, count=600){
+    const seed = seedFrom(sym) + Math.floor(Date.now()/tfMs());
+    const base = PRICE_BASE[sym] || 100;
+    const now = Math.floor(Date.now()/tfMs())*tfMs();
+    let price = base * (1 + Math.sin(seed/17)*0.01);
+    const volBase = isSynth(sym)?2500:isForex(sym)?800:1200;
+    const amp = sym==="XAUUSD"?2.6:(["EURUSD","GBPUSD"].includes(sym)?0.00055:(sym==="USDJPY"?0.055:(isSynth(sym)?18:1.4)));
+    const arr=[];
+    for(let i=count-1;i>=0;i--){
+      const t = now - i*tfMs();
+      const wave = Math.sin((seed+i)*0.07)*amp + Math.cos((seed+i)*0.019)*amp*0.6;
+      const drift = (Math.sin((seed+i)*0.011))*amp*0.22;
+      const open = price;
+      const close = Math.max(0.00001, open + wave + drift);
+      const high = Math.max(open, close) + Math.abs(Math.sin(seed+i))*amp*0.65;
+      const low = Math.min(open, close) - Math.abs(Math.cos(seed+i))*amp*0.65;
+      arr.push({time:t,open,high,low,close,volume:volBase + Math.abs(Math.sin(i+seed))*volBase*0.9,isClosed:i!==0});
+      price = close;
+    }
+    return arr;
+  }
+
+  async function loadCandles(sym){
+    if(isCrypto(sym)){
+      const r = await fetch(`https://api.binance.com/api/v3/klines?symbol=${sym}&interval=${INTERVAL}&limit=600`, {cache:"no-store"});
+      if(!r.ok) throw new Error("Binance candle fetch failed");
+      const raw = await r.json();
+      return raw.map(k=>({time:k[0],open:+k[1],high:+k[2],low:+k[3],close:+k[4],volume:+k[5],isClosed:true})).filter(c=>Number.isFinite(c.close));
+    }
+    return syntheticCandles(sym,600);
+  }
+
+  function updateCoreFromCandles(sym){
+    setText("dsSymbol", label(sym)); setText("dsTF", INTERVAL); setText("dsCandles", String((candles||[]).length));
+    setText("dsUpdate", new Date().toLocaleTimeString());
+    setText("alignSymbol", label(sym));
+    const latest = candles && candles[candles.length-1];
+    if(latest){
+      const lp=byId("livePrice"); if(lp){ lp.textContent = formatPrice(sym, latest.close); lp.style.color = latest.close>=latest.open?"#22c55e":"#ef4444"; }
+      const up=byId("updateTime"); if(up) up.textContent = `${label(sym)} | ${INTERVAL} | ${isCrypto(sym)?"STREAM STABLE":"WATCH FEED STABLE"}`;
+    }
+  }
+
+  async function stableReset(){
+    ntSessionNonce++;
+    const nonce=ntSessionNonce;
+    const sym = cleanSym(SYMBOL || "BTCUSDT");
+    SYMBOL = DISPLAY[sym] ? sym : "BTCUSDT";
+    try{ if(reconnectTimeout){ clearTimeout(reconnectTimeout); reconnectTimeout=null; } }catch(e){}
+    try{ if(ntStableTimer){ clearInterval(ntStableTimer); ntStableTimer=null; } }catch(e){}
+    try{ if(ws){ ws.onopen=ws.onmessage=ws.onclose=ws.onerror=null; ws.close(); ws=null; } }catch(e){}
+    isSwitching = true;
+    currentSignal = null; candles = [];
+    lastLoggedSignalState = { pair:"", tf:"", signal:"", candleTime:0, quality:-999 };
+    chooseBrokerFor(SYMBOL); hardResetUi(SYMBOL); setSocketState("CONNECTING");
+    try{
+      candles = await loadCandles(SYMBOL);
+      if(nonce !== ntSessionNonce) return;
+      isSwitching = false;
+      setSocketState("CONNECTED");
+      updateCoreFromCandles(SYMBOL);
+      if(typeof refreshMTF === "function") { try{ await refreshMTF(); }catch(e){} }
+      const res = analyze(candles,{isClosed:true, symbol:SYMBOL});
+      currentSignal = res;
+      updateDashboard(res);
+      if(isCrypto(SYMBOL)) stableCryptoSocket(nonce); else stableWatchTimer(nonce);
+    }catch(e){
+      isSwitching = false;
+      setSocketState("ERROR");
+      const expl=byId("signalExplainer"); if(expl) expl.innerHTML = `Feed error for <b>${label(SYMBOL)}</b>. Switch market or retry.`;
+    }
+  }
+
+  function stableWatchTimer(nonce){
+    setSocketState("CONNECTED");
+    ntStableTimer = setInterval(()=>{
+      if(nonce !== ntSessionNonce) return;
+      const next = syntheticCandles(SYMBOL,600);
+      candles = next;
+      const res = analyze(candles,{isClosed:false, symbol:SYMBOL});
+      currentSignal = res; updateCoreFromCandles(SYMBOL); updateDashboard(res);
+    }, 2500);
+  }
+
+  function stableCryptoSocket(nonce){
+    try{
+      ws = new WebSocket(`wss://stream.binance.com:9443/ws/${SYMBOL.toLowerCase()}@kline_${INTERVAL}`);
+      ws.onopen = ()=>{ if(nonce===ntSessionNonce) setSocketState("CONNECTED"); };
+      ws.onmessage = (m)=>{
+        if(nonce!==ntSessionNonce) return;
+        try{
+          const parsed=JSON.parse(m.data); if(!parsed || !parsed.k) return;
+          const k=parsed.k;
+          const c={time:k.t,open:+k.o,high:+k.h,low:+k.l,close:+k.c,volume:+k.v,isClosed:k.x===true};
+          if(candles.length && candles[candles.length-1].time===c.time) candles[candles.length-1]=c; else candles.push(c);
+          if(candles.length>1000) candles.splice(0,candles.length-1000);
+          setSocketState("CONNECTED"); updateCoreFromCandles(SYMBOL);
+          const res=analyze(candles,{isClosed:c.isClosed, symbol:SYMBOL}); currentSignal=res; updateDashboard(res);
+        }catch(e){}
+      };
+      ws.onclose = ()=>{ if(nonce===ntSessionNonce && !isSwitching){ setSocketState("RECONNECTING"); setTimeout(()=>{ if(nonce===ntSessionNonce) stableReset(); },3500); } };
+      ws.onerror = ()=>{ if(nonce===ntSessionNonce) setSocketState("ERROR"); };
+    }catch(e){ setSocketState("ERROR"); }
+  }
+
+  window.activeSymbolLabel = function(){ return label(SYMBOL); };
+  window.changeAsset = function(){ const el=byId("assetSelect"); if(el) SYMBOL=cleanSym(el.value); saveGlobalSettings && saveGlobalSettings(); stableReset(); };
+  window.changeTimeframe = function(){ const el=byId("tfSelect"); if(el) INTERVAL=el.value||"1m"; saveGlobalSettings && saveGlobalSettings(); stableReset(); };
+  window.resetStream = stableReset;
+  window.connectWS = function(){ /* handled by stableReset to prevent duplicate sockets */ };
+
+  function quotaKey(){ const d=new Date().toISOString().slice(0,10); const email=(byId("userEmail")?.textContent||document.body.innerText.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0]||"guest").toLowerCase(); return `ntp_signal_quota_${email}_${d}`; }
+  function quotaUsed(){ return Number(localStorage.getItem(quotaKey())||0); }
+  function setQuota(n){ localStorage.setItem(quotaKey(), String(n)); }
+  function paidActive(){ return subscriptionState && subscriptionState.paidUntil && Number(subscriptionState.paidUntil)>Date.now(); }
+  function trialActive(){ return typeof trialDaysLeft === "function" && trialDaysLeft()>0; }
+  function quotaLimit(){ return paidActive()?999:2; }
+  function ensurePatternButton(){
+    const panel=byId("testerPatternPanel"); if(!panel || byId("ntPatternGenerateBtn")) return;
+    const action=document.createElement("div"); action.className="nt-pattern-action";
+    action.innerHTML=`<button id="ntPatternGenerateBtn" class="nt-pattern-generate" onclick="generateTwoSignalPattern()">GENERATE SIGNAL PATTERN</button><div id="ntPatternQuota" class="nt-pattern-quota">Free trial limit: 2 generated signals per day. After 30 days, subscribe Basic / Pro / Premium to continue.</div>`;
+    const note=byId("testerPatternNote"); panel.insertBefore(action, note?note.nextSibling:null);
+  }
+  function updateQuotaUi(){
+    const used=quotaUsed(), lim=quotaLimit();
+    const q=byId("ntPatternQuota"); if(q) q.textContent = paidActive()?`Paid access active — signal pattern generator unlocked.`:`Free trial: ${Math.max(0,2-used)} of 2 signal generations left today. 30-day trial remaining: ${typeof trialDaysLeft==="function"?trialDaysLeft():30} days.`;
+    const btn=byId("ntPatternGenerateBtn"); if(btn){
+      const locked = !paidActive() && (!trialActive() || used>=2);
+      btn.disabled = locked; btn.style.opacity = locked?".55":"1"; btn.textContent = locked ? (trialActive()?"DAILY LIMIT REACHED — SUBSCRIBE":"TRIAL EXPIRED — SUBSCRIBE") : "GENERATE SIGNAL PATTERN";
+    }
+  }
+  window.generateTwoSignalPattern = async function(){
+    if(!paidActive()){
+      if(!trialActive()){ notify("30-day free trial expired. Subscribe to unlock signal generator."); updateQuotaUi(); return; }
+      if(quotaUsed()>=2){ notify("Daily free limit reached: 2 signals per day. Subscribe to unlock more."); updateQuotaUi(); return; }
+    }
+    const res = currentSignal || analyze(candles,{isClosed:true, symbol:SYMBOL});
+    const side = String(res.signal||"WAIT").includes("BUY")?"BUY":String(res.signal||"WAIT").includes("SELL")?"SELL":"WAIT";
+    const entry = candles?.[candles.length-1]?.close || res.price || 0;
+    const risk = Math.max(Math.abs(entry)*0.003, brokerSpreadEstimate ? brokerSpreadEstimate(entry)*3 : 0.01);
+    const sig1 = side==="SELL" ? {entry, sl:entry+risk, tp:entry-risk*1.6} : side==="BUY" ? {entry, sl:entry-risk, tp:entry+risk*1.6} : {entry, sl:entry-risk, tp:entry+risk};
+    const sig2 = side==="SELL" ? {entry:entry-risk*.25, sl:entry+risk*.85, tp:entry-risk*2.2} : side==="BUY" ? {entry:entry+risk*.25, sl:entry-risk*.85, tp:entry+risk*2.2} : {entry, sl:entry-risk, tp:entry+risk};
+    if(!paidActive()) setQuota(quotaUsed()+1);
+    setText("testerPatternSignal", `${side} PATTERN READY`, side==="BUY"?"#22c55e":side==="SELL"?"#ef4444":"#eab308");
+    const note=byId("testerPatternNote");
+    if(note) note.innerHTML = `<b>${label(SYMBOL)}</b> • ${INTERVAL} • ${selectedBrokerLabel?selectedBrokerLabel():BROKER_MODE}<br>Signal 1: ${side} | Entry ${formatPrice(SYMBOL,sig1.entry)} | SL ${formatPrice(SYMBOL,sig1.sl)} | TP ${formatPrice(SYMBOL,sig1.tp)}<br>Signal 2: ${side} | Entry ${formatPrice(SYMBOL,sig2.entry)} | SL ${formatPrice(SYMBOL,sig2.sl)} | TP ${formatPrice(SYMBOL,sig2.tp)}<br><span style="color:#eab308">Limit rule: free trial allows 2 generated signal patterns per day. User trades manually on own broker.</span>`;
+    updateQuotaUi();
+    try{
+      if(window.supabaseClient){
+        const {data}=await window.supabaseClient.auth.getUser();
+        await window.supabaseClient.from("signal_history").insert({ user_id:data?.user?.id||null, symbol:SYMBOL, timeframe:INTERVAL, signal:side, confidence:Number(res.confidence||0), source:"pattern_generator", meta:{signal1:sig1, signal2:sig2, patch:PATCH_VERSION} });
+      }
+    }catch(e){}
+    notify("Signal pattern generated. Free quota updated.");
+  };
+
+  function cleanUserPortal(){
+    const ver=byId("verificationBox"); if(ver) ver.remove();
+    document.querySelectorAll("label,button,div,span,small,b,h3").forEach(el=>{
+      const t=(el.textContent||"").toLowerCase();
+      if(t.includes("face verification") || t.includes("real id front") || t.includes("id copy") || t.includes("phone:") && t.includes("documents:")){
+        const card=el.closest(".card")||el.closest(".portal-info-card")||el; if(card) card.style.display="none";
+      }
+      if(t.includes("deposit")) el.textContent = el.textContent.replace(/deposits?/ig,"subscription payments");
+    });
+  }
+
+  function authButtons(){
+    const overlay=byId("authOverlay"); if(!overlay || byId("ntGoogleBtn")) return;
+    const card=overlay.querySelector("div:not(.nt-market-bg):not(.nt-auth-brand):not(.nt-session-loader)"); if(!card) return;
+    const emailLab=document.createElement("div"); emailLab.className="nt-email-label"; emailLab.innerHTML="✉️ Sign in using email";
+    const google=document.createElement("button"); google.id="ntGoogleBtn"; google.type="button"; google.className="nt-google-btn"; google.innerHTML='<span class="nt-g-logo">G</span> Continue with Google';
+    google.onclick=async()=>{ try{ if(window.supabaseClient){ await window.supabaseClient.auth.signInWithOAuth({provider:"google", options:{redirectTo:location.href}}); } else alert("Google sign-in needs Supabase client first."); }catch(e){ alert("Google sign-in is not enabled yet in Supabase Providers."); } };
+    const firstInput=card.querySelector("input"); if(firstInput) card.insertBefore(emailLab, firstInput);
+    const signup=[...card.querySelectorAll("button")].find(b=>(b.textContent||"").toLowerCase().includes("sign up"));
+    if(signup) signup.insertAdjacentElement("afterend", google); else card.appendChild(google);
+    const mini=card.querySelector("p"); if(mini) mini.textContent="Secure email login active. Google sign-in button added; enable Google provider in Supabase when ready.";
+  }
+
+  function boot(){
+    ensureAssets();
+    const sel=byId("assetSelect"); if(sel && DISPLAY[SYMBOL]) sel.value=SYMBOL;
+    chooseBrokerFor(SYMBOL);
+    ensurePatternButton(); updateQuotaUi(); cleanUserPortal(); authButtons();
+    setInterval(()=>{ensurePatternButton(); updateQuotaUi(); cleanUserPortal(); authButtons();},1500);
+    setTimeout(stableReset,650);
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+})();
+</script>
+<!-- /NETTRACK PRO V13.1 STABILITY + SIGNAL LIMIT + CLEAN USER/PAYMENT PATCH -->
+
 </body>
 </html>
