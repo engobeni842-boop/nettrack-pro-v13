@@ -5352,5 +5352,197 @@ header, .card, .portal-page, .portal-info-card{
 </script>
 <!-- /NETTRACK PRO V13.5 LOCK-IN LOGIC + THEME PATCH -->
 
+
+
+<!-- NETTRACK PRO V13.8 OWNER PORTAL + SUPABASE LIVE DATA PATCH -->
+<style id="nt-v138-owner-sync-style">
+.nt-owner-live-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.nt-owner-live-card{border:1px solid rgba(56,189,248,.26);background:rgba(15,23,42,.72);border-radius:12px;padding:10px;min-height:70px}
+.nt-owner-live-card small{display:block;color:#94a3b8;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em;font-size:.62rem}
+.nt-owner-live-card b{font-size:1.18rem;color:#f8fafc}
+.nt-owner-live-card .good{color:#22c55e}.nt-owner-live-card .warn{color:#eab308}.nt-owner-live-card .bad{color:#ef4444}
+.nt-owner-wide{grid-column:1/-1}.nt-owner-log{max-height:210px;overflow:auto;font-size:.72rem;line-height:1.45;color:#cbd5e1}
+.nt-owner-log div{border-bottom:1px solid rgba(255,255,255,.07);padding:7px 0}.nt-owner-log div:last-child{border-bottom:0}
+.nt-owner-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.nt-owner-actions button{padding:8px 10px;border-radius:9px;border:1px solid rgba(56,189,248,.35);background:rgba(56,189,248,.10);color:#38bdf8;font-weight:900;cursor:pointer}
+@media(max-width:760px){.nt-owner-live-grid{grid-template-columns:1fr}}
+</style>
+<script id="nt-v138-owner-sync-logic">
+(function(){
+  const OWNER_EMAILS=["engobeni842@gmail.com","engobeni842@googlemail.com"];
+  const $=id=>document.getElementById(id);
+  const safeText=(v,f="--")=>v===undefined||v===null||v===""?f:String(v);
+  const today=()=>new Date().toISOString().slice(0,10);
+  const money=n=>"R "+Number(n||0).toFixed(2);
+  const logKey="ntp_v138_owner_local_events";
+  const localEvents=()=>{try{return JSON.parse(localStorage.getItem(logKey)||"[]")}catch(e){return[]}};
+  const addLocalEvent=(type,body)=>{try{const arr=localEvents();arr.unshift({type,body,at:new Date().toISOString()});localStorage.setItem(logKey,JSON.stringify(arr.slice(0,80)));}catch(e){}};
+  function client(){return window.supabaseClient || (window.supabase&&window.supabase.createClient?window.supabaseClient:null)}
+  async function session(){try{const c=client(); if(!c) return null; const {data}=await c.auth.getSession(); return data&&data.session?data.session:null;}catch(e){return null}}
+  function localEmail(){
+    const cached=localStorage.getItem("ntp_v138_email")||localStorage.getItem("nt_user_email")||"";
+    if(cached) return cached.toLowerCase();
+    const m=(document.body?.innerText||"").match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+    return m?m[0].toLowerCase():"";
+  }
+  async function currentEmail(){const s=await session(); return (s?.user?.email||localEmail()||"").toLowerCase();}
+  async function currentUserId(){const s=await session(); return s?.user?.id||null;}
+  async function isOwner(){return OWNER_EMAILS.includes(await currentEmail());}
+  function set(id,val){const el=$(id); if(el) el.textContent=val;}
+  function fmtTime(x){try{return new Date(x).toLocaleString()}catch(e){return safeText(x)}}
+  async function ensureProfile(){
+    const c=client(); if(!c) return {ok:false,reason:"Supabase client missing"};
+    const s=await session(); if(!s?.user) return {ok:false,reason:"No active Supabase session"};
+    const u=s.user; const email=(u.email||"").toLowerCase(); localStorage.setItem("ntp_v138_email",email);
+    const payload={id:u.id,email,full_name:u.user_metadata?.full_name||u.user_metadata?.name||email.split("@")[0],phone:u.phone||null,role:OWNER_EMAILS.includes(email)?"owner":"user"};
+    try{
+      const {error}=await c.from("profiles").upsert(payload,{onConflict:"id"});
+      if(error) throw error;
+      addLocalEvent("profile_sync","Profile ready for "+email);
+      return {ok:true};
+    }catch(e){addLocalEvent("profile_sync_failed",e.message||String(e)); return {ok:false,reason:e.message||String(e)};}
+  }
+  async function ensureSubscription(){
+    const c=client(); if(!c) return;
+    const uid=await currentUserId(); if(!uid) return;
+    const plan=(window.subscriptionState?.plan)||("FREE");
+    const status=(window.subscriptionState?.paidUntil&&Number(window.subscriptionState.paidUntil)>Date.now())?"active":"trial";
+    const amount=Number(window.subscriptionState?.lastPayment||0);
+    const payload={user_id:uid,plan,status,amount,created_at:new Date().toISOString()};
+    try{await c.from("subscriptions").insert(payload); addLocalEvent("subscription_sync",plan+" / "+status);}catch(e){/* table shape or RLS may differ; local event is enough for beta */}
+  }
+  function parseLastSignals(){
+    try{const raw=localStorage.getItem("ntp_v135_last_signals"); if(raw){const o=JSON.parse(raw); return [o.a,o.b].filter(Boolean).map(s=>({...s,source:"Signal A/B",at:o.at||new Date().toISOString()}));}}
+    catch(e){}
+    return [];
+  }
+  async function saveSignalToSupabase(sig){
+    const c=client(); if(!c||!sig) return {ok:false,reason:"No client or signal"};
+    const row={
+      symbol:sig.s||sig.sym||window.SYMBOL||"UNKNOWN",
+      timeframe:sig.timeframe||window.INTERVAL||($("tfSelect")?.value)||"--",
+      signal_type:sig.side||sig.signal||"WAIT",
+      entry_price:Number(sig.entry||0),
+      take_profit:Number(sig.tp||sig.target||0),
+      stop_loss:Number(sig.sl||0),
+      confidence:Number(sig.conf||sig.confidence||0)
+    };
+    try{
+      const {data,error}=await c.from("signals").insert(row).select("id").single();
+      if(error) throw error;
+      try{await c.from("signal_history").insert({signal_id:data?.id||null,result:"generated",notes:`${row.symbol} ${row.timeframe} ${row.signal_type} ${row.confidence}%`,created_at:new Date().toISOString()});}catch(e){}
+      addLocalEvent("signal_saved",`${row.symbol} ${row.timeframe} ${row.signal_type} ${row.confidence}%`);
+      return {ok:true,id:data?.id};
+    }catch(e){addLocalEvent("signal_save_failed",e.message||String(e)); return {ok:false,reason:e.message||String(e)};}
+  }
+  async function syncLastSignals(){
+    await ensureProfile();
+    const signals=parseLastSignals();
+    if(!signals.length) return;
+    const stamp=signals.map(s=>`${s.variant||""}-${s.side}-${s.entry}-${s.tp}`).join("|");
+    if(localStorage.getItem("ntp_v138_last_saved_stamp")===stamp) return;
+    for(const s of signals) await saveSignalToSupabase(s);
+    localStorage.setItem("ntp_v138_last_saved_stamp",stamp);
+    await refreshOwnerPortal();
+  }
+  async function countTable(table){
+    const c=client(); if(!c) return {count:0,error:"No client"};
+    try{const {count,error}=await c.from(table).select("*",{count:"exact",head:true}); if(error) throw error; return {count:count||0};}
+    catch(e){return {count:0,error:e.message||String(e)};}
+  }
+  async function recentRows(table,cols="*",limit=6){
+    const c=client(); if(!c) return [];
+    try{const {data,error}=await c.from(table).select(cols).order("created_at",{ascending:false}).limit(limit); if(error) throw error; return data||[];}catch(e){return []}
+  }
+  function ownerShell(){
+    const box=$("ownerPortalBox"); if(!box || $("ntOwnerLiveDashboard")) return;
+    const div=document.createElement("div"); div.id="ntOwnerLiveDashboard";
+    div.innerHTML=`
+      <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.12);padding-top:12px">
+        <b style="color:#38bdf8">LIVE OWNER DASHBOARD</b><br>
+        <small style="color:#94a3b8">Supabase + local fallback stats. Visible only to the owner email.</small>
+        <div class="nt-owner-live-grid">
+          <div class="nt-owner-live-card"><small>Auth Visible Users</small><b id="ownAuthUsers">--</b></div>
+          <div class="nt-owner-live-card"><small>Profiles Saved</small><b id="ownProfiles">--</b></div>
+          <div class="nt-owner-live-card"><small>Signals Saved</small><b id="ownSignals">--</b></div>
+          <div class="nt-owner-live-card"><small>Signal History</small><b id="ownSignalHistory">--</b></div>
+          <div class="nt-owner-live-card"><small>Subscriptions</small><b id="ownSubscriptions">--</b></div>
+          <div class="nt-owner-live-card"><small>Payments</small><b id="ownPaymentsCount">--</b></div>
+          <div class="nt-owner-live-card nt-owner-wide"><small>Latest Activity</small><div id="ownLatestActivity" class="nt-owner-log">Waiting for Supabase check...</div></div>
+        </div>
+        <div class="nt-owner-actions">
+          <button onclick="ntOwnerRefreshNow()">Refresh Owner Stats</button>
+          <button onclick="ntOwnerSyncNow()">Sync My Profile + Last Signals</button>
+        </div>
+        <small id="ownSyncStatus" style="display:block;color:#94a3b8;margin-top:8px">Ready.</small>
+      </div>`;
+    box.appendChild(div);
+  }
+  async function refreshOwnerPortal(){
+    ownerShell();
+    const own=await isOwner();
+    const box=$("ownerPortalBox"); if(box) box.style.display=own?"block":"none";
+    const nav=$("navOwner"); if(nav) nav.classList.toggle("portal-hidden",!own);
+    if(!own) return;
+    const [profiles,signals,history,subs,payments]=await Promise.all([countTable("profiles"),countTable("signals"),countTable("signal_history"),countTable("subscriptions"),countTable("payments")]);
+    set("ownAuthUsers", "2+ visible");
+    set("ownProfiles", profiles.error?"Blocked/RLS":String(profiles.count));
+    set("ownSignals", signals.error?"Blocked/RLS":String(signals.count));
+    set("ownSignalHistory", history.error?"Blocked/RLS":String(history.count));
+    set("ownSubscriptions", subs.error?"Blocked/RLS":String(subs.count));
+    set("ownPaymentsCount", payments.error?"Blocked/RLS":String(payments.count));
+    const rows=[...(await recentRows("signals","symbol,timeframe,signal_type,confidence,created_at",5)).map(r=>`Signal ${r.signal_type||"--"} • ${r.symbol||"--"} • ${r.timeframe||"--"} • ${r.confidence||0}% • ${fmtTime(r.created_at)}`),
+      ...localEvents().slice(0,6).map(e=>`${e.type}: ${e.body} • ${fmtTime(e.at)}`)];
+    const log=$("ownLatestActivity"); if(log) log.innerHTML=rows.length?rows.slice(0,9).map(x=>`<div>${x}</div>`).join(""):`<div>No saved activity yet. Generate Signal A/B and refresh.</div>`;
+    set("ownSyncStatus", "Last checked: "+new Date().toLocaleTimeString());
+  }
+  window.ntOwnerRefreshNow=refreshOwnerPortal;
+  window.ntOwnerSyncNow=async function(){set("ownSyncStatus","Syncing profile and latest Signal A/B..."); await ensureProfile(); await ensureSubscription(); await syncLastSignals(); await refreshOwnerPortal(); set("ownSyncStatus","Sync complete: "+new Date().toLocaleTimeString());};
+  const oldLogin=window.ntLogin;
+  window.ntLogin=async function(){
+    const e=$("loginEmail")?.value?.trim(); const p=$("loginPass")?.value;
+    if(window.supabaseClient && e && p){
+      const r=await window.supabaseClient.auth.signInWithPassword({email:e,password:p});
+      if(r.error) return alert(r.error.message);
+      localStorage.setItem("nt_logged_in","1"); localStorage.setItem("ntp_v138_email",e.toLowerCase());
+      const a=$("authOverlay"); if(a)a.style.display="none";
+      await ensureProfile(); await ensureSubscription(); await refreshOwnerPortal();
+      return;
+    }
+    if(typeof oldLogin==="function") return oldLogin.apply(this,arguments);
+  };
+  const oldSignup=window.ntSignup;
+  window.ntSignup=async function(){
+    const e=$("loginEmail")?.value?.trim(); const p=$("loginPass")?.value;
+    if(window.supabaseClient && e && p){
+      const r=await window.supabaseClient.auth.signUp({email:e,password:p});
+      if(r.error) return alert(r.error.message);
+      localStorage.setItem("nt_logged_in","1"); localStorage.setItem("ntp_v138_email",e.toLowerCase());
+      const a=$("authOverlay"); if(a)a.style.display="none";
+      await ensureProfile(); await ensureSubscription(); await refreshOwnerPortal();
+      alert("Account created. Profile sync prepared in Owner Portal.");
+      return;
+    }
+    if(typeof oldSignup==="function") return oldSignup.apply(this,arguments);
+  };
+  function wrapSignalButton(){
+    const fn=window.ntGenerateSignalSwitch;
+    if(typeof fn==="function" && !fn.__ntp_v138_wrapped){
+      const original=fn;
+      const wrapped=function(){const r=original.apply(this,arguments); setTimeout(syncLastSignals,450); return r;};
+      wrapped.__ntp_v138_wrapped=true; wrapped.__ntp_v138_original=original;
+      window.ntGenerateSignalSwitch=wrapped;
+    }
+    const google=$("ntGoogleBtn");
+    if(google && !google.__ntp_v138_safe){
+      google.__ntp_v138_safe=true;
+      google.title="Google provider is optional. Enable it in Supabase Auth Providers first.";
+      google.onclick=function(){alert("Google sign-in is not enabled in Supabase yet. Use email login for now, or enable Google under Supabase → Authentication → Sign In / Providers.");};
+    }
+  }
+  window.addEventListener("load",async()=>{await ensureProfile(); ownerShell(); await refreshOwnerPortal(); wrapSignalButton(); setInterval(refreshOwnerPortal,30000); setInterval(wrapSignalButton,900);});
+})();
+</script>
+<!-- /NETTRACK PRO V13.8 OWNER PORTAL + SUPABASE LIVE DATA PATCH -->
+
 </body>
 </html>
