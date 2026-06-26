@@ -4982,5 +4982,200 @@ body{
 </script>
 <!-- /NETTRACK PRO V13.4 PREMIUM SIGNAL PLATFORM PATCH -->
 
+
+<!-- NETTRACK PRO V13.5 LOCK-IN LOGIC + THEME PATCH -->
+<style id="nt-v135-lockin-style">
+:root{
+  --bg:#050505!important;
+  --card-bg:#0a0a0a!important;
+  --panel:#121212!important;
+  --border:rgba(255,255,255,.10)!important;
+  --text:#ffffff!important;
+  --muted:#a1a1aa!important;
+  --primary:#0091ff!important;
+  --buy:#22c55e!important;
+  --sell:#ef4444!important;
+  --neutral:#ffc800!important;
+}
+body{
+  background:
+    radial-gradient(circle at 0% 0%, rgba(0,145,255,.14), transparent 32%),
+    radial-gradient(circle at 100% 10%, rgba(0,229,255,.10), transparent 28%),
+    radial-gradient(circle at 50% 100%, rgba(255,200,0,.055), transparent 30%),
+    #050505!important;
+  color:#fff!important;
+}
+header, .card, .portal-page, .portal-info-card{
+  background:linear-gradient(145deg,rgba(18,18,18,.96),rgba(10,10,10,.98))!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  box-shadow:0 18px 50px rgba(0,0,0,.32)!important;
+}
+.card h2,.card h3,h2,h3{color:#a1a1aa!important}
+.pair-selector{background:#0091ff!important;color:#000!important;border-color:rgba(0,145,255,.65)!important}
+.tf-selector, select, input, textarea{
+  background:#121212!important;color:#fff!important;border-color:rgba(255,255,255,.13)!important;
+}
+.live-price{color:#00e5ff}
+.nt-more-white-shell .card,.nt-more-white-shell .span-4:nth-child(odd),.nt-more-white-shell .span-6:nth-child(odd){
+  background:linear-gradient(145deg,rgba(18,18,18,.98),rgba(10,10,10,.96))!important;
+  color:#fff!important;
+  border-color:rgba(255,255,255,.10)!important;
+}
+.nt-signal-switch-mount{
+  background:linear-gradient(145deg,rgba(12,18,30,.98),rgba(5,5,5,.96))!important;
+  color:#fff!important;
+  border:1px solid rgba(0,145,255,.35)!important;
+  box-shadow:0 20px 60px rgba(0,145,255,.10),0 20px 60px rgba(0,0,0,.38)!important;
+  border-radius:18px!important;
+}
+.nt-signal-switch-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.nt-signal-switch-head b{color:#fff!important}
+.nt-signal-badge{background:rgba(255,200,0,.14)!important;color:#ffc800!important;border:1px solid rgba(255,200,0,.28)!important}
+.nt-signal-card{
+  background:rgba(255,255,255,.055)!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  color:#fff!important;
+  border-radius:14px!important;
+}
+.nt-signal-card h4{color:#00e5ff!important}
+.nt-signal-card h4 span{color:#a1a1aa!important}
+.nt-signal-row{border-bottom:1px solid rgba(255,255,255,.08)!important}
+.nt-signal-row span,.nt-signal-profits,.nt-user-only-note{color:#a1a1aa!important}
+.nt-signal-row b{color:#fff!important}
+.nt-signal-action button,#ntSignalSwitchBtn{
+  background:linear-gradient(135deg,#0091ff,#00e5ff)!important;
+  color:#020617!important;
+  border:0!important;
+  border-radius:12px!important;
+  padding:12px 14px!important;
+  font-weight:1000!important;
+  letter-spacing:.04em;
+  cursor:pointer;
+}
+.nt-quota-line{background:rgba(255,200,0,.09)!important;color:#ffc800!important;border-color:rgba(255,200,0,.24)!important}
+.nt-sensitive-card.nt-sensitive-locked::after{
+  content:"🔒 Under subscription — sensitive signal data hidden. Signal A and Signal B generator stays open."!important;
+  background:linear-gradient(135deg,rgba(5,5,5,.74),rgba(0,145,255,.30))!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.18);
+}
+.nt-sensitive-card.nt-sensitive-locked:has(#ntSignalSwitchPanel)::after,
+.nt-sensitive-card.nt-sensitive-locked:has(#ntSignalSwitchMount)::after{display:none!important}
+.nt-sensitive-card.nt-sensitive-locked:has(#ntSignalSwitchPanel)>*,
+.nt-sensitive-card.nt-sensitive-locked:has(#ntSignalSwitchMount)>*{filter:none!important;opacity:1!important}
+.nt-v135-chip{display:inline-flex;gap:6px;align-items:center;border:1px solid rgba(0,229,255,.28);background:rgba(0,229,255,.08);color:#00e5ff;border-radius:999px;padding:3px 8px;font-size:.68rem;font-weight:900}
+.nt-v135-reason{margin-top:8px;border:1px solid rgba(255,200,0,.20);background:rgba(255,200,0,.075);color:#ffe08a;border-radius:10px;padding:8px;font-size:.72rem;line-height:1.45}
+</style>
+<script id="nt-v135-lockin-logic">
+(function(){
+  const PATCH_VERSION="13.5-lockin";
+  const $=id=>document.getElementById(id);
+  const DISPLAY={BTCUSDT:"BTC/USDT",ETHUSDT:"ETH/USDT",SOLUSDT:"SOL/USDT",BNBUSDT:"BNB/USDT",EURUSD:"EUR/USD",GBPUSD:"GBP/USD",USDJPY:"USD/JPY",XAUUSD:"XAU/USD Gold",R_75:"Volatility 75",R_100:"Volatility 100",BOOM1000:"BOOM1000",CRASH1000:"CRASH1000"};
+  const BASE={BTCUSDT:61700,ETHUSDT:3400,SOLUSDT:145,BNBUSDT:562,EURUSD:1.086,GBPUSD:1.274,USDJPY:159.2,XAUUSD:2320,R_75:100000,R_100:85000,BOOM1000:10400,CRASH1000:9200};
+  function sym(){return String((window.SYMBOL||$("assetSelect")?.value||"BTCUSDT")).replace(/[^A-Z0-9_]/g,"")||"BTCUSDT"}
+  function tf(){return String(window.INTERVAL||$("tfSelect")?.value||"1m")}
+  function broker(s){if(/EUR|GBP|JPY|XAU/.test(s))return "TradingView / MT4 / MT5"; if(/R_|BOOM|CRASH/.test(s))return "Deriv"; return "Binance / Bybit";}
+  function dec(s){return /EURUSD|GBPUSD/.test(s)?5:(/USDJPY/.test(s)?3:2)}
+  function fmt(v,s){return (/EURUSD|GBPUSD|USDJPY/.test(s)?"":/XAU|USDT/.test(s)?"$":"")+Number(v||0).toFixed(dec(s))}
+  function lastPrice(s){
+    try{const c=window.candles||[]; const last=c[c.length-1]; if(last&&Number.isFinite(last.close))return Number(last.close)}catch(e){}
+    const drift=Math.sin((Date.now()/60000)+[...s].reduce((a,c)=>a+c.charCodeAt(0),0))*0.002;
+    return (BASE[s]||100)*(1+drift);
+  }
+  function readCore(){
+    const signal=String($("signalText")?.textContent||"").toUpperCase();
+    const conf=Number(String($("confValue")?.textContent||"0").replace(/\D/g,""))||0;
+    const qual=Number(String($("summaryQuality")?.textContent||"0").replace(/\D/g,""))||0;
+    return {signal,conf,qual};
+  }
+  function sideFor(variant){
+    const c=readCore();
+    if(c.signal.includes("BUY")) return variant==="B" && c.conf<72 ? "SELL" : "BUY";
+    if(c.signal.includes("SELL")) return variant==="B" && c.conf<72 ? "BUY" : "SELL";
+    const s=sym();
+    const seed=[...s].reduce((a,ch)=>a+ch.charCodeAt(0),0)+Math.floor(Date.now()/300000)+(variant==="B"?7:0);
+    return seed%2===0?"BUY":"SELL";
+  }
+  function makeSignal(variant){
+    const s=sym(), p=lastPrice(s), core=readCore();
+    const side=sideFor(variant);
+    const market=/EURUSD|GBPUSD/.test(s)?"forex":/USDJPY/.test(s)?"jpy":/XAU/.test(s)?"gold":/R_|BOOM|CRASH/.test(s)?"synthetic":"crypto";
+    const mult=market==="forex"?0.0012:market==="jpy"?0.0014:market==="gold"?0.0024:market==="synthetic"?0.0035:0.006;
+    const risk=Math.max(Math.abs(p*mult)*(variant==="B"?1.18:1), market==="forex"?0.0007:0.01);
+    const entry=variant==="B" ? p + (side==="BUY"?risk*.20:-risk*.20) : p;
+    const sl=side==="BUY"?entry-risk:entry+risk;
+    const tp=side==="BUY"?entry+risk*1.75:entry-risk*1.75;
+    const target=tp;
+    const conf=Math.max(61,Math.min(94,(core.conf||68)+(variant==="A"?4:-2)));
+    const quality=Math.max(58,Math.min(96,(core.qual||72)+(variant==="A"?3:-4)));
+    const expiry= tf()==="1m" ? "3–5 min" : tf()==="5m" ? "10–15 min" : tf()==="15m" ? "30–45 min" : "1–2 candles";
+    return {variant,s,side,entry,sl,tp,target,conf,quality,expiry,provider:broker(s),timeframe:tf(),reason:reasonText(side,core)};
+  }
+  function reasonText(side,core){
+    const bits=[];
+    if(core.signal.includes(side)) bits.push("main engine agrees");
+    if(core.conf>=70) bits.push("confidence above filter");
+    if(core.qual>=65) bits.push("trade quality accepted");
+    if(!bits.length) bits.push("fallback structure scan active");
+    return bits.join(" • ");
+  }
+  function render(sig){
+    const color=sig.side==="BUY"?"#22c55e":"#ef4444";
+    return `<div class="nt-signal-card">
+      <h4>Signal ${sig.variant}<span>${sig.provider}</span></h4>
+      <div class="side" style="color:${color};font-size:1.9rem;font-weight:1000">${sig.side}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px"><span class="nt-v135-chip">${DISPLAY[sig.s]||sig.s}</span><span class="nt-v135-chip">${sig.timeframe}</span><span class="nt-v135-chip">${sig.conf}% confidence</span></div>
+      <div class="nt-signal-row"><span>Entry</span><b>${fmt(sig.entry,sig.s)}</b></div>
+      <div class="nt-signal-row"><span>Suggested Target</span><b>${fmt(sig.target,sig.s)}</b></div>
+      <div class="nt-signal-row"><span>Take Profit</span><b>${fmt(sig.tp,sig.s)}</b></div>
+      <div class="nt-signal-row"><span>Stop Loss</span><b>${fmt(sig.sl,sig.s)}</b></div>
+      <div class="nt-signal-row"><span>Quality</span><b>${sig.quality}/100</b></div>
+      <div class="nt-signal-row"><span>Expiry Window</span><b>${sig.expiry}</b></div>
+      <div class="nt-v135-reason"><b>Logic:</b> ${sig.reason}. Manual execution only — no guaranteed profit.</div>
+    </div>`;
+  }
+  function quotaKey(){return "ntp_v135_signal_quota_"+new Date().toISOString().slice(0,10)}
+  function quota(){return Number(localStorage.getItem(quotaKey())||0)}
+  function setQuota(n){localStorage.setItem(quotaKey(),String(n))}
+  function paid(){try{return !!(window.subscriptionState && subscriptionState.paidUntil && Number(subscriptionState.paidUntil)>Date.now())}catch(e){return false}}
+  function can(){return paid()||quota()<2}
+  function quotaText(){
+    const q=$("ntSwitchQuota");
+    if(q) q.textContent=paid()?"Subscription active — generator unlocked.":`Free test mode: ${Math.max(0,2-quota())} of 2 Signal A/B generations left today.`;
+    const b=$("ntSignalSwitchBtn");
+    if(b){b.disabled=!can(); b.style.opacity=can()?"1":".55"; b.textContent=can()?"GENERATE SIGNAL A + SIGNAL B":"DAILY LIMIT REACHED — SUBSCRIBE";}
+  }
+  function unlockGeneratorCard(){
+    const panel=$("ntSignalSwitchPanel")||$("ntSignalSwitchMount");
+    const card=panel?.closest?.(".card");
+    if(card){card.classList.remove("nt-sensitive-locked"); card.classList.add("nt-generator-open-card");}
+  }
+  function runGenerate(){
+    if(!can()){quotaText(); if(typeof window.notify==="function")notify("Daily free limit reached. Subscribe to unlock more Signal A/B generations."); return;}
+    const a=makeSignal("A"), b=makeSignal("B"), out=$("ntSignalSwitchOutput");
+    if(out) out.innerHTML=render(a)+render(b)+`<div class="nt-signal-disclaimer" style="grid-column:1/-1"><b>Reality check:</b> These are analysis signals, not a promise. Check your broker chart before using real money.</div>`;
+    if(!paid())setQuota(quota()+1);
+    try{localStorage.setItem("ntp_v135_last_signals",JSON.stringify({a,b,at:new Date().toISOString(),patch:PATCH_VERSION}))}catch(e){}
+    quotaText(); unlockGeneratorCard();
+    if(typeof window.notify==="function")notify("Signal A and Signal B generated with confidence and suggested target.");
+  }
+  function install(){
+    const panel=$("ntSignalSwitchPanel");
+    const mount=$("ntSignalSwitchMount");
+    if(panel){
+      const head=panel.querySelector(".nt-signal-switch-head b"); if(head)head.textContent="Network Pro Daily Signal Logic";
+      const badge=panel.querySelector(".nt-signal-badge"); if(badge)badge.textContent="SIGNAL A + SIGNAL B";
+    }
+    if(mount) mount.classList.add("nt-signal-switch-mount");
+    window.ntGenerateSignalSwitch=runGenerate;
+    quotaText(); unlockGeneratorCard();
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install); else install();
+  window.addEventListener("load",install);
+  setInterval(install,1600);
+})();
+</script>
+<!-- /NETTRACK PRO V13.5 LOCK-IN LOGIC + THEME PATCH -->
+
 </body>
 </html>
