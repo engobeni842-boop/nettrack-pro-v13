@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NetTrack Pro V13.7 Compact Control Drawer</title>
+<title>NetTrack Pro V13.6 Professional Signal Platform</title>
 <style>
 :root {
 --bg: #050a14;
@@ -343,59 +343,6 @@ h2,h3{font-size:.68rem!important;letter-spacing:.95px!important;margin-bottom:.9
 .nt-signal-row{padding:7px 0!important;}
 .nt-signal-action{margin-top:12px!important;}
 @media(max-width:900px){.big-signal{font-size:2.1rem!important}.container{padding:1rem!important}.card{padding:1rem!important}}
-
-
-/* V13.7 COMPACT CONTROL DRAWER — keeps live socket/API logic untouched */
-header.nt-compact-header{
-  padding:10px 18px!important;
-  min-height:74px!important;
-  align-items:center!important;
-  gap:14px!important;
-  background:linear-gradient(180deg, rgba(3,7,18,.96), rgba(2,6,23,.92))!important;
-  box-shadow:0 12px 34px rgba(0,0,0,.32);
-}
-.nt-header-left{display:flex;align-items:center;gap:14px;min-width:260px;}
-.nt-brand-title{margin:0!important;font-size:1.08rem!important;line-height:1.08!important;white-space:nowrap;}
-.nt-brand-title small{font-size:.50rem!important;letter-spacing:.75px!important;color:#64748b!important;}
-.nt-control-drawer{position:relative;flex:1;max-width:720px;z-index:1100;}
-.nt-control-drawer summary{
-  list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;
-  min-height:42px;padding:9px 14px;border-radius:13px;border:1px solid rgba(56,189,248,.38);
-  background:linear-gradient(135deg, rgba(56,189,248,.16), rgba(15,23,42,.92));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 0 0 1px rgba(0,0,0,.2);
-}
-.nt-control-drawer summary::-webkit-details-marker{display:none;}
-.nt-drawer-label{display:flex;align-items:center;gap:10px;font-weight:900;color:#e2e8f0;font-size:.78rem;text-transform:uppercase;letter-spacing:.7px;}
-.nt-drawer-label::before{content:'▾';display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:rgba(56,189,248,.18);color:#38bdf8;border:1px solid rgba(56,189,248,.3);transition:transform .2s ease;}
-.nt-control-drawer[open] .nt-drawer-label::before{transform:rotate(180deg);}
-.nt-drawer-hint{color:#38bdf8;font-size:.72rem;font-weight:900;white-space:nowrap;}
-.nt-selected-strip{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px;}
-.nt-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;background:rgba(15,23,42,.86);border:1px solid rgba(56,189,248,.22);font-size:.68rem;color:#cbd5e1;font-weight:800;}
-.nt-chip b{color:#fff;}
-.nt-drawer-panel{
-  position:absolute;left:0;right:0;top:calc(100% + 8px);padding:14px;border-radius:16px;
-  background:rgba(2,6,23,.98);border:1px solid rgba(56,189,248,.35);
-  box-shadow:0 24px 60px rgba(0,0,0,.55);backdrop-filter:blur(12px);
-}
-.nt-select-grid{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:10px;}
-.nt-field label{display:block;margin:0 0 5px;color:#38bdf8;font-size:.66rem;font-weight:900;text-transform:uppercase;letter-spacing:.7px;}
-.nt-field select{height:38px;margin:0!important;border-radius:10px!important;background:#0f172a!important;border-color:rgba(148,163,184,.25)!important;font-size:.82rem!important;}
-.nt-drawer-note{margin-top:10px;color:#94a3b8;font-size:.7rem;line-height:1.4;}
-.nt-header-actions{display:flex;align-items:center;gap:10px;}
-.nt-help-btn{width:34px!important;height:34px!important;padding:0!important;border-radius:10px!important;}
-header.nt-compact-header .live-price{font-size:1.45rem!important;line-height:1!important;}
-header.nt-compact-header .live-price-container{min-width:210px;}
-body .container{padding-top:1.05rem!important;}
-@media (max-width:900px){
-  header.nt-compact-header{position:sticky;display:grid!important;grid-template-columns:1fr;align-items:start!important;}
-  .nt-header-left{width:100%;justify-content:space-between;}
-  .nt-control-drawer{width:100%;max-width:none;}
-  .nt-drawer-panel{position:static;margin-top:8px;}
-  .nt-select-grid{grid-template-columns:1fr 1fr;}
-  header.nt-compact-header .live-price-container{text-align:left;min-width:0;}
-}
-@media (max-width:560px){.nt-select-grid{grid-template-columns:1fr}.nt-drawer-hint{display:none}.nt-selected-strip{display:none}}
-
 </style>
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -534,16 +481,6 @@ body .container{padding-top:1.05rem!important;}
 #testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
 
 </style>
-
-<style>
-.top-controls{display:grid!important;grid-template-columns:repeat(4,minmax(180px,1fr));gap:12px!important;align-items:end}
-.card,.panel{padding:18px!important}
-h1,h2{letter-spacing:.2px}
-.executive-summary h2,.big-title{font-size:2.2rem!important}
-.section{margin-bottom:18px!important}
-.chart-panel{min-height:560px!important}
-.signal-card{padding:16px!important}
-</style>
 </head>
 <body>
 
@@ -560,75 +497,40 @@ h1,h2{letter-spacing:.2px}
 </div>
 
 <div id="notif-box"></div>
-<header class="nt-compact-header">
-  <div class="nt-header-left">
-    <h1 class="nt-brand-title">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block">V13.10 SIGNAL A/B BRIDGE  ARMOROO ENT</small></h1>
-    <span class="tester-badge">Free Tester Mode</span>
-  </div>
-
-  <details id="tradeControlDrawer" class="nt-control-drawer">
-    <summary>
-      <div>
-        <div class="nt-drawer-label">Trading Controls</div>
-        <div class="nt-selected-strip" aria-live="polite">
-          <span class="nt-chip">Market: <b id="drawerAssetLabel">BTC/USDT</b></span>
-          <span class="nt-chip">TF: <b id="drawerTfLabel">1m</b></span>
-          <span class="nt-chip">Broker: <b id="drawerBrokerLabel">Binance</b></span>
-        </div>
-      </div>
-      <span class="nt-drawer-hint">Tap to change market / timeframe / broker</span>
-    </summary>
-    <div class="nt-drawer-panel">
-      <div class="nt-select-grid">
-        <div class="nt-field">
-          <label for="assetSelect">Market / Symbol</label>
-          <select id="assetSelect" class="pair-selector" onchange="changeAsset(); updateDrawerLabels();">
-            <option value="BTCUSDT">BTC/USDT</option>
-            <option value="ETHUSDT">ETH/USDT</option>
-            <option value="SOLUSDT">SOL/USDT</option>
-            <option value="BNBUSDT">BNB/USDT</option>
-          </select>
-        </div>
-        <div class="nt-field">
-          <label for="tfSelect">Timeframe</label>
-          <select id="tfSelect" class="tf-selector" onchange="changeTimeframe(); updateDrawerLabels();">
-            <option value="1m">1m</option>
-            <option value="5m">5m</option>
-            <option value="15m">15m</option>
-            <option value="1h">1h</option>
-          </select>
-        </div>
-        <div class="nt-field">
-          <label for="brokerSelect">Broker / Platform</label>
-          <select id="brokerSelect" class="tf-selector" title="Broker comparison overlay" onchange="changeBroker(); updateDrawerLabels();">
-            <option value="Binance">Binance</option>
-            <option value="XM">XM</option>
-            <option value="MT5">MT5</option>
-            <option value="MT4">MT4</option>
-            <option value="TradingView">TradingView</option>
-            <option value="IQ Option">IQ Option</option>
-            <option value="Bybit">Bybit</option>
-            <option value="Deriv">Deriv</option>
-            <option value="ICMarkets">ICMarkets</option>
-            <option value="Exness">Exness</option>
-            <option value="Deriv Synthetic">Deriv Synthetic</option>
-            <option value="TradeView">TradeView</option>
-            <option value="VulaCoin">VulaCoin</option>
-          </select>
-        </div>
-        <div class="nt-field">
-          <label>Quick Action</label>
-          <button class="btn-outline nt-help-btn" title="Settings" onclick="toggleSettings()">?</button>
-        </div>
-      </div>
-      <div class="nt-drawer-note">Compact dropdown keeps the chart high. Switching here still refreshes market, timeframe, broker overlay, socket status, and Signal A/B alignment.</div>
-    </div>
-  </details>
-
-  <div class="live-price-container">
-    <div id="livePrice" class="live-price"></div>
-    <small id="updateTime" style="color:var(--muted)">INITIALIZING ENGINE</small>
-  </div>
+<header>
+<div class="controls">
+<h1 style="margin:0; font-size:1.2rem; margin-right:10px">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block;font-size:.55rem;color:#94a3b8;letter-spacing:.8px">V13.6 SIGNAL PLATFORM  ARMOROO ENT</small></h1>
+<span class="tester-badge">Free Tester Mode</span>
+<select id="assetSelect" class="pair-selector" onchange="changeAsset()">
+<option value="BTCUSDT">BTC/USDT</option>
+<option value="ETHUSDT">ETH/USDT</option>
+<option value="SOLUSDT">SOL/USDT</option>
+<option value="BNBUSDT">BNB/USDT</option>
+</select>
+<select id="tfSelect" class="tf-selector" onchange="changeTimeframe()">
+<option value="1m">1m</option>
+<option value="5m">5m</option>
+<option value="15m">15m</option>
+<option value="1h">1h</option>
+</select>
+<select id="brokerSelect" class="tf-selector" title="Broker comparison overlay" onchange="changeBroker()">
+<option value="Binance">Binance</option>
+<option value="XM">XM</option>
+<option value="MT5">MT5</option>
+<option value="MT4">MT4</option>
+<option value="TradingView">TradingView</option>
+<option value="IQ Option">IQ Option</option>
+<option value="Bybit">Bybit</option>
+<option value="Deriv">Deriv</option>
+<option value="ICMarkets">ICMarkets</option>
+<option value="Exness">Exness</option>
+</select>
+<button class="btn-outline" title="Settings" style="width:auto; padding:5px 12px; border-radius:6px; cursor:pointer" onclick="toggleSettings()">?</button>
+</div>
+<div class="live-price-container">
+<div id="livePrice" class="live-price"></div>
+<small id="updateTime" style="color:var(--muted)">INITIALIZING ENGINE</small>
+</div>
 </header>
 
 <nav class="nt-side-nav" aria-label="NetTrack page navigation">
@@ -1041,7 +943,7 @@ h1,h2{letter-spacing:.2px}
 
 <div class="brand-footer">
   <b>ARMOROO ENT Software and Apps</b><br>
-  <span>NetTrack Pro V13.10 Signal A/B Platform</span><br>
+  <span>NetTrack Pro V13.4 Premium Signal Platform</span><br>
   <span>Developed by Emmanuel Musiyiwa Ngobeni &amp; Thando Mbatha</span>
 </div>
 
@@ -2590,24 +2492,6 @@ function connectWS() {
     };
   } catch(e) {}
 })();
-
-
-// V13.7 compact drawer label sync — no socket/API logic changed
-function updateDrawerLabels(){
-  try{
-    const asset=document.getElementById('assetSelect');
-    const tf=document.getElementById('tfSelect');
-    const broker=document.getElementById('brokerSelect');
-    const assetLabel=document.getElementById('drawerAssetLabel');
-    const tfLabel=document.getElementById('drawerTfLabel');
-    const brokerLabel=document.getElementById('drawerBrokerLabel');
-    if(asset && assetLabel){ assetLabel.textContent=(asset.options[asset.selectedIndex]?.text || asset.value || '--'); }
-    if(tf && tfLabel){ tfLabel.textContent=(tf.options[tf.selectedIndex]?.text || tf.value || '--'); }
-    if(broker && brokerLabel){ brokerLabel.textContent=(broker.options[broker.selectedIndex]?.text || broker.value || '--'); }
-  }catch(e){ console.warn('Drawer label sync skipped', e); }
-}
-document.addEventListener('DOMContentLoaded',()=>{ setTimeout(updateDrawerLabels,80); });
-
 </script>
 
 <div id="authOverlay" style="position:fixed;inset:0;background:#020617;z-index:999999;display:flex;align-items:center;justify-content:center">
@@ -5354,319 +5238,6 @@ header, .card, .portal-page, .portal-info-card{
 })();
 </script>
 <!-- /NETTRACK PRO V13.5 LOCK-IN LOGIC + THEME PATCH -->
-
-
-
-<!-- NETTRACK PRO V13.8 OWNER PORTAL + SUPABASE LIVE DATA PATCH -->
-<style id="nt-v138-owner-sync-style">
-.nt-owner-live-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
-.nt-owner-live-card{border:1px solid rgba(56,189,248,.26);background:rgba(15,23,42,.72);border-radius:12px;padding:10px;min-height:70px}
-.nt-owner-live-card small{display:block;color:#94a3b8;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em;font-size:.62rem}
-.nt-owner-live-card b{font-size:1.18rem;color:#f8fafc}
-.nt-owner-live-card .good{color:#22c55e}.nt-owner-live-card .warn{color:#eab308}.nt-owner-live-card .bad{color:#ef4444}
-.nt-owner-wide{grid-column:1/-1}.nt-owner-log{max-height:210px;overflow:auto;font-size:.72rem;line-height:1.45;color:#cbd5e1}
-.nt-owner-log div{border-bottom:1px solid rgba(255,255,255,.07);padding:7px 0}.nt-owner-log div:last-child{border-bottom:0}
-.nt-owner-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.nt-owner-actions button{padding:8px 10px;border-radius:9px;border:1px solid rgba(56,189,248,.35);background:rgba(56,189,248,.10);color:#38bdf8;font-weight:900;cursor:pointer}
-@media(max-width:760px){.nt-owner-live-grid{grid-template-columns:1fr}}
-</style>
-<script id="nt-v138-owner-sync-logic">
-(function(){
-  const OWNER_EMAILS=["engobeni842@gmail.com","engobeni842@googlemail.com"];
-  const $=id=>document.getElementById(id);
-  const safeText=(v,f="--")=>v===undefined||v===null||v===""?f:String(v);
-  const today=()=>new Date().toISOString().slice(0,10);
-  const money=n=>"R "+Number(n||0).toFixed(2);
-  const logKey="ntp_v138_owner_local_events";
-  const localEvents=()=>{try{return JSON.parse(localStorage.getItem(logKey)||"[]")}catch(e){return[]}};
-  const addLocalEvent=(type,body)=>{try{const arr=localEvents();arr.unshift({type,body,at:new Date().toISOString()});localStorage.setItem(logKey,JSON.stringify(arr.slice(0,80)));}catch(e){}};
-  function client(){return window.supabaseClient || (window.supabase&&window.supabase.createClient?window.supabaseClient:null)}
-  async function session(){try{const c=client(); if(!c) return null; const {data}=await c.auth.getSession(); return data&&data.session?data.session:null;}catch(e){return null}}
-  function localEmail(){
-    const cached=localStorage.getItem("ntp_v138_email")||localStorage.getItem("nt_user_email")||"";
-    if(cached) return cached.toLowerCase();
-    const m=(document.body?.innerText||"").match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
-    return m?m[0].toLowerCase():"";
-  }
-  async function currentEmail(){const s=await session(); return (s?.user?.email||localEmail()||"").toLowerCase();}
-  async function currentUserId(){const s=await session(); return s?.user?.id||null;}
-  async function isOwner(){return OWNER_EMAILS.includes(await currentEmail());}
-  function set(id,val){const el=$(id); if(el) el.textContent=val;}
-  function fmtTime(x){try{return new Date(x).toLocaleString()}catch(e){return safeText(x)}}
-  async function ensureProfile(){
-    const c=client(); if(!c) return {ok:false,reason:"Supabase client missing"};
-    const s=await session(); if(!s?.user) return {ok:false,reason:"No active Supabase session"};
-    const u=s.user; const email=(u.email||"").toLowerCase(); localStorage.setItem("ntp_v138_email",email);
-    const payload={id:u.id,email,full_name:u.user_metadata?.full_name||u.user_metadata?.name||email.split("@")[0],phone:u.phone||null,role:OWNER_EMAILS.includes(email)?"owner":"user"};
-    try{
-      const {error}=await c.from("profiles").upsert(payload,{onConflict:"id"});
-      if(error) throw error;
-      addLocalEvent("profile_sync","Profile ready for "+email);
-      return {ok:true};
-    }catch(e){addLocalEvent("profile_sync_failed",e.message||String(e)); return {ok:false,reason:e.message||String(e)};}
-  }
-  async function ensureSubscription(){
-    const c=client(); if(!c) return;
-    const uid=await currentUserId(); if(!uid) return;
-    const plan=(window.subscriptionState?.plan)||("FREE");
-    const status=(window.subscriptionState?.paidUntil&&Number(window.subscriptionState.paidUntil)>Date.now())?"active":"trial";
-    const amount=Number(window.subscriptionState?.lastPayment||0);
-    const payload={user_id:uid,plan,status,amount,created_at:new Date().toISOString()};
-    try{await c.from("subscriptions").insert(payload); addLocalEvent("subscription_sync",plan+" / "+status);}catch(e){/* table shape or RLS may differ; local event is enough for beta */}
-  }
-  function parseLastSignals(){
-    try{const raw=localStorage.getItem("ntp_v135_last_signals"); if(raw){const o=JSON.parse(raw); return [o.a,o.b].filter(Boolean).map(s=>({...s,source:"Signal A/B",at:o.at||new Date().toISOString()}));}}
-    catch(e){}
-    return [];
-  }
-  async function saveSignalToSupabase(sig){
-    const c=client(); if(!c||!sig) return {ok:false,reason:"No client or signal"};
-    const row={
-      symbol:sig.s||sig.sym||window.SYMBOL||"UNKNOWN",
-      timeframe:sig.timeframe||window.INTERVAL||($("tfSelect")?.value)||"--",
-      signal_type:sig.side||sig.signal||"WAIT",
-      entry_price:Number(sig.entry||0),
-      take_profit:Number(sig.tp||sig.target||0),
-      stop_loss:Number(sig.sl||0),
-      confidence:Number(sig.conf||sig.confidence||0)
-    };
-    try{
-      const {data,error}=await c.from("signals").insert(row).select("id").single();
-      if(error) throw error;
-      try{await c.from("signal_history").insert({signal_id:data?.id||null,result:"generated",notes:`${row.symbol} ${row.timeframe} ${row.signal_type} ${row.confidence}%`,created_at:new Date().toISOString()});}catch(e){}
-      addLocalEvent("signal_saved",`${row.symbol} ${row.timeframe} ${row.signal_type} ${row.confidence}%`);
-      return {ok:true,id:data?.id};
-    }catch(e){addLocalEvent("signal_save_failed",e.message||String(e)); return {ok:false,reason:e.message||String(e)};}
-  }
-  async function syncLastSignals(){
-    await ensureProfile();
-    const signals=parseLastSignals();
-    if(!signals.length) return;
-    const stamp=signals.map(s=>`${s.variant||""}-${s.side}-${s.entry}-${s.tp}`).join("|");
-    if(localStorage.getItem("ntp_v138_last_saved_stamp")===stamp) return;
-    for(const s of signals) await saveSignalToSupabase(s);
-    localStorage.setItem("ntp_v138_last_saved_stamp",stamp);
-    await refreshOwnerPortal();
-  }
-  async function countTable(table){
-    const c=client(); if(!c) return {count:0,error:"No client"};
-    try{const {count,error}=await c.from(table).select("*",{count:"exact",head:true}); if(error) throw error; return {count:count||0};}
-    catch(e){return {count:0,error:e.message||String(e)};}
-  }
-  async function recentRows(table,cols="*",limit=6){
-    const c=client(); if(!c) return [];
-    try{const {data,error}=await c.from(table).select(cols).order("created_at",{ascending:false}).limit(limit); if(error) throw error; return data||[];}catch(e){return []}
-  }
-  function ownerShell(){
-    const box=$("ownerPortalBox"); if(!box || $("ntOwnerLiveDashboard")) return;
-    const div=document.createElement("div"); div.id="ntOwnerLiveDashboard";
-    div.innerHTML=`
-      <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.12);padding-top:12px">
-        <b style="color:#38bdf8">LIVE OWNER DASHBOARD</b><br>
-        <small style="color:#94a3b8">Supabase + local fallback stats. Visible only to the owner email.</small>
-        <div class="nt-owner-live-grid">
-          <div class="nt-owner-live-card"><small>Auth Visible Users</small><b id="ownAuthUsers">--</b></div>
-          <div class="nt-owner-live-card"><small>Profiles Saved</small><b id="ownProfiles">--</b></div>
-          <div class="nt-owner-live-card"><small>Signals Saved</small><b id="ownSignals">--</b></div>
-          <div class="nt-owner-live-card"><small>Signal History</small><b id="ownSignalHistory">--</b></div>
-          <div class="nt-owner-live-card"><small>Subscriptions</small><b id="ownSubscriptions">--</b></div>
-          <div class="nt-owner-live-card"><small>Payments</small><b id="ownPaymentsCount">--</b></div>
-          <div class="nt-owner-live-card nt-owner-wide"><small>Latest Activity</small><div id="ownLatestActivity" class="nt-owner-log">Waiting for Supabase check...</div></div>
-        </div>
-        <div class="nt-owner-actions">
-          <button onclick="ntOwnerRefreshNow()">Refresh Owner Stats</button>
-          <button onclick="ntOwnerSyncNow()">Sync My Profile + Last Signals</button>
-        </div>
-        <small id="ownSyncStatus" style="display:block;color:#94a3b8;margin-top:8px">Ready.</small>
-      </div>`;
-    box.appendChild(div);
-  }
-  async function refreshOwnerPortal(){
-    ownerShell();
-    const own=await isOwner();
-    const box=$("ownerPortalBox"); if(box) box.style.display=own?"block":"none";
-    const nav=$("navOwner"); if(nav) nav.classList.toggle("portal-hidden",!own);
-    if(!own) return;
-    const [profiles,signals,history,subs,payments]=await Promise.all([countTable("profiles"),countTable("signals"),countTable("signal_history"),countTable("subscriptions"),countTable("payments")]);
-    set("ownAuthUsers", "2+ visible");
-    set("ownProfiles", profiles.error?"Blocked/RLS":String(profiles.count));
-    set("ownSignals", signals.error?"Blocked/RLS":String(signals.count));
-    set("ownSignalHistory", history.error?"Blocked/RLS":String(history.count));
-    set("ownSubscriptions", subs.error?"Blocked/RLS":String(subs.count));
-    set("ownPaymentsCount", payments.error?"Blocked/RLS":String(payments.count));
-    const rows=[...(await recentRows("signals","symbol,timeframe,signal_type,confidence,created_at",5)).map(r=>`Signal ${r.signal_type||"--"} • ${r.symbol||"--"} • ${r.timeframe||"--"} • ${r.confidence||0}% • ${fmtTime(r.created_at)}`),
-      ...localEvents().slice(0,6).map(e=>`${e.type}: ${e.body} • ${fmtTime(e.at)}`)];
-    const log=$("ownLatestActivity"); if(log) log.innerHTML=rows.length?rows.slice(0,9).map(x=>`<div>${x}</div>`).join(""):`<div>No saved activity yet. Generate Signal A/B and refresh.</div>`;
-    set("ownSyncStatus", "Last checked: "+new Date().toLocaleTimeString());
-  }
-  window.ntOwnerRefreshNow=refreshOwnerPortal;
-  window.ntOwnerSyncNow=async function(){set("ownSyncStatus","Syncing profile and latest Signal A/B..."); await ensureProfile(); await ensureSubscription(); await syncLastSignals(); await refreshOwnerPortal(); set("ownSyncStatus","Sync complete: "+new Date().toLocaleTimeString());};
-  const oldLogin=window.ntLogin;
-  window.ntLogin=async function(){
-    const e=$("loginEmail")?.value?.trim(); const p=$("loginPass")?.value;
-    if(window.supabaseClient && e && p){
-      const r=await window.supabaseClient.auth.signInWithPassword({email:e,password:p});
-      if(r.error) return alert(r.error.message);
-      localStorage.setItem("nt_logged_in","1"); localStorage.setItem("ntp_v138_email",e.toLowerCase());
-      const a=$("authOverlay"); if(a)a.style.display="none";
-      await ensureProfile(); await ensureSubscription(); await refreshOwnerPortal();
-      return;
-    }
-    if(typeof oldLogin==="function") return oldLogin.apply(this,arguments);
-  };
-  const oldSignup=window.ntSignup;
-  window.ntSignup=async function(){
-    const e=$("loginEmail")?.value?.trim(); const p=$("loginPass")?.value;
-    if(window.supabaseClient && e && p){
-      const r=await window.supabaseClient.auth.signUp({email:e,password:p});
-      if(r.error) return alert(r.error.message);
-      localStorage.setItem("nt_logged_in","1"); localStorage.setItem("ntp_v138_email",e.toLowerCase());
-      const a=$("authOverlay"); if(a)a.style.display="none";
-      await ensureProfile(); await ensureSubscription(); await refreshOwnerPortal();
-      alert("Account created. Profile sync prepared in Owner Portal.");
-      return;
-    }
-    if(typeof oldSignup==="function") return oldSignup.apply(this,arguments);
-  };
-  function wrapSignalButton(){
-    const fn=window.ntGenerateSignalSwitch;
-    if(typeof fn==="function" && !fn.__ntp_v138_wrapped){
-      const original=fn;
-      const wrapped=function(){const r=original.apply(this,arguments); setTimeout(syncLastSignals,450); return r;};
-      wrapped.__ntp_v138_wrapped=true; wrapped.__ntp_v138_original=original;
-      window.ntGenerateSignalSwitch=wrapped;
-    }
-    const google=$("ntGoogleBtn");
-    if(google && !google.__ntp_v138_safe){
-      google.__ntp_v138_safe=true;
-      google.title="Google provider is optional. Enable it in Supabase Auth Providers first.";
-      google.onclick=function(){alert("Google sign-in is not enabled in Supabase yet. Use email login for now, or enable Google under Supabase → Authentication → Sign In / Providers.");};
-    }
-  }
-  window.addEventListener("load",async()=>{await ensureProfile(); ownerShell(); await refreshOwnerPortal(); wrapSignalButton(); setInterval(refreshOwnerPortal,30000); setInterval(wrapSignalButton,900);});
-})();
-</script>
-<!-- /NETTRACK PRO V13.8 OWNER PORTAL + SUPABASE LIVE DATA PATCH -->
-
-
-
-<!-- NETTRACK PRO V13.10 CLEAN SIGNAL A/B BRIDGE PATCH -->
-<style id="nt-v1310-clean-style">
-  #walletBox,#verificationBox,#netTrackBotBox,.face-verification,.payment-box,[data-feature*="wallet"],[data-feature*="face"],[data-feature*="verification"]{display:none!important}
-  .nt-v1310-panel{border:1px solid rgba(56,189,248,.25);background:linear-gradient(135deg,rgba(15,23,42,.94),rgba(2,6,23,.98));border-radius:14px;padding:12px;line-height:1.45}
-  .nt-v1310-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px}
-  .nt-v1310-head b{font-size:.82rem;letter-spacing:.08em;color:#38bdf8;text-transform:uppercase}
-  .nt-v1310-badge{font-size:.64rem;border:1px solid rgba(34,197,94,.38);color:#22c55e;border-radius:999px;padding:4px 8px;font-weight:900;white-space:nowrap}
-  .nt-v1310-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .nt-v1310-box{background:rgba(15,23,42,.9);border:1px solid rgba(148,163,184,.16);border-radius:10px;padding:9px;min-height:58px}
-  .nt-v1310-box small{display:block;color:#94a3b8;font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-  .nt-v1310-box b{font-size:.9rem;color:#f8fafc;word-break:break-word}
-  .nt-v1310-buy{color:#22c55e!important}.nt-v1310-sell{color:#ef4444!important}.nt-v1310-wait{color:#eab308!important}
-  .nt-v1310-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .nt-v1310-actions button,.nt-platform-btn{border:1px solid rgba(56,189,248,.35);background:rgba(56,189,248,.10);color:#e0f2fe;border-radius:9px;padding:8px 10px;font-weight:900;cursor:pointer;font-size:.68rem}
-  .nt-v1310-actions button:hover,.nt-platform-btn:hover{background:rgba(56,189,248,.22)}
-  .nt-v1310-note{font-size:.68rem;color:#94a3b8;margin-top:8px;border-top:1px solid rgba(148,163,184,.15);padding-top:8px}
-  .nt-platform-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:8px}
-  .nt-sensitive-details{margin-top:10px;border:1px solid rgba(148,163,184,.18);border-radius:10px;padding:8px;background:rgba(2,6,23,.4)}
-  .nt-sensitive-details summary{cursor:pointer;color:#94a3b8;font-size:.68rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase}
-  .nt-sensitive-details div{font-size:.68rem;color:#cbd5e1;margin-top:8px;line-height:1.55}
-  @media(max-width:760px){.nt-v1310-grid,.nt-platform-grid{grid-template-columns:1fr}.nt-v1310-head{align-items:flex-start;flex-direction:column}}
-</style>
-<script id="nt-v1310-clean-logic">
-(function(){
-  const PATCH_VERSION='V13.10 Signal A/B Bridge Clean';
-  const $=id=>document.getElementById(id);
-  const fmt=n=>Number.isFinite(Number(n))?Number(n).toFixed((Math.abs(Number(n))<10)?4:2):'--';
-  const brokerLinks={
-    Binance:'https://www.binance.com/', Bybit:'https://www.bybit.com/', XM:'https://www.xm.com/', Exness:'https://www.exness.com/', Deriv:'https://deriv.com/',
-    MT5:'https://www.metatrader5.com/', MT4:'https://www.metatrader4.com/', TradingView:'https://www.tradingview.com/', TradeView:'https://www.tradeviewforex.com/',
-    ICMarkets:'https://www.icmarkets.com/', 'IQ Option':'https://iqoption.com/', 'Deriv Synthetic':'https://deriv.com/markets/synthetic/', VulaCoin:'#'
-  };
-  const extraSymbols=[['BTCUSDT','BTC/USDT'],['ETHUSDT','ETH/USDT'],['SOLUSDT','SOL/USDT'],['BNBUSDT','BNB/USDT'],['EURUSDT','EUR/USD proxy'],['GBPUSDT','GBP/USD proxy'],['XRPUSDT','XRP/USDT'],['DOGEUSDT','DOGE/USDT']];
-  function addOptions(){
-    const asset=$('assetSelect'); if(asset){
-      const vals=new Set([...asset.options].map(o=>o.value));
-      extraSymbols.forEach(([v,t])=>{if(!vals.has(v)){const o=document.createElement('option');o.value=v;o.textContent=t;asset.appendChild(o)}});
-    }
-    const broker=$('brokerSelect'); if(broker){
-      Object.keys(brokerLinks).forEach(v=>{ if(![...broker.options].some(o=>o.value===v)){const o=document.createElement('option');o.value=v;o.textContent=v;broker.appendChild(o);} });
-    }
-  }
-  function sideFromSignal(){
-    const txt=String($('signalText')?.textContent||window.currentSignal?.signal||'NEUTRAL').toUpperCase();
-    if(txt.includes('BUY'))return 'BUY'; if(txt.includes('SELL'))return 'SELL'; return 'WAIT';
-  }
-  function price(){
-    try{const c=window.candles||[]; const last=c[c.length-1]; if(last&&Number.isFinite(+last.close)) return +last.close;}catch(e){}
-    const n=Number(String($('livePrice')?.textContent||'').replace(/[^0-9.\-]/g,'')); return Number.isFinite(n)?n:0;
-  }
-  function atr(){try{return Number(window.currentSignal?.tradePlan?.atr||window.currentSignal?.indicators?.atr||0)||Math.max(price()*0.004,1)}catch(e){return Math.max(price()*0.004,1)}}
-  function calcSignal(variant){
-    const p=price()||65000, a=atr(), side=sideFromSignal();
-    const conf=Number(String($('confValue')?.textContent||'0').replace(/[^0-9]/g,''))||Number(window.currentSignal?.confidence||0)||55;
-    const q=Number(String($('qualityValue')?.textContent||'0').replace(/[^0-9]/g,''))||Number(window.currentSignal?.tradePlan?.quality||0)||50;
-    const finalSide=side==='WAIT' ? (q>=58?'BUY':'WAIT') : side;
-    const mult=variant==='A'?1.4:2.1, slMult=variant==='A'?0.9:1.15;
-    let entry=p, sl=p, tp=p;
-    if(finalSide==='BUY'){ sl=p-a*slMult; tp=p+a*mult; }
-    else if(finalSide==='SELL'){ sl=p+a*slMult; tp=p-a*mult; }
-    return {variant, side:finalSide, entry, sl, tp, conf:Math.min(96,Math.max(35,conf+(variant==='A'?2:-3))), quality:Math.min(100,Math.max(30,q+(variant==='B'?3:0))), rr:(Math.abs(tp-entry)/Math.max(Math.abs(entry-sl),0.00001)).toFixed(2)};
-  }
-  function card(sig){
-    const cls=sig.side==='BUY'?'nt-v1310-buy':sig.side==='SELL'?'nt-v1310-sell':'nt-v1310-wait';
-    return `<div class="nt-v1310-panel"><div class="nt-v1310-head"><b>Signal ${sig.variant}</b><span class="nt-v1310-badge ${cls}">${sig.side}</span></div>
-      <div class="nt-v1310-grid">
-        <div class="nt-v1310-box"><small>Entry</small><b>${fmt(sig.entry)}</b></div>
-        <div class="nt-v1310-box"><small>Stop Loss</small><b>${fmt(sig.sl)}</b></div>
-        <div class="nt-v1310-box"><small>Take Profit</small><b>${fmt(sig.tp)}</b></div>
-        <div class="nt-v1310-box"><small>Risk / Reward</small><b>${sig.rr}</b></div>
-        <div class="nt-v1310-box"><small>Confidence</small><b>${sig.conf}%</b></div>
-        <div class="nt-v1310-box"><small>Quality</small><b>${sig.quality}/100</b></div>
-      </div><div class="nt-v1310-note">Manual signal only. Confirm on your broker chart before placing any trade.</div></div>`;
-  }
-  function renderSignalPanels(){
-    const a=calcSignal('A'), b=calcSignal('B');
-    const out=$('ntV1310SignalOutput'); if(out) out.innerHTML=card(a)+card(b);
-    try{localStorage.setItem('ntp_v1310_last_signal_ab',JSON.stringify({a,b,at:new Date().toISOString(),symbol:window.SYMBOL||$('assetSelect')?.value,tf:window.INTERVAL||$('tfSelect')?.value,broker:window.BROKER_MODE||$('brokerSelect')?.value}))}catch(e){}
-  }
-  function platformButtons(){
-    const names=['Binance','MetaTrader 5','MetaTrader 4','XM','Exness','Deriv','TradingView','TradeView','IQ Option','ICMarkets','Bybit','VulaCoin'];
-    return names.map(name=>{const val=name==='MetaTrader 5'?'MT5':name==='MetaTrader 4'?'MT4':name;return `<button class="nt-platform-btn" data-broker="${val}">${name}</button>`}).join('');
-  }
-  function replaceCardByHeading(match, html){
-    [...document.querySelectorAll('.card')].forEach(card=>{
-      const h=card.querySelector('h3'); if(h && match.test(h.textContent||'')){ card.innerHTML=html; }
-    });
-  }
-  function cleanLayout(){
-    ['walletBox','verificationBox','netTrackBotBox'].forEach(id=>{const el=$(id); if(el) el.remove();});
-    replaceCardByHeading(/Win\/Loss|Analytics/i, `<h3>Signal A / Signal B Pattern</h3><div id="ntV1310SignalOutput" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div><div class="nt-v1310-actions"><button onclick="ntV1310GenerateSignals()">GENERATE SIGNAL A + B</button><button onclick="ntV1310SyncBroker()">SYNC WITH SELECTED PLATFORM</button></div><details class="nt-sensitive-details"><summary>Description / sensitive info hidden</summary><div>Signal A is the safer structure. Signal B is the extended target structure. NetTrack does not hold funds, execute trades, or guarantee results.</div></details>`);
-    replaceCardByHeading(/Equity Curve|Performance/i, `<h3>Broker / Platform Bridge</h3><div class="nt-v1310-panel"><div class="nt-v1310-head"><b>Selected platform</b><span class="nt-v1310-badge" id="ntBridgeBroker">--</span></div><div class="nt-platform-grid">${platformButtons()}</div><div class="nt-v1310-note">Buttons switch the NetTrack overlay and open the selected broker/trading platform when available. Actual trade execution stays inside the broker account.</div></div>`);
-    replaceCardByHeading(/MACD Momentum/i, `<h3>Signal Pattern Pulse</h3><div class="nt-v1310-panel"><div class="nt-v1310-grid"><div class="nt-v1310-box"><small>Pattern State</small><b id="ntPulseState">WAITING</b></div><div class="nt-v1310-box"><small>Broker Sync</small><b id="ntPulseSync">--</b></div><div class="nt-v1310-box"><small>Market Switch</small><b id="ntPulseMarket">--</b></div><div class="nt-v1310-box"><small>Next Action</small><b id="ntPulseAction">Generate A/B</b></div></div><canvas id="macdChart" height="1" style="display:none"></canvas></div>`);
-    const h=$('historyBody'); if(h){ [...h.querySelectorAll('tr')].forEach(tr=>{const last=tr.lastElementChild;if(last){last.textContent=String(last.textContent).replace(/WIN|LOSS/gi,'CHECKED').replace(/PENDING/gi,'OPEN')}}); }
-    const sample=$('btSample'); if(sample) sample.textContent=String(sample.textContent).replace(/\d+W\s*\/\s*\d+L/i,'closed samples');
-    const rate=$('btRate'); if(rate && rate.parentElement?.previousElementSibling) rate.parentElement.previousElementSibling.textContent='Signal Hit Score';
-    addOptions(); bindPlatformButtons(); renderSignalPanels(); updatePulse();
-  }
-  function bindPlatformButtons(){
-    document.querySelectorAll('.nt-platform-btn').forEach(btn=>{if(btn.__bound)return;btn.__bound=true;btn.onclick=()=>{const val=btn.dataset.broker; const sel=$('brokerSelect'); if(sel){sel.value=val; if(typeof window.changeBroker==='function')window.changeBroker(); if(typeof window.updateDrawerLabels==='function')window.updateDrawerLabels();} updatePulse(); const url=brokerLinks[val]; if(url && url!=='#') window.open(url,'_blank','noopener');};});
-  }
-  function updatePulse(){
-    const broker=window.BROKER_MODE||$('brokerSelect')?.value||'Binance'; const sym=window.SYMBOL||$('assetSelect')?.value||'BTCUSDT';
-    const side=sideFromSignal(); const sync=$('alignSync')?.textContent||'WAITING';
-    const set=(id,v)=>{const e=$(id); if(e)e.textContent=v};
-    set('ntBridgeBroker', broker); set('ntPulseState', side); set('ntPulseSync', sync); set('ntPulseMarket', sym); set('ntPulseAction', side==='WAIT'?'Wait for confirmation':'Use Signal A/B levels');
-  }
-  window.ntV1310GenerateSignals=function(){renderSignalPanels(); updatePulse(); if(typeof window.notify==='function')notify('Signal A/B generated from current market, timeframe and selected platform.');};
-  window.ntV1310SyncBroker=function(){updatePulse(); if(typeof window.updateDrawerLabels==='function')window.updateDrawerLabels(); if(typeof window.notify==='function')notify('Platform bridge synced. Switch market/timeframe/platform from Trading Controls.');};
-  const oldRender=window.renderHistory; if(typeof oldRender==='function'){window.renderHistory=function(){oldRender.apply(this,arguments); setTimeout(cleanLayout,0);};}
-  const oldAuto=window.autoResolvePendingSignals; if(typeof oldAuto==='function'){window.autoResolvePendingSignals=function(){oldAuto.apply(this,arguments); try{(window.signalHistory||[]).forEach(h=>{if(h.result==='WIN'||h.result==='LOSS')h.result='CHECKED';});}catch(e){}};}
-  const oldBacktest=window.runAdvancedBacktest; if(typeof oldBacktest==='function'){window.runAdvancedBacktest=function(){oldBacktest.apply(this,arguments);setTimeout(()=>{const s=$('btSample');if(s)s.textContent=String(s.textContent).replace(/\d+W\s*\/\s*\d+L/i,'closed samples');},0);};}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',cleanLayout); else cleanLayout();
-  window.addEventListener('load',()=>{cleanLayout();setInterval(()=>{renderSignalPanels();updatePulse();},3500);});
-  setInterval(cleanLayout,2500);
-})();
-</script>
-<!-- /NETTRACK PRO V13.10 CLEAN SIGNAL A/B BRIDGE PATCH -->
 
 </body>
 </html>
