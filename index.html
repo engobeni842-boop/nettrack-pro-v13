@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NetTrack Pro V13.6 Professional Signal Platform</title>
+<title>NetTrack Pro V13.7 Compact Control Drawer</title>
 <style>
 :root {
 --bg: #050a14;
@@ -343,6 +343,59 @@ h2,h3{font-size:.68rem!important;letter-spacing:.95px!important;margin-bottom:.9
 .nt-signal-row{padding:7px 0!important;}
 .nt-signal-action{margin-top:12px!important;}
 @media(max-width:900px){.big-signal{font-size:2.1rem!important}.container{padding:1rem!important}.card{padding:1rem!important}}
+
+
+/* V13.7 COMPACT CONTROL DRAWER — keeps live socket/API logic untouched */
+header.nt-compact-header{
+  padding:10px 18px!important;
+  min-height:74px!important;
+  align-items:center!important;
+  gap:14px!important;
+  background:linear-gradient(180deg, rgba(3,7,18,.96), rgba(2,6,23,.92))!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.32);
+}
+.nt-header-left{display:flex;align-items:center;gap:14px;min-width:260px;}
+.nt-brand-title{margin:0!important;font-size:1.08rem!important;line-height:1.08!important;white-space:nowrap;}
+.nt-brand-title small{font-size:.50rem!important;letter-spacing:.75px!important;color:#64748b!important;}
+.nt-control-drawer{position:relative;flex:1;max-width:720px;z-index:1100;}
+.nt-control-drawer summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:42px;padding:9px 14px;border-radius:13px;border:1px solid rgba(56,189,248,.38);
+  background:linear-gradient(135deg, rgba(56,189,248,.16), rgba(15,23,42,.92));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 0 0 1px rgba(0,0,0,.2);
+}
+.nt-control-drawer summary::-webkit-details-marker{display:none;}
+.nt-drawer-label{display:flex;align-items:center;gap:10px;font-weight:900;color:#e2e8f0;font-size:.78rem;text-transform:uppercase;letter-spacing:.7px;}
+.nt-drawer-label::before{content:'▾';display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:rgba(56,189,248,.18);color:#38bdf8;border:1px solid rgba(56,189,248,.3);transition:transform .2s ease;}
+.nt-control-drawer[open] .nt-drawer-label::before{transform:rotate(180deg);}
+.nt-drawer-hint{color:#38bdf8;font-size:.72rem;font-weight:900;white-space:nowrap;}
+.nt-selected-strip{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px;}
+.nt-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;background:rgba(15,23,42,.86);border:1px solid rgba(56,189,248,.22);font-size:.68rem;color:#cbd5e1;font-weight:800;}
+.nt-chip b{color:#fff;}
+.nt-drawer-panel{
+  position:absolute;left:0;right:0;top:calc(100% + 8px);padding:14px;border-radius:16px;
+  background:rgba(2,6,23,.98);border:1px solid rgba(56,189,248,.35);
+  box-shadow:0 24px 60px rgba(0,0,0,.55);backdrop-filter:blur(12px);
+}
+.nt-select-grid{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:10px;}
+.nt-field label{display:block;margin:0 0 5px;color:#38bdf8;font-size:.66rem;font-weight:900;text-transform:uppercase;letter-spacing:.7px;}
+.nt-field select{height:38px;margin:0!important;border-radius:10px!important;background:#0f172a!important;border-color:rgba(148,163,184,.25)!important;font-size:.82rem!important;}
+.nt-drawer-note{margin-top:10px;color:#94a3b8;font-size:.7rem;line-height:1.4;}
+.nt-header-actions{display:flex;align-items:center;gap:10px;}
+.nt-help-btn{width:34px!important;height:34px!important;padding:0!important;border-radius:10px!important;}
+header.nt-compact-header .live-price{font-size:1.45rem!important;line-height:1!important;}
+header.nt-compact-header .live-price-container{min-width:210px;}
+body .container{padding-top:1.05rem!important;}
+@media (max-width:900px){
+  header.nt-compact-header{position:sticky;display:grid!important;grid-template-columns:1fr;align-items:start!important;}
+  .nt-header-left{width:100%;justify-content:space-between;}
+  .nt-control-drawer{width:100%;max-width:none;}
+  .nt-drawer-panel{position:static;margin-top:8px;}
+  .nt-select-grid{grid-template-columns:1fr 1fr;}
+  header.nt-compact-header .live-price-container{text-align:left;min-width:0;}
+}
+@media (max-width:560px){.nt-select-grid{grid-template-columns:1fr}.nt-drawer-hint{display:none}.nt-selected-strip{display:none}}
+
 </style>
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -507,40 +560,72 @@ h1,h2{letter-spacing:.2px}
 </div>
 
 <div id="notif-box"></div>
-<header>
-<div class="controls">
-<h1 style="margin:0; font-size:1.2rem; margin-right:10px">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block;font-size:.55rem;color:#94a3b8;letter-spacing:.8px">V13.6 SIGNAL PLATFORM  ARMOROO ENT</small></h1>
-<span class="tester-badge">Free Tester Mode</span>
-<select id="assetSelect" class="pair-selector" onchange="changeAsset()">
-<option value="BTCUSDT">BTC/USDT</option>
-<option value="ETHUSDT">ETH/USDT</option>
-<option value="SOLUSDT">SOL/USDT</option>
-<option value="BNBUSDT">BNB/USDT</option>
-</select>
-<select id="tfSelect" class="tf-selector" onchange="changeTimeframe()">
-<option value="1m">1m</option>
-<option value="5m">5m</option>
-<option value="15m">15m</option>
-<option value="1h">1h</option>
-</select>
-<select id="brokerSelect" class="tf-selector" title="Broker comparison overlay" onchange="changeBroker()">
-<option value="Binance">Binance</option>
-<option value="XM">XM</option>
-<option value="MT5">MT5</option>
-<option value="MT4">MT4</option>
-<option value="TradingView">TradingView</option>
-<option value="IQ Option">IQ Option</option>
-<option value="Bybit">Bybit</option>
-<option value="Deriv">Deriv</option>
-<option value="ICMarkets">ICMarkets</option>
-<option value="Exness">Exness</option>
-</select>
-<button class="btn-outline" title="Settings" style="width:auto; padding:5px 12px; border-radius:6px; cursor:pointer" onclick="toggleSettings()">?</button>
-</div>
-<div class="live-price-container">
-<div id="livePrice" class="live-price"></div>
-<small id="updateTime" style="color:var(--muted)">INITIALIZING ENGINE</small>
-</div>
+<header class="nt-compact-header">
+  <div class="nt-header-left">
+    <h1 class="nt-brand-title">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block">V13.7 COMPACT DRAWER  ARMOROO ENT</small></h1>
+    <span class="tester-badge">Free Tester Mode</span>
+  </div>
+
+  <details id="tradeControlDrawer" class="nt-control-drawer">
+    <summary>
+      <div>
+        <div class="nt-drawer-label">Trading Controls</div>
+        <div class="nt-selected-strip" aria-live="polite">
+          <span class="nt-chip">Market: <b id="drawerAssetLabel">BTC/USDT</b></span>
+          <span class="nt-chip">TF: <b id="drawerTfLabel">1m</b></span>
+          <span class="nt-chip">Broker: <b id="drawerBrokerLabel">Binance</b></span>
+        </div>
+      </div>
+      <span class="nt-drawer-hint">Tap to change market / timeframe / broker</span>
+    </summary>
+    <div class="nt-drawer-panel">
+      <div class="nt-select-grid">
+        <div class="nt-field">
+          <label for="assetSelect">Market / Symbol</label>
+          <select id="assetSelect" class="pair-selector" onchange="changeAsset(); updateDrawerLabels();">
+            <option value="BTCUSDT">BTC/USDT</option>
+            <option value="ETHUSDT">ETH/USDT</option>
+            <option value="SOLUSDT">SOL/USDT</option>
+            <option value="BNBUSDT">BNB/USDT</option>
+          </select>
+        </div>
+        <div class="nt-field">
+          <label for="tfSelect">Timeframe</label>
+          <select id="tfSelect" class="tf-selector" onchange="changeTimeframe(); updateDrawerLabels();">
+            <option value="1m">1m</option>
+            <option value="5m">5m</option>
+            <option value="15m">15m</option>
+            <option value="1h">1h</option>
+          </select>
+        </div>
+        <div class="nt-field">
+          <label for="brokerSelect">Broker / Platform</label>
+          <select id="brokerSelect" class="tf-selector" title="Broker comparison overlay" onchange="changeBroker(); updateDrawerLabels();">
+            <option value="Binance">Binance</option>
+            <option value="XM">XM</option>
+            <option value="MT5">MT5</option>
+            <option value="MT4">MT4</option>
+            <option value="TradingView">TradingView</option>
+            <option value="IQ Option">IQ Option</option>
+            <option value="Bybit">Bybit</option>
+            <option value="Deriv">Deriv</option>
+            <option value="ICMarkets">ICMarkets</option>
+            <option value="Exness">Exness</option>
+          </select>
+        </div>
+        <div class="nt-field">
+          <label>Quick Action</label>
+          <button class="btn-outline nt-help-btn" title="Settings" onclick="toggleSettings()">?</button>
+        </div>
+      </div>
+      <div class="nt-drawer-note">Compact dropdown keeps the chart high. Switching here still refreshes market, timeframe, broker overlay, socket status, and Signal A/B alignment.</div>
+    </div>
+  </details>
+
+  <div class="live-price-container">
+    <div id="livePrice" class="live-price"></div>
+    <small id="updateTime" style="color:var(--muted)">INITIALIZING ENGINE</small>
+  </div>
 </header>
 
 <nav class="nt-side-nav" aria-label="NetTrack page navigation">
@@ -2502,6 +2587,24 @@ function connectWS() {
     };
   } catch(e) {}
 })();
+
+
+// V13.7 compact drawer label sync — no socket/API logic changed
+function updateDrawerLabels(){
+  try{
+    const asset=document.getElementById('assetSelect');
+    const tf=document.getElementById('tfSelect');
+    const broker=document.getElementById('brokerSelect');
+    const assetLabel=document.getElementById('drawerAssetLabel');
+    const tfLabel=document.getElementById('drawerTfLabel');
+    const brokerLabel=document.getElementById('drawerBrokerLabel');
+    if(asset && assetLabel){ assetLabel.textContent=(asset.options[asset.selectedIndex]?.text || asset.value || '--'); }
+    if(tf && tfLabel){ tfLabel.textContent=(tf.options[tf.selectedIndex]?.text || tf.value || '--'); }
+    if(broker && brokerLabel){ brokerLabel.textContent=(broker.options[broker.selectedIndex]?.text || broker.value || '--'); }
+  }catch(e){ console.warn('Drawer label sync skipped', e); }
+}
+document.addEventListener('DOMContentLoaded',()=>{ setTimeout(updateDrawerLabels,80); });
+
 </script>
 
 <div id="authOverlay" style="position:fixed;inset:0;background:#020617;z-index:999999;display:flex;align-items:center;justify-content:center">
