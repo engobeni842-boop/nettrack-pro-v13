@@ -396,10 +396,6 @@ body .container{padding-top:1.05rem!important;}
 }
 @media (max-width:560px){.nt-select-grid{grid-template-columns:1fr}.nt-drawer-hint{display:none}.nt-selected-strip{display:none}}
 
-
-.nt-platform-buttons .btn-outline,#platformLinkBox .btn-outline{font-size:.64rem;padding:7px 8px;border-radius:999px}
-#signalABBox b,#platformLinkBox b{letter-spacing:.2px}
-#sensitiveInfoDrop summary::-webkit-details-marker{display:none}
 </style>
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -566,7 +562,7 @@ h1,h2{letter-spacing:.2px}
 <div id="notif-box"></div>
 <header class="nt-compact-header">
   <div class="nt-header-left">
-    <h1 class="nt-brand-title">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block">V13.9 SIGNAL A/B PLATFORM  ARMOROO ENT</small></h1>
+    <h1 class="nt-brand-title">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block">V13.10 SIGNAL A/B BRIDGE  ARMOROO ENT</small></h1>
     <span class="tester-badge">Free Tester Mode</span>
   </div>
 
@@ -591,9 +587,6 @@ h1,h2{letter-spacing:.2px}
             <option value="ETHUSDT">ETH/USDT</option>
             <option value="SOLUSDT">SOL/USDT</option>
             <option value="BNBUSDT">BNB/USDT</option>
-            <option value="EURUSDT">EUR/USDT</option>
-            <option value="XAUUSDT">XAU/USD</option>
-            <option value="GBPUSDT">GBP/USDT</option>
           </select>
         </div>
         <div class="nt-field">
@@ -618,8 +611,9 @@ h1,h2{letter-spacing:.2px}
             <option value="Deriv">Deriv</option>
             <option value="ICMarkets">ICMarkets</option>
             <option value="Exness">Exness</option>
+            <option value="Deriv Synthetic">Deriv Synthetic</option>
             <option value="TradeView">TradeView</option>
-            <option value="RoboForex">RoboForex</option>
+            <option value="VulaCoin">VulaCoin</option>
           </select>
         </div>
         <div class="nt-field">
@@ -627,19 +621,7 @@ h1,h2{letter-spacing:.2px}
           <button class="btn-outline nt-help-btn" title="Settings" onclick="toggleSettings()">?</button>
         </div>
       </div>
-      <div class="nt-drawer-note">Compact dropdown keeps the chart high. Switching here refreshes market, timeframe, broker overlay, socket status, and Signal A/B alignment.</div>
-      <div class="nt-platform-buttons" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
-        <button class="btn-outline" onclick="selectBrokerQuick('Binance')">Binance</button>
-        <button class="btn-outline" onclick="selectBrokerQuick('MT5')">MT5</button>
-        <button class="btn-outline" onclick="selectBrokerQuick('MT4')">MT4</button>
-        <button class="btn-outline" onclick="selectBrokerQuick('XM')">XM</button>
-        <button class="btn-outline" onclick="selectBrokerQuick('Exness')">Exness</button>
-        <button class="btn-outline" onclick="selectBrokerQuick('Deriv')">Deriv</button>
-        <button class="btn-outline" onclick="selectBrokerQuick('IQ Option')">IQ Option</button>
-        <button class="btn-outline" onclick="selectBrokerQuick('TradingView')">TradingView</button>
-        <button class="btn-outline" onclick="selectBrokerQuick('TradeView')">TradeView</button>
-        <button class="btn-outline" onclick="openBrokerPlatform()">Open Live Chart</button>
-      </div>
+      <div class="nt-drawer-note">Compact dropdown keeps the chart high. Switching here still refreshes market, timeframe, broker overlay, socket status, and Signal A/B alignment.</div>
     </div>
   </details>
 
@@ -659,7 +641,7 @@ h1,h2{letter-spacing:.2px}
     <div class="portal-title-row">
       <div>
         <h2>User Portal</h2>
-        <small>30-day free trial, subscription access and signal-only trading view.</small>
+        <small>30-day free trial, subscription access, verification and signal-only trading view.</small>
       </div>
       <button class="btn-outline" onclick="showNetTrackPage('trading')">Back to Trading</button>
     </div>
@@ -766,58 +748,115 @@ h1,h2{letter-spacing:.2px}
     <span>Sync: <b id="alignSync">WAITING</b></span><br>
     <span>Mode: <b id="alignMode">Signal view only</b></span>
   </div>
-  <div id="signalABBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(34,197,94,.28); background:linear-gradient(135deg, rgba(34,197,94,.09), rgba(15,23,42,.90)); font-size:.75rem; line-height:1.55">
-    <b style="color:#22c55e">SIGNAL PATTERN A/B ENGINE</b><br>
-    <small style="color:#94a3b8">Two-signal matrix: Signal A is the main setup. Signal B is the safety/alternate setup. Both follow the selected market, timeframe and broker/platform.</small>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-      <div style="border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:9px;background:rgba(2,6,23,.35)">
-        <b id="sigASide" style="color:#22c55e">SIGNAL A — WAIT</b><br>
-        <span>Entry: <b id="sigAEntry">--</b></span><br>
-        <span>Stop Loss: <b id="sigASL">--</b></span><br>
-        <span>Take Profit: <b id="sigATP">--</b></span><br>
-        <span>Logic: <b id="sigALogic">Waiting for structure</b></span>
-      </div>
-      <div style="border:1px solid rgba(56,189,248,.25);border-radius:10px;padding:9px;background:rgba(2,6,23,.35)">
-        <b id="sigBSide" style="color:#38bdf8">SIGNAL B — WAIT</b><br>
-        <span>Entry: <b id="sigBEntry">--</b></span><br>
-        <span>Stop Loss: <b id="sigBSL">--</b></span><br>
-        <span>Take Profit: <b id="sigBTP">--</b></span><br>
-        <span>Logic: <b id="sigBLogic">Safety confirmation</b></span>
-      </div>
+  <div id="netTrackBotBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(34,197,94,.25); background:linear-gradient(135deg, rgba(34,197,94,.09), rgba(15,23,42,.88)); font-size:.75rem; line-height:1.55">
+    <b style="color:#22c55e">NETTRACK BOT — SIGNAL ENGINE</b><br>
+    <small style="color:#94a3b8">Final signal-platform mode — no client fund custody, no wallet trading, no auto-execution. The bot scans the market and gives signals only.</small>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+      <div style="padding:8px;border:1px solid rgba(34,197,94,.22);border-radius:8px;background:rgba(2,6,23,.30)"><small style="color:#94a3b8">Trial status</small><br><b id="trialStatus" style="color:#22c55e">30 DAYS FREE</b></div>
+      <div style="padding:8px;border:1px solid rgba(56,189,248,.22);border-radius:8px;background:rgba(2,6,23,.30)"><small style="color:#94a3b8">Days remaining</small><br><b id="trialDaysLeft" style="color:#38bdf8">30</b></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-      <button class="btn btn-success" style="padding:8px" onclick="copySignalPattern('A')">COPY SIGNAL A</button>
-      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="copySignalPattern('B')">COPY SIGNAL B</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+      <label style="font-size:.65rem;color:#94a3b8">Plan
+        <select id="subscriptionPlan" onchange="updateNetTrackBotPanel()" style="width:100%;margin-top:4px;background:#0f172a;color:white;border:1px solid #334155;border-radius:6px;padding:7px">
+          <option value="FREE">Free Trial — 30 Days</option>
+          <option value="BASIC">Basic — R99 / month</option>
+          <option value="PRO">Pro — R199 / month</option>
+          <option value="PREMIUM">Premium — R299 / month</option>
+        </select>
+      </label>
+      <label style="font-size:.65rem;color:#94a3b8">Unlock method
+        <select id="subscriptionMethod" onchange="updateNetTrackBotPanel()" style="width:100%;margin-top:4px;background:#0f172a;color:white;border:1px solid #334155;border-radius:6px;padding:7px">
+          <option>Trial access</option><option>Subscription unlock test</option><option>PayFast webhook later</option><option>Ozow webhook later</option><option>Card provider later</option>
+        </select>
+      </label>
     </div>
-    <div style="margin-top:8px;padding:8px;border-radius:8px;background:rgba(2,6,23,.35);border:1px solid rgba(148,163,184,.16)">
-      <span>Platform sync: <b id="platformSyncLabel">Binance • BTC/USDT • 1m</b></span><br>
-      <span>Risk rule: <b id="signalRiskRule">Wait for candle close and broker alignment.</b></span>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:8px">
+      <button class="btn btn-success" style="padding:8px" onclick="runNetTrackBot('ACTIVATE_TRIAL')">ACTIVATE FREE TRIAL</button>
+      <button class="btn btn-success" style="padding:8px" onclick="runNetTrackBot('PAY_SUBSCRIPTION')">MARK SUBSCRIPTION PAID</button>
+      <button class="btn btn-danger" style="padding:8px" onclick="runNetTrackBot('RESET_TRIAL')">RESET TEST</button>
+    </div>
+    <div style="margin-top:8px; border-top:1px solid rgba(148,163,184,.16); padding-top:8px">
+      <span>Access mode: <b id="botPaymentStatus">FREE TRIAL</b></span><br>
+      <span>Subscription value: <b id="botZarValue">R 0.00</b></span><br>
+      <span>Signal access: <b id="botUsable">ACTIVE</b></span><br>
+      <span>Current signal: <b id="botSignal">--</b></span><br>
+      <span>Signal action: <b id="botTpReturn">User trades on own broker</b></span><br>
+      <span>Bot result: <b id="botResult">SIGNAL-ONLY MODE READY</b></span>
+    </div>
+    <small style="display:block;color:#eab308;margin-top:8px">Compliance guard: NetTrack does not hold client funds, does not place trades for users, and does not guarantee profit. It provides market signals only.</small>
+  </div>
+
+  <div id="walletBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.28); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
+    <b style="color:#38bdf8">SUBSCRIPTION ACCESS</b><br>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+      <div><small style="color:#94a3b8">Current plan</small><br><b id="walletLevel" style="color:#22c55e">FREE TRIAL</b></div>
+      <div><small style="color:#94a3b8">Trial remaining</small><br><b id="walletPending" style="color:#eab308">30 days</b></div>
+      <div><small style="color:#94a3b8">Monthly fee</small><br><b id="walletAvailable" style="color:#38bdf8">R 0.00</b></div>
+      <div><small style="color:#94a3b8">Subscription paid</small><br><b id="walletCommission" style="color:#22c55e">R 0.00</b></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+      <button class="btn btn-success" style="padding:8px" onclick="runNetTrackBot('ACTIVATE_TRIAL')">START 30-DAY FREE</button>
+      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="runNetTrackBot('PAY_SUBSCRIPTION')">UPGRADE PLAN</button>
     </div>
   </div>
 
-  <details id="sensitiveInfoDrop" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(148,163,184,.20); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
-    <summary style="cursor:pointer;color:#cbd5e1;font-weight:800">Description / Protected Information</summary>
-    <div style="margin-top:10px;color:#94a3b8">
-      Subscription, access events, owner revenue, verification notes and sensitive account details are hidden from the main screen. Keep this information inside the owner portal / Supabase dashboard only.
-      <br><br><b style="color:#38bdf8">Platform rule:</b> NetTrack gives entries, stop filter, take profit, confidence and broker alignment. Users place trades manually inside their own broker account. NetTrack does not hold client funds and does not auto-execute trades.
+  <div id="verificationBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(234,179,8,.28); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
+    <b style="color:#eab308">VERIFICATION CENTER</b><br>
+    <div style="margin-top:8px">
+      <span>Email: <b style="color:#22c55e">VERIFIED</b></span><br>
+      <span>Phone: <b id="kycPhone" style="color:#eab308">PENDING</b></span><br>
+      <span>ID: <b id="kycId" style="color:#eab308">PENDING</b></span><br>
+      <span>Documents: <b id="kycDocs" style="color:#eab308">PENDING</b></span><br>
+      <span>Status: <b id="kycStatus">BASIC ACCOUNT</b></span>
     </div>
-  </details>
+    <div class="progress-bg" style="margin-top:8px"><div id="kycProgress" class="progress-fill" style="width:25%;background:#eab308"></div></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="verifyStep('PHONE')">PHONE</button>
+      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="verifyStep('ID')">ID DETAILS</button>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+      <label class="btn" style="padding:8px;background:#334155;color:#e2e8f0;text-align:center;cursor:pointer">ID COPY<input type="file" accept="image/*,.pdf" style="display:none" onchange="verifyDocumentUpload('copy',this)"></label>
+      <label class="btn" style="padding:8px;background:#334155;color:#e2e8f0;text-align:center;cursor:pointer">REAL ID FRONT/BACK<input type="file" accept="image/*,.pdf" multiple style="display:none" onchange="verifyDocumentUpload('real',this)"></label>
+    </div>
+  </div>
 
-  <div id="platformLinkBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.34); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
-    <b style="color:#38bdf8">TRADING PLATFORM SWITCH</b><br>
-    <small style="color:#94a3b8">Switching a platform here also switches the chart overlay and Signal A/B pattern.</small>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px">
-      <button class="btn-outline" onclick="selectBrokerQuick('Binance')">Binance</button>
-      <button class="btn-outline" onclick="selectBrokerQuick('MetaTrader 5')">MT5</button>
-      <button class="btn-outline" onclick="selectBrokerQuick('MetaTrader 4')">MT4</button>
-      <button class="btn-outline" onclick="selectBrokerQuick('XM')">XM</button>
-      <button class="btn-outline" onclick="selectBrokerQuick('Exness')">Exness</button>
-      <button class="btn-outline" onclick="selectBrokerQuick('Deriv')">Deriv</button>
-      <button class="btn-outline" onclick="selectBrokerQuick('IQ Option')">IQ Option</button>
-      <button class="btn-outline" onclick="selectBrokerQuick('TradingView')">TradingView</button>
-      <button class="btn-outline" onclick="selectBrokerQuick('TradeView')">TradeView</button>
+  <div id="txBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(148,163,184,.20); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
+    <b style="color:#cbd5e1">SUBSCRIPTION EVENT HISTORY</b><br>
+    <div id="txHistory" style="margin-top:8px; max-height:120px; overflow:auto; color:#cbd5e1">No subscription events yet.</div>
+  </div>
+
+  <div id="revenueBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(34,197,94,.20); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
+    <b style="color:#22c55e">SUBSCRIPTION REVENUE</b><br>
+    <span>Plans: <b>R99 / R199 / R299</b></span><br>
+    <span>Today: <b id="commissionToday">R 0.00</b></span><br>
+    <span>Total: <b id="commissionTotal">R 0.00</b></span>
+  </div>
+
+  <div id="userPortalBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.34); background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(8,13,24,.92)); font-size:.75rem; line-height:1.55">
+    <b style="color:#38bdf8">USER PORTAL</b><br>
+    <small style="color:#94a3b8">Signal subscription, verification and access overview.</small>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+      <div><small style="color:#94a3b8">Plan</small><br><b id="upZar" style="color:#22c55e">FREE TRIAL</b></div>
+      <div><small style="color:#94a3b8">Monthly price</small><br><b id="upUsd">R 0.00</b></div>
+      <div><small style="color:#94a3b8">Trial started</small><br><b id="upUsdt">Not started</b></div>
+      <div><small style="color:#94a3b8">Trial expires</small><br><b id="upBtc">--</b></div>
+      <div><small style="color:#94a3b8">Access</small><br><b id="upEth">Signals only</b></div>
+      <div><small style="color:#94a3b8">Status</small><br><b id="upWithdrawable" style="color:#eab308">TRIAL READY</b></div>
     </div>
-    <button class="btn btn-primary" style="padding:8px;margin-top:8px" onclick="openBrokerPlatform()">OPEN SELECTED LIVE CHART / BROKER</button>
+    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <label><small style="color:#94a3b8">Broker / chart platform tester</small>
+        <select id="withdrawMethod" style="width:100%;margin-top:4px;background:#111827;color:#fff;border:1px solid #334155;border-radius:6px;padding:7px">
+          <option>Binance</option><option>Bybit</option><option>MT5</option><option>MT4</option><option>XM</option><option>Exness</option><option>Deriv</option><option>ICMarkets</option>
+        </select>
+      </label>
+    </div>
+    <div style="margin-top:8px;padding:8px;border:1px solid rgba(56,189,248,.18);border-radius:8px;background:rgba(2,6,23,.35);color:#cbd5e1;font-size:.72rem">
+      <b style="color:#38bdf8">Signal platform rule:</b> NetTrack gives entries, stop loss, take profit, confidence and alignment. Users place trades manually inside their own broker account.
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <button class="btn btn-success" style="padding:8px" onclick="runNetTrackBot('ACTIVATE_TRIAL')">START FREE TRIAL</button>
+      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="runNetTrackBot('PAY_SUBSCRIPTION')">MARK PAID / UPGRADE</button>
+    </div>
   </div>
 
   <div id="ownerPortalBox" style="display:none;margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(234,179,8,.42); background:linear-gradient(180deg,rgba(30,21,7,.92),rgba(15,23,42,.92)); font-size:.75rem; line-height:1.55">
@@ -832,7 +871,7 @@ h1,h2{letter-spacing:.2px}
     <div style="margin-top:8px;border-top:1px solid rgba(250,204,21,.22);padding-top:8px">
       <span>Revenue account: <b>Subscription income ledger</b></span><br>
       <span>Owner email: <b>engobeni842@gmail.com</b></span><br>
-      <span>Security: <b>Email + Supabase RLS</b></span>
+      <span>Security: <b>Email + document verification + Supabase RLS</b></span>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
       <button class="btn btn-success" style="padding:8px" onclick="ownerWithdrawCommission()">WITHDRAW REVENUE</button>
@@ -842,21 +881,21 @@ h1,h2{letter-spacing:.2px}
 </div>
 
 <div class="card span-6">
-  <h3>Signal Pattern Intelligence</h3>
+  <h3>Win/Loss Analytics</h3>
   <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px; margin-bottom:15px">
     <div class="card" style="padding:10px; background:#1e293b; align-items:center">
-      <small>Pattern Accuracy</small><b id="anRate" style="font-size:1.5rem">0%</b>
+      <small>Win Rate</small><b id="anRate" style="font-size:1.5rem">0%</b>
     </div>
     <div class="card" style="padding:10px; background:#1e293b; align-items:center">
-      <small>Signal Strength</small><b id="anPF" style="font-size:1.5rem">0.0</b>
+      <small>Profit Factor</small><b id="anPF" style="font-size:1.5rem">0.0</b>
     </div>
     <div class="card" style="padding:10px; background:#1e293b; align-items:center">
-      <small>Current Flow</small><b id="anStreak" style="font-size:1.5rem">0</b>
+      <small>Current Streak</small><b id="anStreak" style="font-size:1.5rem">0</b>
     </div>
   </div>
-  <div class="stat-row"><span>Signal A Confirmations</span><b id="anWins" style="color:var(--buy)">0</b></div>
-  <div class="stat-row"><span>Signal B Filters</span><b id="anLoss" style="color:var(--sell)">0</b></div>
-  <div class="stat-row"><span>Risk Compression</span><b id="anDD" style="color:var(--sell)">0.0%</b></div>
+  <div class="stat-row"><span>Total Gains</span><b id="anWins" style="color:var(--buy)">0</b></div>
+  <div class="stat-row"><span>Total Losses</span><b id="anLoss" style="color:var(--sell)">0</b></div>
+  <div class="stat-row"><span>Max Drawdown</span><b id="anDD" style="color:var(--sell)">0.0%</b></div>
 </div>
 
 <div class="card span-6">
@@ -931,7 +970,7 @@ h1,h2{letter-spacing:.2px}
 </div>
 
 <div class="card span-4">
-  <h3>Historical Signal Test</h3>
+  <h3>Historical Backtest</h3>
   <div style="display:flex; gap:10px; margin-bottom:10px">
     <select id="btLookback" style="margin:0">
       <option value="300" selected>300 Candles</option>
@@ -941,7 +980,7 @@ h1,h2{letter-spacing:.2px}
     <button class="btn btn-primary" style="margin:0; width:auto" onclick="runAdvancedBacktest()">Run Test</button>
   </div>
   <div id="btResults" style="font-size:0.85rem">
-    <div class="stat-row"><span>Simulated Signal Accuracy</span><b id="btRate">0%</b></div>
+    <div class="stat-row"><span>Simulated Win Rate</span><b id="btRate">0%</b></div>
     <div class="stat-row"><span>Sample Size</span><b id="btSample">0</b></div>
   </div>
 </div>
@@ -976,7 +1015,7 @@ h1,h2{letter-spacing:.2px}
 
 <div class="card span-12">
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-    <h3>Signal History</h3>
+    <h3>Signal & Trade History</h3>
     <div style="display:flex; gap:8px"><button class="btn btn-outline" style="width:auto; margin:0" onclick="clearHistory()">Clear History</button><button class="btn btn-outline" style="width:auto; margin:0" onclick="exportCSV()">Export Data</button></div>
   </div>
   <div class="table-wrap">
@@ -1002,7 +1041,7 @@ h1,h2{letter-spacing:.2px}
 
 <div class="brand-footer">
   <b>ARMOROO ENT Software and Apps</b><br>
-  <span>NetTrack Pro V13.9 Signal A/B Platform</span><br>
+  <span>NetTrack Pro V13.10 Signal A/B Platform</span><br>
   <span>Developed by Emmanuel Musiyiwa Ngobeni &amp; Thando Mbatha</span>
 </div>
 
@@ -1066,16 +1105,16 @@ const ema = (vals, p) => {
 };
 const rsi = (closes, p=14) => {
   if (!closes || closes.length <= p) return new Array(closes ? closes.length : 0).fill(null);
-  let gains = [0], filters = [0];
+  let gains = [0], losses = [0];
   for(let i=1; i<closes.length; i++){
     let d = closes[i] - closes[i-1];
-    gains.push(Math.max(0, d)); filters.push(Math.max(0, -d));
+    gains.push(Math.max(0, d)); losses.push(Math.max(0, -d));
   }
-  let avgG = avg(gains.slice(1, p+1)), avgL = avg(filters.slice(1, p+1));
+  let avgG = avg(gains.slice(1, p+1)), avgL = avg(losses.slice(1, p+1));
   let firstRsi = avgL === 0 ? 100 : 100 - (100/(1 + avgG/avgL));
   let res = [...new Array(p).fill(null), firstRsi];
   for(let i=p+1; i<closes.length; i++){
-    avgG = (avgG * (p-1) + gains[i])/p; avgL = (avgL * (p-1) + filters[i])/p;
+    avgG = (avgG * (p-1) + gains[i])/p; avgL = (avgL * (p-1) + losses[i])/p;
     res.push(avgL === 0 ? 100 : 100 - (100/(1 + avgG/avgL)));
   }
   return res;
@@ -1567,7 +1606,6 @@ function updateDashboard(res) {
   }
 
   updateTradePlan(res);
-  updateSignalABPattern(res);
   updateLiveAlignment(res);
 
   const bias = res.signal.includes("BUY") ? "BULLISH" : res.signal.includes("SELL") ? "BEARISH" : "NEUTRAL";
@@ -1640,14 +1678,14 @@ function updateDashboard(res) {
 /** ANALYTICS & CHARTS **/
 function calculateAnalytics() {
   const marked = signalHistory.filter(h => h && h.result && h.result !== 'PENDING');
-  const confirms = marked.filter(h => h.result === 'HIT').length;
-  const filters = marked.filter(h => h.result === 'MISS').length;
-  const total = confirms + filters;
+  const wins = marked.filter(h => h.result === 'WIN').length;
+  const losses = marked.filter(h => h.result === 'LOSS').length;
+  const total = wins + losses;
 
-  const rate = total > 0 ? Math.round((confirms/total)*100) : 0;
+  const rate = total > 0 ? Math.round((wins/total)*100) : 0;
   if(document.getElementById("anRate")) document.getElementById("anRate").innerText = rate + "%";
-  if(document.getElementById("anWins")) document.getElementById("anWins").innerText = confirms;
-  if(document.getElementById("anLoss")) document.getElementById("anLoss").innerText = filters;
+  if(document.getElementById("anWins")) document.getElementById("anWins").innerText = wins;
+  if(document.getElementById("anLoss")) document.getElementById("anLoss").innerText = losses;
 
   let currentEquity = 1000, maxEq = 1000, mdd = 0;
   let streak = 0;
@@ -1660,7 +1698,7 @@ function calculateAnalytics() {
     const pct = elPct ? parseFloat(elPct.value) : 2;
     const stake = (bal * (pct/100));
 
-    if(h.result === 'HIT') {
+    if(h.result === 'WIN') {
       currentEquity += stake * 0.9; streak = streak < 0 ? 1 : streak + 1;
     } else {
       currentEquity -= stake; streak = streak > 0 ? -1 : streak - 1;
@@ -1671,7 +1709,7 @@ function calculateAnalytics() {
     mdd = Math.max(mdd, dd);
   });
 
-  if(document.getElementById("anPF")) document.getElementById("anPF").innerText = filters > 0 ? (confirms*0.9 / filters).toFixed(1) : confirms > 0 ? "8" : "0.0";
+  if(document.getElementById("anPF")) document.getElementById("anPF").innerText = losses > 0 ? (wins*0.9 / losses).toFixed(1) : wins > 0 ? "8" : "0.0";
   if(document.getElementById("anStreak")) document.getElementById("anStreak").innerText = streak;
   if(document.getElementById("anDD")) document.getElementById("anDD").innerText = mdd.toFixed(1) + "%";
 
@@ -1714,10 +1752,7 @@ let lastAlignSnapshot = { net:null, broker:null, t:0 };
 const USD_ZAR_RATE = 18.25;
 
 function selectedBrokerLabel(){ return BROKER_LABELS[BROKER_MODE] || BROKER_MODE || "Broker"; }
-function activeSymbolLabel(){
-  const map={BTCUSDT:"BTC/USDT",ETHUSDT:"ETH/USDT",SOLUSDT:"SOL/USDT",BNBUSDT:"BNB/USDT",EURUSDT:"EUR/USDT",XAUUSDT:"XAU/USD",GBPUSDT:"GBP/USDT"};
-  return map[SYMBOL] || String(SYMBOL || "BTCUSDT").replace("USDT","/USDT").replace("USD","/USD");
-}
+function activeSymbolLabel(){ return String(SYMBOL || "BTCUSDT").replace("USDT","/USDT").replace("USD","/USD"); }
 function movementLabel(current, prev){
   if(!Number.isFinite(current) || !Number.isFinite(prev)) return "--";
   const d = current - prev;
@@ -1862,104 +1897,12 @@ function runNetTrackBot(mode){
     updateNetTrackBotPanel(); return;
   }
   if(resultEl){ resultEl.innerText = "SIGNAL READY — USER TRADES MANUALLY ON OWN BROKER"; resultEl.style.color = "#22c55e"; }
-  updateSignalABPattern(res);
   updateNetTrackBotPanel();
-}
-
-
-function normalizeBrokerName(name){
-  const b = String(name || '').toLowerCase();
-  if(b.includes('metatrader 5') || b === 'mt5') return 'MT5';
-  if(b.includes('metatrader 4') || b === 'mt4') return 'MT4';
-  if(b.includes('iq')) return 'IQ Option';
-  if(b.includes('tradeview')) return 'TradeView';
-  if(b.includes('tradingview')) return 'TradingView';
-  if(b.includes('robo')) return 'RoboForex';
-  if(b.includes('xm')) return 'XM';
-  if(b.includes('exness')) return 'Exness';
-  if(b.includes('deriv')) return 'Deriv';
-  if(b.includes('icmarkets')) return 'ICMarkets';
-  if(b.includes('bybit')) return 'Bybit';
-  return name || 'Binance';
-}
-
-function selectBrokerQuick(name){
-  const wanted = normalizeBrokerName(name);
-  const el = document.getElementById('brokerSelect');
-  if(el){
-    let found = false;
-    [...el.options].forEach((o,i)=>{ if(o.value === wanted || o.text === wanted){ el.selectedIndex = i; found = true; } });
-    if(!found){
-      const opt = document.createElement('option'); opt.value = wanted; opt.text = wanted; el.appendChild(opt); el.value = wanted;
-    }
-  }
-  BROKER_MODE = wanted;
-  changeBroker();
-  updateDrawerLabels();
-  notify('Platform switched to ' + selectedBrokerLabel() + '. Signal A/B re-synced.');
-}
-
-function brokerPlatformUrl(){
-  const asset = activeSymbolLabel().replace('/','');
-  const b = normalizeBrokerName(BROKER_MODE);
-  const map = {
-    'Binance': 'https://www.binance.com/en/trade/' + asset + '?type=spot',
-    'Bybit': 'https://www.bybit.com/trade/spot/' + asset,
-    'TradingView': 'https://www.tradingview.com/chart/?symbol=BINANCE:' + asset,
-    'TradeView': 'https://www.tradingview.com/chart/?symbol=BINANCE:' + asset,
-    'MT5': 'https://www.metatrader5.com/en/download',
-    'MT4': 'https://www.metatrader4.com/en/download',
-    'XM': 'https://www.xm.com/',
-    'Exness': 'https://www.exness.com/',
-    'Deriv': 'https://deriv.com/',
-    'IQ Option': 'https://iqoption.com/',
-    'ICMarkets': 'https://www.icmarkets.com/',
-    'RoboForex': 'https://roboforex.com/'
-  };
-  return map[b] || map.TradingView;
-}
-function openBrokerPlatform(){ confirmdow.open(brokerPlatformUrl(), '_blank', 'noopener,noreferrer'); }
-
-function updateSignalABPattern(res){
-  if(!res) return;
-  const plan = res.tradePlan || {};
-  const broker = selectedBrokerLabel();
-  const symbol = activeSymbolLabel();
-  const tf = INTERVAL || '1m';
-  const dir = String(plan.direction || (res.signal.includes('BUY') ? 'BUY' : res.signal.includes('SELL') ? 'SELL' : 'WAIT'));
-  const active = plan.active && dir !== 'NEUTRAL' && dir !== 'WAIT' && Number.isFinite(plan.entry) && Number.isFinite(plan.stopLoss) && Number.isFinite(plan.takeProfit);
-  const atrv = Number(res.indicators?.atr14 || 0);
-  const entry = active ? plan.entry : res.price;
-  const aSL = active ? plan.stopLoss : NaN;
-  const aTP = active ? plan.takeProfit : NaN;
-  const bEntry = active ? (dir === 'BUY' ? entry + atrv*0.18 : entry - atrv*0.18) : NaN;
-  const bSL = active ? (dir === 'BUY' ? bEntry - atrv*1.05 : bEntry + atrv*1.05) : NaN;
-  const bTP = active ? (dir === 'BUY' ? bEntry + atrv*1.65 : bEntry - atrv*1.65) : NaN;
-  const set=(id,val,color)=>{const el=document.getElementById(id); if(el){el.innerText=val; if(color)el.style.color=color;}};
-  const mainColor = dir === 'BUY' ? '#22c55e' : dir === 'SELL' ? '#ef4444' : '#eab308';
-  set('sigASide', active ? `SIGNAL A — ${dir}` : 'SIGNAL A — WAIT', mainColor);
-  set('sigAEntry', active ? fmtPrice(entry) : '--'); set('sigASL', active ? fmtPrice(aSL) : '--'); set('sigATP', active ? fmtPrice(aTP) : '--');
-  set('sigALogic', active ? `${res.confidence}% conf • ${plan.quality}/100 quality` : 'Waiting for closed-candle confirmation');
-  set('sigBSide', active ? `SIGNAL B — ${dir} SAFETY` : 'SIGNAL B — WAIT', '#38bdf8');
-  set('sigBEntry', active ? fmtPrice(bEntry) : '--'); set('sigBSL', active ? fmtPrice(bSL) : '--'); set('sigBTP', active ? fmtPrice(bTP) : '--');
-  set('sigBLogic', active ? 'Retest/second-entry filter after spread check' : 'Activates only after Signal A alignment');
-  set('platformSyncLabel', `${broker} • ${symbol} • ${tf}`);
-  set('signalRiskRule', active ? `Manual execution only. Wait for ${tf} candle close.` : 'Wait for candle close and broker alignment.');
-}
-
-function copySignalPattern(which){
-  const prefix = which === 'B' ? 'sigB' : 'sigA';
-  const side = document.getElementById(prefix+'Side')?.innerText || 'SIGNAL';
-  const entry = document.getElementById(prefix+'Entry')?.innerText || '--';
-  const sl = document.getElementById(prefix+'SL')?.innerText || '--';
-  const tp = document.getElementById(prefix+'TP')?.innerText || '--';
-  const txt = `${side}\nMarket: ${activeSymbolLabel()}\nPlatform: ${selectedBrokerLabel()}\nTimeframe: ${INTERVAL}\nEntry: ${entry}\nStop Loss: ${sl}\nTake Profit: ${tp}\nManual execution only.`;
-  navigator.clipboard?.writeText(txt).then(()=>notify('Signal '+which+' copied.')).catch(()=>alert(txt));
 }
 
 function changeBroker() {
   const el = document.getElementById("brokerSelect");
-  if (el) BROKER_MODE = normalizeBrokerName(el.value || "Binance");
+  if (el) BROKER_MODE = el.value || "Binance";
   localStorage.setItem("ntp_broker_mode_v114", BROKER_MODE);
   const n = document.getElementById("brokerOverlayName");
   if (n) n.innerText = selectedBrokerLabel();
@@ -2226,7 +2169,7 @@ function runAdvancedBacktest() {
   }
   
   const testData = candles.slice(-limit);
-  let confirms = 0, filters = 0, total = 0;
+  let wins = 0, losses = 0, total = 0;
   let elite = 0, strong = 0, normal = 0, watchlist = 0;
   const hold = INTERVAL === "1m" ? 5 : INTERVAL === "5m" ? 4 : 3;
 
@@ -2246,18 +2189,18 @@ function runAdvancedBacktest() {
     else normal++;
 
     if(sig.includes("BUY")) {
-      if (exitPrice > entryPrice) confirms++; else filters++;
+      if (exitPrice > entryPrice) wins++; else losses++;
     } else if (sig.includes("SELL")) {
-      if (exitPrice < entryPrice) confirms++; else filters++;
+      if (exitPrice < entryPrice) wins++; else losses++;
     }
   }
   
-  const rate = total > 0 ? clampScore((confirms / total) * 100) : 0;
+  const rate = total > 0 ? clampScore((wins / total) * 100) : 0;
   if(document.getElementById("btRate")) document.getElementById("btRate").innerText = rate + "%";
   if(document.getElementById("btSample")) {
-    document.getElementById("btSample").innerText = `${total} (${confirms}A / ${filters}B | E: ${elite} | S: ${strong} | W: ${watchlist})`;
+    document.getElementById("btSample").innerText = `${total} (${wins}W / ${losses}L | E: ${elite} | S: ${strong} | W: ${watchlist})`;
   }
-  notify(`Backtest compiled over ${total} validated closed confirmdows.`);
+  notify(`Backtest compiled over ${total} validated closed windows.`);
 }
 
 /** ACTIONS & PERSISTENCE **/
@@ -2374,7 +2317,7 @@ function exportCSV() {
     if(h) csv += `${h.time},${h.pair},${h.tf},${h.price},${h.signal},${h.grade},${h.tradePlan?.quality || h.confidence || ''},${h.result}\n`;
   });
   const blob = new Blob([csv], { type: 'text/csv' });
-  const url = confirmdow.URL.createObjectURL(blob);
+  const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url; a.download = `nettrack_export.csv`; a.click();
 }
@@ -2468,8 +2411,8 @@ function autoResolvePendingSignals() {
     const entry = Number(h.price);
     const exit = Number(latest.close);
     if(!Number.isFinite(entry) || !Number.isFinite(exit)) return;
-    if(String(h.signal).includes("BUY")) h.result = exit > entry ? "HIT" : "MISS";
-    else if(String(h.signal).includes("SELL")) h.result = exit < entry ? "HIT" : "MISS";
+    if(String(h.signal).includes("BUY")) h.result = exit > entry ? "WIN" : "LOSS";
+    else if(String(h.signal).includes("SELL")) h.result = exit < entry ? "WIN" : "LOSS";
     else return;
     changed = true;
   });
@@ -2499,23 +2442,6 @@ async function changeTimeframe() {
   }
 }
 
-
-function syntheticBasePrice(sym){
-  const map={EURUSDT:1.0825,GBPUSDT:1.2715,XAUUSDT:2338.40,BTCUSDT:65395,ETHUSDT:3500,SOLUSDT:150,BNBUSDT:580};
-  return map[sym] || 100;
-}
-function isSyntheticSymbol(sym){ return ["XAUUSDT","GBPUSDT"].includes(String(sym||"")); }
-function makeSyntheticCandles(sym, limit=600){
-  const base=syntheticBasePrice(sym); const now=Date.now(); const step=tfMs(INTERVAL||"1m"); let arr=[]; let price=base;
-  for(let i=limit-1;i>=0;i--){
-    const t=now-i*step; const wave=Math.sin(i/11)*base*0.0018 + Math.cos(i/23)*base*0.0012;
-    const drift=Math.sin((Date.now()/60000+i)/37)*base*0.0005; const open=price; const close=Math.max(base*0.4, base+wave+drift);
-    const high=Math.max(open,close)+base*(0.0009+Math.abs(Math.sin(i))*0.0007); const low=Math.min(open,close)-base*(0.0009+Math.abs(Math.cos(i))*0.0007);
-    arr.push({time:t,open,high,low,close,volume:1000+Math.abs(Math.sin(i/5))*500,isClosed:true}); price=close;
-  }
-  return arr;
-}
-
 /** PRODUCTION FIX 4: ATOMIC DISCONNECT & STABLE RESET LOOP ENGINE **/
 async function resetStream() {
   isSwitching = true;
@@ -2540,22 +2466,19 @@ async function resetStream() {
   if(elUpdateTime) elUpdateTime.innerText = "SYNCING STRUCTURAL CONTEXT: " + SYMBOL;
 
   try {
-    if(isSyntheticSymbol(SYMBOL)) {
-      candles = makeSyntheticCandles(SYMBOL, 600);
-    } else {
-      const r = await fetch(`https://api.binance.com/api/v3/klines?symbol=${SYMBOL}&interval=${INTERVAL}&limit=600`);
-      if(!r.ok) throw new Error();
-      const raw = await r.json();
-      if(!Array.isArray(raw)) throw new Error();
-      candles = raw.map(k => ({ 
-        time: k[0], 
-        open: parseFloat(k[1]), 
-        high: parseFloat(k[2]), 
-        low: parseFloat(k[3]), 
-        close: parseFloat(k[4]), 
-        volume: parseFloat(k[5]) 
-      })).filter(c => c && Number.isFinite(c.close));
-    }
+    const r = await fetch(`https://api.binance.com/api/v3/klines?symbol=${SYMBOL}&interval=${INTERVAL}&limit=600`);
+    if(!r.ok) throw new Error();
+    const raw = await r.json();
+    if(!Array.isArray(raw)) throw new Error();
+    
+    candles = raw.map(k => ({ 
+      time: k[0], 
+      open: parseFloat(k[1]), 
+      high: parseFloat(k[2]), 
+      low: parseFloat(k[3]), 
+      close: parseFloat(k[4]), 
+      volume: parseFloat(k[5]) 
+    })).filter(c => c && Number.isFinite(c.close));
 
     lastLoggedSignalState = { pair: "", tf: "", signal: "", candleTime: 0, quality: -999 };
 
@@ -2570,7 +2493,7 @@ async function resetStream() {
     
     setTimeout(() => { try { runAdvancedBacktest(); } catch(e){} }, 1000);
     isSwitching = false;
-    if(isSyntheticSymbol(SYMBOL)) { setSocketState("SYNTHETIC LIVE"); } else { connectWS(); }
+    connectWS();
   } catch(e) {
     setSocketState("RECONNECTING");
     reconnectTimeout = setTimeout(resetStream, 6000);
@@ -2580,7 +2503,6 @@ async function resetStream() {
 function connectWS() {
   if (ws && ws.readyState <= 1) return;
 
-  if(isSyntheticSymbol(SYMBOL)) { setSocketState("SYNTHETIC LIVE"); return; }
   ws = new WebSocket(`wss://stream.binance.com:9443/ws/${SYMBOL.toLowerCase()}@kline_${INTERVAL}`);
 
   ws.onopen = () => {
@@ -2663,7 +2585,7 @@ function connectWS() {
     calculateAnalytics();
     setInterval(scanStrongestPairs, 60000);
     
-    confirmdow.onresize = () => {
+    window.onresize = () => {
       if(candles && candles.length > 0) updateDashboard(analyze(candles));
     };
   } catch(e) {}
@@ -2714,7 +2636,7 @@ function ntLogin(){
    localStorage.setItem('nt_logged_in','1');
  } else alert('Invalid login');
 }
-confirmdow.addEventListener('load',()=>{
+window.addEventListener('load',()=>{
  if(localStorage.getItem('nt_logged_in')==='1'){
    const a=document.getElementById('authOverlay'); if(a)a.style.display='none';
  }
@@ -2843,11 +2765,11 @@ body.portal-open .brand-footer{ display:none; }
 <script>
 let ntDeferredInstallPrompt = null;
 if ('serviceWorker' in navigator) {
-  confirmdow.addEventListener('load', () => {
+  window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(err => console.log('Service worker registration failed', err));
   });
 }
-confirmdow.addEventListener('beforeinstallprompt', (event) => {
+window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault();
   ntDeferredInstallPrompt = event;
   const btn = document.getElementById('pwaInstallBtn');
@@ -3050,7 +2972,7 @@ async function ntLogin(){
  document.getElementById('authOverlay').style.display='none';
 }
 
-confirmdow.addEventListener('load', async ()=>{
+window.addEventListener('load', async ()=>{
  const {data} = await supabaseClient.auth.getSession();
  if(data.session){
    const a=document.getElementById('authOverlay');
@@ -3465,45 +3387,45 @@ body.portal-open .brand-footer{ display:none; }
     if(loader) loader.classList.remove("show");
   }
 
-  confirmdow.addEventListener("DOMContentLoaded", enhanceAuthUI);
-  confirmdow.addEventListener("load", enhanceAuthUI);
+  window.addEventListener("DOMContentLoaded", enhanceAuthUI);
+  window.addEventListener("load", enhanceAuthUI);
   setTimeout(enhanceAuthUI, 500);
 
   const waitForSupabase = setInterval(() => {
-    if(confirmdow.supabase){
+    if(window.supabase){
       clearInterval(waitForSupabase);
       try{
-        confirmdow.supabaseClient = confirmdow.supabaseClient || confirmdow.supabase.createClient(supaUrl, supaKey);
+        window.supabaseClient = window.supabaseClient || window.supabase.createClient(supaUrl, supaKey);
 
-        confirmdow.ntSignup = async function(){
+        window.ntSignup = async function(){
           const e = document.getElementById("loginEmail")?.value?.trim();
           const p = document.getElementById("loginPass")?.value;
           if(!e || !p) return alert("Enter email and password");
           showLoader("Creating your NetTrack account...");
-          const r = await confirmdow.supabaseClient.auth.signUp({ email:e, password:p });
+          const r = await window.supabaseClient.auth.signUp({ email:e, password:p });
           if(r.error){ hideLoader(); return alert(r.error.message); }
           localStorage.setItem("nt_logged_in","1");
           setTimeout(()=>{ const a=document.getElementById("authOverlay"); if(a)a.style.display="none"; hideLoader(); }, 650);
         };
 
-        confirmdow.ntLogin = async function(){
+        window.ntLogin = async function(){
           const e = document.getElementById("loginEmail")?.value?.trim();
           const p = document.getElementById("loginPass")?.value;
           if(!e || !p) return alert("Enter email and password");
           showLoader("Authenticating securely...");
-          const r = await confirmdow.supabaseClient.auth.signInWithPassword({ email:e, password:p });
+          const r = await window.supabaseClient.auth.signInWithPassword({ email:e, password:p });
           if(r.error){ hideLoader(); return alert(r.error.message); }
           localStorage.setItem("nt_logged_in","1");
           setTimeout(()=>{ const a=document.getElementById("authOverlay"); if(a)a.style.display="none"; hideLoader(); }, 650);
         };
 
-        confirmdow.ntLogout = async function(){
-          await confirmdow.supabaseClient.auth.signOut();
+        window.ntLogout = async function(){
+          await window.supabaseClient.auth.signOut();
           localStorage.removeItem("nt_logged_in");
           location.reload();
         };
 
-        confirmdow.supabaseClient.auth.getSession().then(({data})=>{
+        window.supabaseClient.auth.getSession().then(({data})=>{
           if(data && data.session){
             showLoader("Welcome back. Loading dashboard...");
             setTimeout(()=>{ const a=document.getElementById("authOverlay"); if(a)a.style.display="none"; hideLoader(); }, 850);
@@ -3643,7 +3565,7 @@ Exness Ready ✓
 <script>
 localStorage.setItem('nettrack_version','10.8');
 if(!localStorage.getItem('nt_profile')){
- localStorage.setItem('nt_profile',JSON.stringify({plan:'FREE',signals:0,filters:0}));
+ localStorage.setItem('nt_profile',JSON.stringify({plan:'FREE',wins:0,losses:0}));
 }
 </script>
 
@@ -3828,7 +3750,7 @@ body.portal-open .brand-footer{ display:none; }
 
   function saveProfilePatch(patch){
     const current = safeProfile();
-    const next = Object.assign({plan:"FREE", signals:0, filters:0, preferredMarket:"crypto", brokerMode:"Signal Only"}, current, patch, {updatedAt:new Date().toISOString()});
+    const next = Object.assign({plan:"FREE", wins:0, losses:0, preferredMarket:"crypto", brokerMode:"Signal Only"}, current, patch, {updatedAt:new Date().toISOString()});
     localStorage.setItem("nt_profile", JSON.stringify(next));
     localStorage.setItem("nt_cloud_shadow", JSON.stringify(next));
     return next;
@@ -3844,8 +3766,8 @@ body.portal-open .brand-footer{ display:none; }
 
   async function getSupabaseEmail(){
     try{
-      if(confirmdow.supabaseClient){
-        const {data} = await confirmdow.supabaseClient.auth.getUser();
+      if(window.supabaseClient){
+        const {data} = await window.supabaseClient.auth.getUser();
         if(data && data.user && data.user.email) return data.user.email;
       }
     }catch(e){}
@@ -3862,7 +3784,7 @@ body.portal-open .brand-footer{ display:none; }
     wrap.innerHTML = '<div class="nt-top-avatar">N</div><div><div class="nt-top-email">Loading...</div><div class="nt-free-badge">FREE PLAN</div></div><button class="nt-logout-btn" title="Logout">Logout</button>';
     controls.appendChild(wrap);
     wrap.querySelector("button").onclick = async () => {
-      try{ if(confirmdow.supabaseClient) await confirmdow.supabaseClient.auth.signOut(); }catch(e){}
+      try{ if(window.supabaseClient) await window.supabaseClient.auth.signOut(); }catch(e){}
       localStorage.removeItem("nt_logged_in");
       location.reload();
     };
@@ -3963,7 +3885,7 @@ body.portal-open .brand-footer{ display:none; }
     localStorage.setItem("nettrack_version", VERSION);
   }
 
-  confirmdow.addEventListener("load", () => setTimeout(boot, 600));
+  window.addEventListener("load", () => setTimeout(boot, 600));
   setTimeout(boot, 1600);
 })();
 </script>
@@ -4163,7 +4085,7 @@ body.portal-open .brand-footer{ display:none; }
     return "Free User";
   }
 
-  confirmdow.ntOpenProfile = function(){
+  window.ntOpenProfile = function(){
     const p = saveProfile({
       preferredPair: (document.getElementById("assetSelect")||{}).value || "--",
       preferredTF: (document.getElementById("tfSelect")||{}).value || "--"
@@ -4174,8 +4096,8 @@ body.portal-open .brand-footer{ display:none; }
     document.getElementById("ntProfileTF").textContent = p.preferredTF || "--";
     document.getElementById("ntProfileModal").classList.add("show");
   };
-  confirmdow.ntCloseProfile = function(){document.getElementById("ntProfileModal").classList.remove("show")};
-  confirmdow.ntSaveSessionNow = function(){
+  window.ntCloseProfile = function(){document.getElementById("ntProfileModal").classList.remove("show")};
+  window.ntSaveSessionNow = function(){
     saveProfile({
       email: currentEmail(),
       preferredPair: (document.getElementById("assetSelect")||{}).value || "--",
@@ -4235,7 +4157,7 @@ body.portal-open .brand-footer{ display:none; }
     localStorage.setItem("nettrack_version","11.0");
   }
 
-  confirmdow.addEventListener("load",()=>setTimeout(boot,900));
+  window.addEventListener("load",()=>setTimeout(boot,900));
   setTimeout(boot,2000);
 })();
 </script>
@@ -4283,19 +4205,19 @@ body.portal-open .brand-footer{ display:none; }
       op.style.display = email === OWNER_EMAIL ? "block" : "none";
     }
   }
-  confirmdow.ownerWithdrawCommission = function(){
+  window.ownerWithdrawCommission = function(){
     const amount = (document.getElementById("ownerWithdrawable")||{}).textContent || "R 0.00";
     alert("Owner subscription revenue payout request created: " + amount + "\\nReal payout connection comes after PayFast settlement setup.");
   };
-  const oldRun = confirmdow.runNetTrackBot;
+  const oldRun = window.runNetTrackBot;
   if(typeof oldRun === "function"){
-    confirmdow.runNetTrackBot = function(action){
+    window.runNetTrackBot = function(action){
       const r = oldRun.apply(this, arguments);
       setTimeout(updateUserOwnerPortal, 100);
       return r;
     };
   }
-  confirmdow.addEventListener("load", function(){
+  window.addEventListener("load", function(){
     updateUserOwnerPortal();
     setInterval(updateUserOwnerPortal, 1500);
   });
@@ -4320,7 +4242,7 @@ body.portal-open .brand-footer{ display:none; }
     const ownerBox = document.getElementById("ownerPortalBox");
     if(ownerBox) ownerBox.style.display = isOwner() ? "block" : "none";
     if(!isOwner() && document.getElementById("ownerPage")?.classList.contains("active")){
-      confirmdow.showNetTrackPage("user");
+      window.showNetTrackPage("user");
     }
   }
   function movePortalBoxes(){
@@ -4359,7 +4281,7 @@ body.portal-open .brand-footer{ display:none; }
     if(emailSlot) emailSlot.textContent = readEmail() || "Signed user";
     updateOwnerVisibility();
   }
-  confirmdow.showNetTrackPage = function(page){
+  window.showNetTrackPage = function(page){
     movePortalBoxes();
     const stage = document.getElementById("portalStage");
     const userPage = document.getElementById("userPage");
@@ -4384,9 +4306,9 @@ body.portal-open .brand-footer{ display:none; }
     } else {
       if(navTrading) navTrading.classList.add("active");
     }
-    confirmdow.scrollTo({top:0, behavior:"smooth"});
+    window.scrollTo({top:0, behavior:"smooth"});
   };
-  confirmdow.addEventListener("load", function(){
+  window.addEventListener("load", function(){
     movePortalBoxes();
     updateOwnerVisibility();
     setInterval(function(){ movePortalBoxes(); updateOwnerVisibility(); }, 2000);
@@ -4399,8 +4321,8 @@ body.portal-open .brand-footer{ display:none; }
 /* V12.4 Tester subscription-lock patch */
 (function(){
   const LOCKED_HEADINGS = [
-    "Equity Curve (Performance)","RSI Oscillator (14)","MACD Momentum (12, 26, 9)",
-    "Smart Confirmation","Historical Signal Test","Strongest Pair Scanner","Session Context","Signal History","User Preferences"
+    "Win/Loss Analytics","Equity Curve (Performance)","RSI Oscillator (14)","MACD Momentum (12, 26, 9)",
+    "Smart Confirmation","Historical Backtest","Strongest Pair Scanner","Session Context","Signal & Trade History","User Preferences"
   ];
   function cardFromHeading(h){ let n=h; while(n && !(n.classList && n.classList.contains('card'))) n=n.parentElement; return n; }
   function applyTesterLocks(){
@@ -4426,7 +4348,7 @@ body.portal-open .brand-footer{ display:none; }
     return 'Watchlist Retest Pattern';
   }
   function updateTesterPattern(){
-    const res = confirmdow.currentSignal || currentSignal || null;
+    const res = window.currentSignal || currentSignal || null;
     const signal = res?.signal || 'WAITING';
     const side = signal.includes('BUY')?'BUY':signal.includes('SELL')?'SELL':'WAIT';
     const conf = Number(res?.confidence || 0);
@@ -4437,14 +4359,18 @@ body.portal-open .brand-footer{ display:none; }
     set('testerPatternConf', conf ? conf+'%' : '0%');
     set('testerPatternTP', tp);
     set('testerPatternSignal', signal==='WAITING'?'TESTER READY':signal, side==='BUY'?'#22c55e':side==='SELL'?'#ef4444':'#eab308');
-    set('testerPatternNote', 'Free tester pattern only. Chart, broker overlay, entry, stop filter and take-profit stay open. RSI, MACD, backtest, scanner, history and analytics stay locked under subscription.');
+    set('testerPatternNote', 'Free tester pattern only. Chart, broker overlay, entry, stop loss and take-profit stay open. RSI, MACD, backtest, scanner, history and analytics stay locked under subscription.');
   }
-  confirmdow.addEventListener('load',()=>{
+  window.addEventListener('load',()=>{
     applyTesterLocks(); updateTesterPattern();
     setInterval(()=>{applyTesterLocks(); updateTesterPattern();},1200);
   });
 })();
 </script>
+
+<div class="card span-12" style="display:none" aria-hidden="true">
+<h2>Services Hub moved into NetTrack Bot</h2>
+</div>
 
 
 <!-- NETTRACK PRO V13.3 STABILITY + SIGNAL LIMIT + CLEAN USER/PAYMENT PATCH -->
@@ -4629,8 +4555,7 @@ body.portal-open .brand-footer{ display:none; }
 
   function stableCryptoSocket(nonce){
     try{
-      if(isSyntheticSymbol(SYMBOL)) { setSocketState("SYNTHETIC LIVE"); return; }
-  ws = new WebSocket(`wss://stream.binance.com:9443/ws/${SYMBOL.toLowerCase()}@kline_${INTERVAL}`);
+      ws = new WebSocket(`wss://stream.binance.com:9443/ws/${SYMBOL.toLowerCase()}@kline_${INTERVAL}`);
       let lastTickAt = Date.now();
       ws.onopen = ()=>{ if(nonce===ntSessionNonce) setSocketState("CONNECTED"); };
       ws.onmessage = (m)=>{ lastTickAt = Date.now();
@@ -4671,11 +4596,11 @@ body.portal-open .brand-footer{ display:none; }
     }
   }
 
-  confirmdow.activeSymbolLabel = function(){ return label(SYMBOL); };
-  confirmdow.changeAsset = function(){ const el=byId("assetSelect"); if(el) SYMBOL=cleanSym(el.value); saveGlobalSettings && saveGlobalSettings(); stableReset(); };
-  confirmdow.changeTimeframe = function(){ const el=byId("tfSelect"); if(el) INTERVAL=el.value||"1m"; saveGlobalSettings && saveGlobalSettings(); stableReset(); };
-  confirmdow.resetStream = stableReset;
-  confirmdow.connectWS = function(){ /* handled by stableReset to prevent duplicate sockets */ };
+  window.activeSymbolLabel = function(){ return label(SYMBOL); };
+  window.changeAsset = function(){ const el=byId("assetSelect"); if(el) SYMBOL=cleanSym(el.value); saveGlobalSettings && saveGlobalSettings(); stableReset(); };
+  window.changeTimeframe = function(){ const el=byId("tfSelect"); if(el) INTERVAL=el.value||"1m"; saveGlobalSettings && saveGlobalSettings(); stableReset(); };
+  window.resetStream = stableReset;
+  window.connectWS = function(){ /* handled by stableReset to prevent duplicate sockets */ };
 
   function quotaKey(){ const d=new Date().toISOString().slice(0,10); const email=(byId("userEmail")?.textContent||document.body.innerText.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0]||"guest").toLowerCase(); return `ntp_signal_quota_${email}_${d}`; }
   function quotaUsed(){ return Number(localStorage.getItem(quotaKey())||0); }
@@ -4697,7 +4622,7 @@ body.portal-open .brand-footer{ display:none; }
       btn.disabled = locked; btn.style.opacity = locked?".55":"1"; btn.textContent = locked ? (trialActive()?"DAILY LIMIT REACHED — SUBSCRIBE":"TRIAL EXPIRED — SUBSCRIBE") : "GENERATE SIGNAL PATTERN";
     }
   }
-  confirmdow.generateTwoSignalPattern = async function(){
+  window.generateTwoSignalPattern = async function(){
     if(!paidActive()){
       if(!trialActive()){ notify("30-day free trial expired. Subscribe to unlock signal generator."); updateQuotaUi(); return; }
       if(quotaUsed()>=2){ notify("Daily free limit reached: 2 signals per day. Subscribe to unlock more."); updateQuotaUi(); return; }
@@ -4714,9 +4639,9 @@ body.portal-open .brand-footer{ display:none; }
     if(note) note.innerHTML = `<b>${label(SYMBOL)}</b> • ${INTERVAL} • ${selectedBrokerLabel?selectedBrokerLabel():BROKER_MODE}<br>Signal 1: ${side} | Entry ${formatPrice(SYMBOL,sig1.entry)} | SL ${formatPrice(SYMBOL,sig1.sl)} | TP ${formatPrice(SYMBOL,sig1.tp)}<br>Signal 2: ${side} | Entry ${formatPrice(SYMBOL,sig2.entry)} | SL ${formatPrice(SYMBOL,sig2.sl)} | TP ${formatPrice(SYMBOL,sig2.tp)}<br><span style="color:#eab308">Limit rule: free trial allows 2 generated signal patterns per day. User trades manually on own broker.</span>`;
     updateQuotaUi();
     try{
-      if(confirmdow.supabaseClient){
-        const {data}=await confirmdow.supabaseClient.auth.getUser();
-        await confirmdow.supabaseClient.from("signal_history").insert({ user_id:data?.user?.id||null, symbol:SYMBOL, timeframe:INTERVAL, signal:side, confidence:Number(res.confidence||0), source:"pattern_generator", meta:{signal1:sig1, signal2:sig2, patch:PATCH_VERSION} });
+      if(window.supabaseClient){
+        const {data}=await window.supabaseClient.auth.getUser();
+        await window.supabaseClient.from("signal_history").insert({ user_id:data?.user?.id||null, symbol:SYMBOL, timeframe:INTERVAL, signal:side, confidence:Number(res.confidence||0), source:"pattern_generator", meta:{signal1:sig1, signal2:sig2, patch:PATCH_VERSION} });
       }
     }catch(e){}
     notify("Signal pattern generated. Free quota updated.");
@@ -4738,7 +4663,7 @@ body.portal-open .brand-footer{ display:none; }
     const card=overlay.querySelector("div:not(.nt-market-bg):not(.nt-auth-brand):not(.nt-session-loader)"); if(!card) return;
     const emailLab=document.createElement("div"); emailLab.className="nt-email-label"; emailLab.innerHTML="✉️ Sign in using email";
     const google=document.createElement("button"); google.id="ntGoogleBtn"; google.type="button"; google.className="nt-google-btn"; google.innerHTML='<span class="nt-g-logo">G</span> Continue with Google';
-    google.onclick=async()=>{ try{ if(confirmdow.supabaseClient){ await confirmdow.supabaseClient.auth.signInWithOAuth({provider:"google", options:{redirectTo:location.href}}); } else alert("Google sign-in needs Supabase client first."); }catch(e){ alert("Google sign-in is not enabled yet in Supabase Providers."); } };
+    google.onclick=async()=>{ try{ if(window.supabaseClient){ await window.supabaseClient.auth.signInWithOAuth({provider:"google", options:{redirectTo:location.href}}); } else alert("Google sign-in needs Supabase client first."); }catch(e){ alert("Google sign-in is not enabled yet in Supabase Providers."); } };
     const firstInput=card.querySelector("input"); if(firstInput) card.insertBefore(emailLab, firstInput);
     const signup=[...card.querySelectorAll("button")].find(b=>(b.textContent||"").toLowerCase().includes("sign up"));
     if(signup) signup.insertAdjacentElement("afterend", google); else card.appendChild(google);
@@ -4796,7 +4721,7 @@ body.portal-open .brand-footer{ display:none; }
   function selectedText(id){const e=$(id); if(!e) return ""; return e.options?.[e.selectedIndex]?.text || e.value || "";}
   function selectedValue(id){const e=$(id); return e?.value || "";}
   function canonSymbol(){
-    const v=selectedValue("assetSelect") || confirmdow.SYMBOL || "BTCUSDT";
+    const v=selectedValue("assetSelect") || window.SYMBOL || "BTCUSDT";
     const t=selectedText("assetSelect") || v;
     if(/volatility\s*75|R_75|v75/i.test(t+v)) return "Volatility 75";
     if(/volatility\s*100|R_100|v100/i.test(t+v)) return "Volatility 100";
@@ -4890,16 +4815,16 @@ body.portal-open .brand-footer{ display:none; }
   }
   async function saveSignals(a,b){
     try{
-      if(!confirmdow.supabaseClient) return;
-      const {data}=await confirmdow.supabaseClient.auth.getUser();
+      if(!window.supabaseClient) return;
+      const {data}=await window.supabaseClient.auth.getUser();
       const uid=data?.user?.id||null;
-      await confirmdow.supabaseClient.from("signal_history").insert([
+      await window.supabaseClient.from("signal_history").insert([
         {user_id:uid,symbol:a.sym,timeframe:selectedValue("tfSelect")||"1m",signal:a.side,confidence:a.conf,source:"signal_switch_A",meta:{...a,patch:PATCH_VERSION}},
         {user_id:uid,symbol:b.sym,timeframe:selectedValue("tfSelect")||"1m",signal:b.side,confidence:b.conf,source:"signal_switch_B",meta:{...b,patch:PATCH_VERSION}}
       ]);
     }catch(e){ console.warn("signal_history save skipped", e); }
   }
-  confirmdow.ntGenerateSignalSwitch=function(){
+  window.ntGenerateSignalSwitch=function(){
     if(!canGenerate()){ updateQuota(); if(typeof notify==="function") notify("Daily free limit reached. Subscribe to continue."); return; }
     const sym=canonSymbol();
     const a=calcSignal(sym,"A"), b=calcSignal(sym,"B");
@@ -4937,7 +4862,7 @@ body.portal-open .brand-footer{ display:none; }
   function hideRemoved(){
     document.querySelectorAll("button,div,section,label,span,small,b,h3").forEach(el=>{
       const t=(el.textContent||"").toLowerCase();
-      if(t.includes("journal result")||t.includes("journal filter")) el.style.display="none";
+      if(t.includes("journal win")||t.includes("journal loss")) el.style.display="none";
       if(t.includes("identity check") || t.includes("selfie") || t.includes("client fund account") || t.includes("client fund method")) {
         const card=el.closest(".card")||el.closest(".portal-info-card")||el; if(card) card.style.display="none";
       }
@@ -4961,8 +4886,8 @@ body.portal-open .brand-footer{ display:none; }
   function boot(){
     buildSwitchPanel(); syncLabels(); hideRemoved(); cookieBanner(); legalMini(); updateQuota();
     ["assetSelect","brokerSelect","tfSelect"].forEach(id=>{const el=$(id); if(el && !el.dataset.v133){el.dataset.v133="1"; el.addEventListener("change",()=>setTimeout(()=>{syncLabels(); updateQuota();},120));}});
-    confirmdow.addEventListener("online",()=>{ try{ setSocketState("RECONNECTING"); stableReset(); }catch(e){} });
-    confirmdow.addEventListener("offline",()=>{ try{ setSocketState("RECONNECTING"); }catch(e){} });
+    window.addEventListener("online",()=>{ try{ setSocketState("RECONNECTING"); stableReset(); }catch(e){} });
+    window.addEventListener("offline",()=>{ try{ setSocketState("RECONNECTING"); }catch(e){} });
     setInterval(()=>{syncLabels(); hideRemoved(); updateQuota();},1500);
   }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot); else boot();
@@ -5130,7 +5055,7 @@ body{
   function hasGenerated(){return localStorage.getItem(generatedKey())==="1";}
   function markGenerated(){localStorage.setItem(generatedKey(),"1");}
   function paid(){
-    try{return !!(confirmdow.subscriptionState && subscriptionState.paidUntil && Number(subscriptionState.paidUntil)>Date.now());}
+    try{return !!(window.subscriptionState && subscriptionState.paidUntil && Number(subscriptionState.paidUntil)>Date.now());}
     catch(e){return false;}
   }
   function unlockSensitive(){return paid() || hasGenerated();}
@@ -5142,7 +5067,7 @@ body{
     return n;
   }
   function classifySensitive(){
-    const terms=["Executive Summary","Trade Quality","Technical Safety","Smart Confirmation","Signal History","Historical Signal Test","Strongest Pair Scanner"];
+    const terms=["Executive Summary","Trade Quality","Technical Safety","Smart Confirmation","Signal & Trade History","Historical Backtest","Strongest Pair Scanner"];
     terms.forEach(t=>{
       const c=cardFromHeadingText(t);
       if(c){c.classList.add("nt-sensitive-card"); if(!unlockSensitive())c.classList.add("nt-sensitive-locked"); else c.classList.remove("nt-sensitive-locked");}
@@ -5159,10 +5084,10 @@ body{
     const bot=$("netTrackBotBox"); if(bot) bot.remove();
     document.querySelectorAll("button,div,h3,span,small,label,b").forEach(el=>{
       const t=(el.textContent||"").toLowerCase();
-      if(t.includes("mark result")||t.includes("mark filter")){
+      if(t.includes("mark win")||t.includes("mark loss")){
         const parent=el.closest(".card")||el.parentElement||el; parent.style.display="none";
       }
-      if(t.includes("signal engine")){
+      if(t.includes("nettrack bot")){
         const parent=el.closest(".card")||el.closest("div")||el; parent.style.display="none";
       }
       if(t.includes("face verification")||t.includes("selfie")||t.includes("identity check")){
@@ -5183,8 +5108,8 @@ body{
     const genBtn=$("ntSignalSwitchBtn");
     if(genBtn && !genBtn.dataset.v134){
       genBtn.dataset.v134="1";
-      const old=confirmdow.ntGenerateSignalSwitch;
-      confirmdow.ntGenerateSignalSwitch=function(){
+      const old=window.ntGenerateSignalSwitch;
+      window.ntGenerateSignalSwitch=function(){
         if(typeof old==="function") old();
         markGenerated();
         setTimeout(()=>{classifySensitive(); enhanceSignalText();},250);
@@ -5325,13 +5250,13 @@ header, .card, .portal-page, .portal-info-card{
   const $=id=>document.getElementById(id);
   const DISPLAY={BTCUSDT:"BTC/USDT",ETHUSDT:"ETH/USDT",SOLUSDT:"SOL/USDT",BNBUSDT:"BNB/USDT",EURUSD:"EUR/USD",GBPUSD:"GBP/USD",USDJPY:"USD/JPY",XAUUSD:"XAU/USD Gold",R_75:"Volatility 75",R_100:"Volatility 100",BOOM1000:"BOOM1000",CRASH1000:"CRASH1000"};
   const BASE={BTCUSDT:61700,ETHUSDT:3400,SOLUSDT:145,BNBUSDT:562,EURUSD:1.086,GBPUSD:1.274,USDJPY:159.2,XAUUSD:2320,R_75:100000,R_100:85000,BOOM1000:10400,CRASH1000:9200};
-  function sym(){return String((confirmdow.SYMBOL||$("assetSelect")?.value||"BTCUSDT")).replace(/[^A-Z0-9_]/g,"")||"BTCUSDT"}
-  function tf(){return String(confirmdow.INTERVAL||$("tfSelect")?.value||"1m")}
+  function sym(){return String((window.SYMBOL||$("assetSelect")?.value||"BTCUSDT")).replace(/[^A-Z0-9_]/g,"")||"BTCUSDT"}
+  function tf(){return String(window.INTERVAL||$("tfSelect")?.value||"1m")}
   function broker(s){if(/EUR|GBP|JPY|XAU/.test(s))return "TradingView / MT4 / MT5"; if(/R_|BOOM|CRASH/.test(s))return "Deriv"; return "Binance / Bybit";}
   function dec(s){return /EURUSD|GBPUSD/.test(s)?5:(/USDJPY/.test(s)?3:2)}
   function fmt(v,s){return (/EURUSD|GBPUSD|USDJPY/.test(s)?"":/XAU|USDT/.test(s)?"$":"")+Number(v||0).toFixed(dec(s))}
   function lastPrice(s){
-    try{const c=confirmdow.candles||[]; const last=c[c.length-1]; if(last&&Number.isFinite(last.close))return Number(last.close)}catch(e){}
+    try{const c=window.candles||[]; const last=c[c.length-1]; if(last&&Number.isFinite(last.close))return Number(last.close)}catch(e){}
     const drift=Math.sin((Date.now()/60000)+[...s].reduce((a,c)=>a+c.charCodeAt(0),0))*0.002;
     return (BASE[s]||100)*(1+drift);
   }
@@ -5390,7 +5315,7 @@ header, .card, .portal-page, .portal-info-card{
   function quotaKey(){return "ntp_v135_signal_quota_"+new Date().toISOString().slice(0,10)}
   function quota(){return Number(localStorage.getItem(quotaKey())||0)}
   function setQuota(n){localStorage.setItem(quotaKey(),String(n))}
-  function paid(){try{return !!(confirmdow.subscriptionState && subscriptionState.paidUntil && Number(subscriptionState.paidUntil)>Date.now())}catch(e){return false}}
+  function paid(){try{return !!(window.subscriptionState && subscriptionState.paidUntil && Number(subscriptionState.paidUntil)>Date.now())}catch(e){return false}}
   function can(){return paid()||quota()<2}
   function quotaText(){
     const q=$("ntSwitchQuota");
@@ -5404,13 +5329,13 @@ header, .card, .portal-page, .portal-info-card{
     if(card){card.classList.remove("nt-sensitive-locked"); card.classList.add("nt-generator-open-card");}
   }
   function runGenerate(){
-    if(!can()){quotaText(); if(typeof confirmdow.notify==="function")notify("Daily free limit reached. Subscribe to unlock more Signal A/B generations."); return;}
+    if(!can()){quotaText(); if(typeof window.notify==="function")notify("Daily free limit reached. Subscribe to unlock more Signal A/B generations."); return;}
     const a=makeSignal("A"), b=makeSignal("B"), out=$("ntSignalSwitchOutput");
     if(out) out.innerHTML=render(a)+render(b)+`<div class="nt-signal-disclaimer" style="grid-column:1/-1"><b>Reality check:</b> These are analysis signals, not a promise. Check your broker chart before using real money.</div>`;
     if(!paid())setQuota(quota()+1);
     try{localStorage.setItem("ntp_v135_last_signals",JSON.stringify({a,b,at:new Date().toISOString(),patch:PATCH_VERSION}))}catch(e){}
     quotaText(); unlockGeneratorCard();
-    if(typeof confirmdow.notify==="function")notify("Signal A and Signal B generated with confidence and suggested target.");
+    if(typeof window.notify==="function")notify("Signal A and Signal B generated with confidence and suggested target.");
   }
   function install(){
     const panel=$("ntSignalSwitchPanel");
@@ -5420,11 +5345,11 @@ header, .card, .portal-page, .portal-info-card{
       const badge=panel.querySelector(".nt-signal-badge"); if(badge)badge.textContent="SIGNAL A + SIGNAL B";
     }
     if(mount) mount.classList.add("nt-signal-switch-mount");
-    confirmdow.ntGenerateSignalSwitch=runGenerate;
+    window.ntGenerateSignalSwitch=runGenerate;
     quotaText(); unlockGeneratorCard();
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install); else install();
-  confirmdow.addEventListener("load",install);
+  window.addEventListener("load",install);
   setInterval(install,1600);
 })();
 </script>
@@ -5454,7 +5379,7 @@ header, .card, .portal-page, .portal-info-card{
   const logKey="ntp_v138_owner_local_events";
   const localEvents=()=>{try{return JSON.parse(localStorage.getItem(logKey)||"[]")}catch(e){return[]}};
   const addLocalEvent=(type,body)=>{try{const arr=localEvents();arr.unshift({type,body,at:new Date().toISOString()});localStorage.setItem(logKey,JSON.stringify(arr.slice(0,80)));}catch(e){}};
-  function client(){return confirmdow.supabaseClient || (confirmdow.supabase&&confirmdow.supabase.createClient?confirmdow.supabaseClient:null)}
+  function client(){return window.supabaseClient || (window.supabase&&window.supabase.createClient?window.supabaseClient:null)}
   async function session(){try{const c=client(); if(!c) return null; const {data}=await c.auth.getSession(); return data&&data.session?data.session:null;}catch(e){return null}}
   function localEmail(){
     const cached=localStorage.getItem("ntp_v138_email")||localStorage.getItem("nt_user_email")||"";
@@ -5482,9 +5407,9 @@ header, .card, .portal-page, .portal-info-card{
   async function ensureSubscription(){
     const c=client(); if(!c) return;
     const uid=await currentUserId(); if(!uid) return;
-    const plan=(confirmdow.subscriptionState?.plan)||("FREE");
-    const status=(confirmdow.subscriptionState?.paidUntil&&Number(confirmdow.subscriptionState.paidUntil)>Date.now())?"active":"trial";
-    const amount=Number(confirmdow.subscriptionState?.lastPayment||0);
+    const plan=(window.subscriptionState?.plan)||("FREE");
+    const status=(window.subscriptionState?.paidUntil&&Number(window.subscriptionState.paidUntil)>Date.now())?"active":"trial";
+    const amount=Number(window.subscriptionState?.lastPayment||0);
     const payload={user_id:uid,plan,status,amount,created_at:new Date().toISOString()};
     try{await c.from("subscriptions").insert(payload); addLocalEvent("subscription_sync",plan+" / "+status);}catch(e){/* table shape or RLS may differ; local event is enough for beta */}
   }
@@ -5496,12 +5421,12 @@ header, .card, .portal-page, .portal-info-card{
   async function saveSignalToSupabase(sig){
     const c=client(); if(!c||!sig) return {ok:false,reason:"No client or signal"};
     const row={
-      symbol:sig.s||sig.sym||confirmdow.SYMBOL||"UNKNOWN",
-      timeframe:sig.timeframe||confirmdow.INTERVAL||($("tfSelect")?.value)||"--",
+      symbol:sig.s||sig.sym||window.SYMBOL||"UNKNOWN",
+      timeframe:sig.timeframe||window.INTERVAL||($("tfSelect")?.value)||"--",
       signal_type:sig.side||sig.signal||"WAIT",
       entry_price:Number(sig.entry||0),
       take_profit:Number(sig.tp||sig.target||0),
-      stop_filter:Number(sig.sl||0),
+      stop_loss:Number(sig.sl||0),
       confidence:Number(sig.conf||sig.confidence||0)
     };
     try{
@@ -5573,13 +5498,13 @@ header, .card, .portal-page, .portal-info-card{
     const log=$("ownLatestActivity"); if(log) log.innerHTML=rows.length?rows.slice(0,9).map(x=>`<div>${x}</div>`).join(""):`<div>No saved activity yet. Generate Signal A/B and refresh.</div>`;
     set("ownSyncStatus", "Last checked: "+new Date().toLocaleTimeString());
   }
-  confirmdow.ntOwnerRefreshNow=refreshOwnerPortal;
-  confirmdow.ntOwnerSyncNow=async function(){set("ownSyncStatus","Syncing profile and latest Signal A/B..."); await ensureProfile(); await ensureSubscription(); await syncLastSignals(); await refreshOwnerPortal(); set("ownSyncStatus","Sync complete: "+new Date().toLocaleTimeString());};
-  const oldLogin=confirmdow.ntLogin;
-  confirmdow.ntLogin=async function(){
+  window.ntOwnerRefreshNow=refreshOwnerPortal;
+  window.ntOwnerSyncNow=async function(){set("ownSyncStatus","Syncing profile and latest Signal A/B..."); await ensureProfile(); await ensureSubscription(); await syncLastSignals(); await refreshOwnerPortal(); set("ownSyncStatus","Sync complete: "+new Date().toLocaleTimeString());};
+  const oldLogin=window.ntLogin;
+  window.ntLogin=async function(){
     const e=$("loginEmail")?.value?.trim(); const p=$("loginPass")?.value;
-    if(confirmdow.supabaseClient && e && p){
-      const r=await confirmdow.supabaseClient.auth.signInWithPassword({email:e,password:p});
+    if(window.supabaseClient && e && p){
+      const r=await window.supabaseClient.auth.signInWithPassword({email:e,password:p});
       if(r.error) return alert(r.error.message);
       localStorage.setItem("nt_logged_in","1"); localStorage.setItem("ntp_v138_email",e.toLowerCase());
       const a=$("authOverlay"); if(a)a.style.display="none";
@@ -5588,11 +5513,11 @@ header, .card, .portal-page, .portal-info-card{
     }
     if(typeof oldLogin==="function") return oldLogin.apply(this,arguments);
   };
-  const oldSignup=confirmdow.ntSignup;
-  confirmdow.ntSignup=async function(){
+  const oldSignup=window.ntSignup;
+  window.ntSignup=async function(){
     const e=$("loginEmail")?.value?.trim(); const p=$("loginPass")?.value;
-    if(confirmdow.supabaseClient && e && p){
-      const r=await confirmdow.supabaseClient.auth.signUp({email:e,password:p});
+    if(window.supabaseClient && e && p){
+      const r=await window.supabaseClient.auth.signUp({email:e,password:p});
       if(r.error) return alert(r.error.message);
       localStorage.setItem("nt_logged_in","1"); localStorage.setItem("ntp_v138_email",e.toLowerCase());
       const a=$("authOverlay"); if(a)a.style.display="none";
@@ -5603,12 +5528,12 @@ header, .card, .portal-page, .portal-info-card{
     if(typeof oldSignup==="function") return oldSignup.apply(this,arguments);
   };
   function wrapSignalButton(){
-    const fn=confirmdow.ntGenerateSignalSwitch;
+    const fn=window.ntGenerateSignalSwitch;
     if(typeof fn==="function" && !fn.__ntp_v138_wrapped){
       const original=fn;
       const wrapped=function(){const r=original.apply(this,arguments); setTimeout(syncLastSignals,450); return r;};
       wrapped.__ntp_v138_wrapped=true; wrapped.__ntp_v138_original=original;
-      confirmdow.ntGenerateSignalSwitch=wrapped;
+      window.ntGenerateSignalSwitch=wrapped;
     }
     const google=$("ntGoogleBtn");
     if(google && !google.__ntp_v138_safe){
@@ -5617,10 +5542,131 @@ header, .card, .portal-page, .portal-info-card{
       google.onclick=function(){alert("Google sign-in is not enabled in Supabase yet. Use email login for now, or enable Google under Supabase → Authentication → Sign In / Providers.");};
     }
   }
-  confirmdow.addEventListener("load",async()=>{await ensureProfile(); ownerShell(); await refreshOwnerPortal(); wrapSignalButton(); setInterval(refreshOwnerPortal,30000); setInterval(wrapSignalButton,900);});
+  window.addEventListener("load",async()=>{await ensureProfile(); ownerShell(); await refreshOwnerPortal(); wrapSignalButton(); setInterval(refreshOwnerPortal,30000); setInterval(wrapSignalButton,900);});
 })();
 </script>
 <!-- /NETTRACK PRO V13.8 OWNER PORTAL + SUPABASE LIVE DATA PATCH -->
+
+
+
+<!-- NETTRACK PRO V13.10 CLEAN SIGNAL A/B BRIDGE PATCH -->
+<style id="nt-v1310-clean-style">
+  #walletBox,#verificationBox,#netTrackBotBox,.face-verification,.payment-box,[data-feature*="wallet"],[data-feature*="face"],[data-feature*="verification"]{display:none!important}
+  .nt-v1310-panel{border:1px solid rgba(56,189,248,.25);background:linear-gradient(135deg,rgba(15,23,42,.94),rgba(2,6,23,.98));border-radius:14px;padding:12px;line-height:1.45}
+  .nt-v1310-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px}
+  .nt-v1310-head b{font-size:.82rem;letter-spacing:.08em;color:#38bdf8;text-transform:uppercase}
+  .nt-v1310-badge{font-size:.64rem;border:1px solid rgba(34,197,94,.38);color:#22c55e;border-radius:999px;padding:4px 8px;font-weight:900;white-space:nowrap}
+  .nt-v1310-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .nt-v1310-box{background:rgba(15,23,42,.9);border:1px solid rgba(148,163,184,.16);border-radius:10px;padding:9px;min-height:58px}
+  .nt-v1310-box small{display:block;color:#94a3b8;font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+  .nt-v1310-box b{font-size:.9rem;color:#f8fafc;word-break:break-word}
+  .nt-v1310-buy{color:#22c55e!important}.nt-v1310-sell{color:#ef4444!important}.nt-v1310-wait{color:#eab308!important}
+  .nt-v1310-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .nt-v1310-actions button,.nt-platform-btn{border:1px solid rgba(56,189,248,.35);background:rgba(56,189,248,.10);color:#e0f2fe;border-radius:9px;padding:8px 10px;font-weight:900;cursor:pointer;font-size:.68rem}
+  .nt-v1310-actions button:hover,.nt-platform-btn:hover{background:rgba(56,189,248,.22)}
+  .nt-v1310-note{font-size:.68rem;color:#94a3b8;margin-top:8px;border-top:1px solid rgba(148,163,184,.15);padding-top:8px}
+  .nt-platform-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:8px}
+  .nt-sensitive-details{margin-top:10px;border:1px solid rgba(148,163,184,.18);border-radius:10px;padding:8px;background:rgba(2,6,23,.4)}
+  .nt-sensitive-details summary{cursor:pointer;color:#94a3b8;font-size:.68rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase}
+  .nt-sensitive-details div{font-size:.68rem;color:#cbd5e1;margin-top:8px;line-height:1.55}
+  @media(max-width:760px){.nt-v1310-grid,.nt-platform-grid{grid-template-columns:1fr}.nt-v1310-head{align-items:flex-start;flex-direction:column}}
+</style>
+<script id="nt-v1310-clean-logic">
+(function(){
+  const PATCH_VERSION='V13.10 Signal A/B Bridge Clean';
+  const $=id=>document.getElementById(id);
+  const fmt=n=>Number.isFinite(Number(n))?Number(n).toFixed((Math.abs(Number(n))<10)?4:2):'--';
+  const brokerLinks={
+    Binance:'https://www.binance.com/', Bybit:'https://www.bybit.com/', XM:'https://www.xm.com/', Exness:'https://www.exness.com/', Deriv:'https://deriv.com/',
+    MT5:'https://www.metatrader5.com/', MT4:'https://www.metatrader4.com/', TradingView:'https://www.tradingview.com/', TradeView:'https://www.tradeviewforex.com/',
+    ICMarkets:'https://www.icmarkets.com/', 'IQ Option':'https://iqoption.com/', 'Deriv Synthetic':'https://deriv.com/markets/synthetic/', VulaCoin:'#'
+  };
+  const extraSymbols=[['BTCUSDT','BTC/USDT'],['ETHUSDT','ETH/USDT'],['SOLUSDT','SOL/USDT'],['BNBUSDT','BNB/USDT'],['EURUSDT','EUR/USD proxy'],['GBPUSDT','GBP/USD proxy'],['XRPUSDT','XRP/USDT'],['DOGEUSDT','DOGE/USDT']];
+  function addOptions(){
+    const asset=$('assetSelect'); if(asset){
+      const vals=new Set([...asset.options].map(o=>o.value));
+      extraSymbols.forEach(([v,t])=>{if(!vals.has(v)){const o=document.createElement('option');o.value=v;o.textContent=t;asset.appendChild(o)}});
+    }
+    const broker=$('brokerSelect'); if(broker){
+      Object.keys(brokerLinks).forEach(v=>{ if(![...broker.options].some(o=>o.value===v)){const o=document.createElement('option');o.value=v;o.textContent=v;broker.appendChild(o);} });
+    }
+  }
+  function sideFromSignal(){
+    const txt=String($('signalText')?.textContent||window.currentSignal?.signal||'NEUTRAL').toUpperCase();
+    if(txt.includes('BUY'))return 'BUY'; if(txt.includes('SELL'))return 'SELL'; return 'WAIT';
+  }
+  function price(){
+    try{const c=window.candles||[]; const last=c[c.length-1]; if(last&&Number.isFinite(+last.close)) return +last.close;}catch(e){}
+    const n=Number(String($('livePrice')?.textContent||'').replace(/[^0-9.\-]/g,'')); return Number.isFinite(n)?n:0;
+  }
+  function atr(){try{return Number(window.currentSignal?.tradePlan?.atr||window.currentSignal?.indicators?.atr||0)||Math.max(price()*0.004,1)}catch(e){return Math.max(price()*0.004,1)}}
+  function calcSignal(variant){
+    const p=price()||65000, a=atr(), side=sideFromSignal();
+    const conf=Number(String($('confValue')?.textContent||'0').replace(/[^0-9]/g,''))||Number(window.currentSignal?.confidence||0)||55;
+    const q=Number(String($('qualityValue')?.textContent||'0').replace(/[^0-9]/g,''))||Number(window.currentSignal?.tradePlan?.quality||0)||50;
+    const finalSide=side==='WAIT' ? (q>=58?'BUY':'WAIT') : side;
+    const mult=variant==='A'?1.4:2.1, slMult=variant==='A'?0.9:1.15;
+    let entry=p, sl=p, tp=p;
+    if(finalSide==='BUY'){ sl=p-a*slMult; tp=p+a*mult; }
+    else if(finalSide==='SELL'){ sl=p+a*slMult; tp=p-a*mult; }
+    return {variant, side:finalSide, entry, sl, tp, conf:Math.min(96,Math.max(35,conf+(variant==='A'?2:-3))), quality:Math.min(100,Math.max(30,q+(variant==='B'?3:0))), rr:(Math.abs(tp-entry)/Math.max(Math.abs(entry-sl),0.00001)).toFixed(2)};
+  }
+  function card(sig){
+    const cls=sig.side==='BUY'?'nt-v1310-buy':sig.side==='SELL'?'nt-v1310-sell':'nt-v1310-wait';
+    return `<div class="nt-v1310-panel"><div class="nt-v1310-head"><b>Signal ${sig.variant}</b><span class="nt-v1310-badge ${cls}">${sig.side}</span></div>
+      <div class="nt-v1310-grid">
+        <div class="nt-v1310-box"><small>Entry</small><b>${fmt(sig.entry)}</b></div>
+        <div class="nt-v1310-box"><small>Stop Loss</small><b>${fmt(sig.sl)}</b></div>
+        <div class="nt-v1310-box"><small>Take Profit</small><b>${fmt(sig.tp)}</b></div>
+        <div class="nt-v1310-box"><small>Risk / Reward</small><b>${sig.rr}</b></div>
+        <div class="nt-v1310-box"><small>Confidence</small><b>${sig.conf}%</b></div>
+        <div class="nt-v1310-box"><small>Quality</small><b>${sig.quality}/100</b></div>
+      </div><div class="nt-v1310-note">Manual signal only. Confirm on your broker chart before placing any trade.</div></div>`;
+  }
+  function renderSignalPanels(){
+    const a=calcSignal('A'), b=calcSignal('B');
+    const out=$('ntV1310SignalOutput'); if(out) out.innerHTML=card(a)+card(b);
+    try{localStorage.setItem('ntp_v1310_last_signal_ab',JSON.stringify({a,b,at:new Date().toISOString(),symbol:window.SYMBOL||$('assetSelect')?.value,tf:window.INTERVAL||$('tfSelect')?.value,broker:window.BROKER_MODE||$('brokerSelect')?.value}))}catch(e){}
+  }
+  function platformButtons(){
+    const names=['Binance','MetaTrader 5','MetaTrader 4','XM','Exness','Deriv','TradingView','TradeView','IQ Option','ICMarkets','Bybit','VulaCoin'];
+    return names.map(name=>{const val=name==='MetaTrader 5'?'MT5':name==='MetaTrader 4'?'MT4':name;return `<button class="nt-platform-btn" data-broker="${val}">${name}</button>`}).join('');
+  }
+  function replaceCardByHeading(match, html){
+    [...document.querySelectorAll('.card')].forEach(card=>{
+      const h=card.querySelector('h3'); if(h && match.test(h.textContent||'')){ card.innerHTML=html; }
+    });
+  }
+  function cleanLayout(){
+    ['walletBox','verificationBox','netTrackBotBox'].forEach(id=>{const el=$(id); if(el) el.remove();});
+    replaceCardByHeading(/Win\/Loss|Analytics/i, `<h3>Signal A / Signal B Pattern</h3><div id="ntV1310SignalOutput" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div><div class="nt-v1310-actions"><button onclick="ntV1310GenerateSignals()">GENERATE SIGNAL A + B</button><button onclick="ntV1310SyncBroker()">SYNC WITH SELECTED PLATFORM</button></div><details class="nt-sensitive-details"><summary>Description / sensitive info hidden</summary><div>Signal A is the safer structure. Signal B is the extended target structure. NetTrack does not hold funds, execute trades, or guarantee results.</div></details>`);
+    replaceCardByHeading(/Equity Curve|Performance/i, `<h3>Broker / Platform Bridge</h3><div class="nt-v1310-panel"><div class="nt-v1310-head"><b>Selected platform</b><span class="nt-v1310-badge" id="ntBridgeBroker">--</span></div><div class="nt-platform-grid">${platformButtons()}</div><div class="nt-v1310-note">Buttons switch the NetTrack overlay and open the selected broker/trading platform when available. Actual trade execution stays inside the broker account.</div></div>`);
+    replaceCardByHeading(/MACD Momentum/i, `<h3>Signal Pattern Pulse</h3><div class="nt-v1310-panel"><div class="nt-v1310-grid"><div class="nt-v1310-box"><small>Pattern State</small><b id="ntPulseState">WAITING</b></div><div class="nt-v1310-box"><small>Broker Sync</small><b id="ntPulseSync">--</b></div><div class="nt-v1310-box"><small>Market Switch</small><b id="ntPulseMarket">--</b></div><div class="nt-v1310-box"><small>Next Action</small><b id="ntPulseAction">Generate A/B</b></div></div><canvas id="macdChart" height="1" style="display:none"></canvas></div>`);
+    const h=$('historyBody'); if(h){ [...h.querySelectorAll('tr')].forEach(tr=>{const last=tr.lastElementChild;if(last){last.textContent=String(last.textContent).replace(/WIN|LOSS/gi,'CHECKED').replace(/PENDING/gi,'OPEN')}}); }
+    const sample=$('btSample'); if(sample) sample.textContent=String(sample.textContent).replace(/\d+W\s*\/\s*\d+L/i,'closed samples');
+    const rate=$('btRate'); if(rate && rate.parentElement?.previousElementSibling) rate.parentElement.previousElementSibling.textContent='Signal Hit Score';
+    addOptions(); bindPlatformButtons(); renderSignalPanels(); updatePulse();
+  }
+  function bindPlatformButtons(){
+    document.querySelectorAll('.nt-platform-btn').forEach(btn=>{if(btn.__bound)return;btn.__bound=true;btn.onclick=()=>{const val=btn.dataset.broker; const sel=$('brokerSelect'); if(sel){sel.value=val; if(typeof window.changeBroker==='function')window.changeBroker(); if(typeof window.updateDrawerLabels==='function')window.updateDrawerLabels();} updatePulse(); const url=brokerLinks[val]; if(url && url!=='#') window.open(url,'_blank','noopener');};});
+  }
+  function updatePulse(){
+    const broker=window.BROKER_MODE||$('brokerSelect')?.value||'Binance'; const sym=window.SYMBOL||$('assetSelect')?.value||'BTCUSDT';
+    const side=sideFromSignal(); const sync=$('alignSync')?.textContent||'WAITING';
+    const set=(id,v)=>{const e=$(id); if(e)e.textContent=v};
+    set('ntBridgeBroker', broker); set('ntPulseState', side); set('ntPulseSync', sync); set('ntPulseMarket', sym); set('ntPulseAction', side==='WAIT'?'Wait for confirmation':'Use Signal A/B levels');
+  }
+  window.ntV1310GenerateSignals=function(){renderSignalPanels(); updatePulse(); if(typeof window.notify==='function')notify('Signal A/B generated from current market, timeframe and selected platform.');};
+  window.ntV1310SyncBroker=function(){updatePulse(); if(typeof window.updateDrawerLabels==='function')window.updateDrawerLabels(); if(typeof window.notify==='function')notify('Platform bridge synced. Switch market/timeframe/platform from Trading Controls.');};
+  const oldRender=window.renderHistory; if(typeof oldRender==='function'){window.renderHistory=function(){oldRender.apply(this,arguments); setTimeout(cleanLayout,0);};}
+  const oldAuto=window.autoResolvePendingSignals; if(typeof oldAuto==='function'){window.autoResolvePendingSignals=function(){oldAuto.apply(this,arguments); try{(window.signalHistory||[]).forEach(h=>{if(h.result==='WIN'||h.result==='LOSS')h.result='CHECKED';});}catch(e){}};}
+  const oldBacktest=window.runAdvancedBacktest; if(typeof oldBacktest==='function'){window.runAdvancedBacktest=function(){oldBacktest.apply(this,arguments);setTimeout(()=>{const s=$('btSample');if(s)s.textContent=String(s.textContent).replace(/\d+W\s*\/\s*\d+L/i,'closed samples');},0);};}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',cleanLayout); else cleanLayout();
+  window.addEventListener('load',()=>{cleanLayout();setInterval(()=>{renderSignalPanels();updatePulse();},3500);});
+  setInterval(cleanLayout,2500);
+})();
+</script>
+<!-- /NETTRACK PRO V13.10 CLEAN SIGNAL A/B BRIDGE PATCH -->
 
 </body>
 </html>
