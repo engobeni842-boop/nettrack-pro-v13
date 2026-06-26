@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NetTrack Pro V13.4 Premium Signal Platform</title>
+<title>NetTrack Pro V13.6 Professional Signal Platform</title>
 <style>
 :root {
 --bg: #050a14;
@@ -322,6 +322,27 @@ body.portal-open .brand-footer{ display:none; }
 #testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
 #testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
 
+
+/* V13.6 PROFESSIONAL SPACING + FLOW PATCH */
+header{padding:1rem 1.35rem!important;gap:18px!important;}
+.controls{gap:14px!important;flex-wrap:wrap!important;}
+.container{padding:1.65rem!important;}
+.grid{gap:1.18rem!important;}
+.card{padding:1.35rem!important;border-radius:14px!important;}
+h2,h3{font-size:.68rem!important;letter-spacing:.95px!important;margin-bottom:.95rem!important;line-height:1.35!important;}
+.big-signal{font-size:2.48rem!important;margin:.25rem 0 .7rem!important;letter-spacing:-1px!important;}
+.grade-badge{font-size:1.15rem!important;padding:5px 10px!important;top:13px!important;right:13px!important;}
+.summary-mini{gap:10px!important;}
+.summary-mini div,.level-box,.mini-box{padding:10px 11px!important;border-radius:9px!important;}
+.stat-row,.scanner-row{padding:.62rem 0!important;line-height:1.45!important;}
+#mainChart{min-height:390px!important;}
+#dsSocket{font-weight:1000!important;}
+.nt-signal-switch-mount,.nt-signal-card{border-radius:14px!important;}
+.nt-signal-card{padding:14px!important;}
+.nt-signal-card h4{font-size:.78rem!important;margin-bottom:10px!important;}
+.nt-signal-row{padding:7px 0!important;}
+.nt-signal-action{margin-top:12px!important;}
+@media(max-width:900px){.big-signal{font-size:2.1rem!important}.container{padding:1rem!important}.card{padding:1rem!important}}
 </style>
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -478,7 +499,7 @@ body.portal-open .brand-footer{ display:none; }
 <div id="notif-box"></div>
 <header>
 <div class="controls">
-<h1 style="margin:0; font-size:1.2rem; margin-right:10px">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block;font-size:.55rem;color:#94a3b8;letter-spacing:.8px">V13.3 SIGNAL PLATFORM  ARMOROO ENT</small></h1>
+<h1 style="margin:0; font-size:1.2rem; margin-right:10px">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block;font-size:.55rem;color:#94a3b8;letter-spacing:.8px">V13.6 SIGNAL PLATFORM  ARMOROO ENT</small></h1>
 <span class="tester-badge">Free Tester Mode</span>
 <select id="assetSelect" class="pair-selector" onchange="changeAsset()">
 <option value="BTCUSDT">BTC/USDT</option>
@@ -1789,8 +1810,14 @@ function changeBroker() {
   if (n) n.innerText = selectedBrokerLabel();
   const a = document.getElementById("alignBrokerName");
   if (a) a.innerText = selectedBrokerLabel();
+  const m = document.getElementById("alignMode");
+  if (m) m.innerText = selectedBrokerLabel() + " comparison • signal view";
   lastAlignSnapshot = { net:null, broker:null, t:0 };
-  if (currentSignal) { drawMain(currentSignal); updateLiveAlignment(currentSignal); }
+  if (currentSignal) { drawMain(currentSignal); updateLiveAlignment(currentSignal); updateDashboard(currentSignal); }
+  try { if (typeof ntGenerateSignalSwitch === "function") {
+    const out = document.getElementById("ntSignalSwitchOutput");
+    if(out && !/Waiting/.test(out.innerText)) ntGenerateSignalSwitch();
+  }} catch(e){}
 }
 
 function brokerSpreadEstimate(price) {
@@ -4384,9 +4411,18 @@ body.portal-open .brand-footer{ display:none; }
       updateDashboard(res);
       if(isCrypto(SYMBOL)) stableCryptoSocket(nonce); else stableWatchTimer(nonce);
     }catch(e){
+      // V13.6: do not kill the dashboard when the REST preload fails.
+      // Firebase/API may be fine while Binance REST or browser network blocks candles.
+      // Use safe local candles, keep Signal A/B alive, and still attempt the live stream.
       isSwitching = false;
-      setSocketState("ERROR");
-      const expl=byId("signalExplainer"); if(expl) expl.innerHTML = `Feed error for <b>${label(SYMBOL)}</b>. Switch market or retry.`;
+      candles = syntheticCandles(SYMBOL,600);
+      updateCoreFromCandles(SYMBOL);
+      const res = analyze(candles,{isClosed:true, symbol:SYMBOL});
+      currentSignal = res;
+      updateDashboard(res);
+      setSocketState(isCrypto(SYMBOL) ? "RECONNECTING" : "CONNECTED");
+      const expl=byId("signalExplainer"); if(expl) expl.innerHTML = `Backup feed active for <b>${label(SYMBOL)}</b>. Live socket is retrying automatically; Signal A and Signal B remain usable.`;
+      if(isCrypto(SYMBOL)) stableCryptoSocket(nonce); else stableWatchTimer(nonce);
     }
   }
 
@@ -4404,8 +4440,9 @@ body.portal-open .brand-footer{ display:none; }
   function stableCryptoSocket(nonce){
     try{
       ws = new WebSocket(`wss://stream.binance.com:9443/ws/${SYMBOL.toLowerCase()}@kline_${INTERVAL}`);
+      let lastTickAt = Date.now();
       ws.onopen = ()=>{ if(nonce===ntSessionNonce) setSocketState("CONNECTED"); };
-      ws.onmessage = (m)=>{
+      ws.onmessage = (m)=>{ lastTickAt = Date.now();
         if(nonce!==ntSessionNonce) return;
         try{
           const parsed=JSON.parse(m.data); if(!parsed || !parsed.k) return;
@@ -4417,9 +4454,30 @@ body.portal-open .brand-footer{ display:none; }
           const res=analyze(candles,{isClosed:c.isClosed, symbol:SYMBOL}); currentSignal=res; updateDashboard(res);
         }catch(e){}
       };
-      ws.onclose = ()=>{ if(nonce===ntSessionNonce && !isSwitching){ setSocketState("RECONNECTING"); setTimeout(()=>{ if(nonce===ntSessionNonce) stableReset(); },3500); } };
-      ws.onerror = ()=>{ if(nonce===ntSessionNonce) setSocketState("ERROR"); };
-    }catch(e){ setSocketState("ERROR"); }
+      ws.onclose = ()=>{
+        if(nonce===ntSessionNonce && !isSwitching){
+          setSocketState("RECONNECTING");
+          if(reconnectTimeout) clearTimeout(reconnectTimeout);
+          reconnectTimeout = setTimeout(()=>{ if(nonce===ntSessionNonce) stableReset(); },2500);
+        }
+      };
+      ws.onerror = ()=>{
+        if(nonce===ntSessionNonce){
+          setSocketState("RECONNECTING");
+          try{ ws.close(); }catch(_e){}
+        }
+      };
+      setTimeout(()=>{
+        if(nonce===ntSessionNonce && isCrypto(SYMBOL) && Date.now()-lastTickAt>12000){
+          setSocketState("RECONNECTING");
+          try{ ws.close(); }catch(_e){}
+        }
+      },13000);
+    }catch(e){
+      setSocketState("RECONNECTING");
+      if(reconnectTimeout) clearTimeout(reconnectTimeout);
+      reconnectTimeout = setTimeout(()=>{ if(nonce===ntSessionNonce) stableReset(); },3000);
+    }
   }
 
   window.activeSymbolLabel = function(){ return label(SYMBOL); };
@@ -4563,9 +4621,13 @@ body.portal-open .brand-footer{ display:none; }
     return "BTC/USDT";
   }
   function providerFor(sym){
+    // V13.6: Signal A/B must follow the selected broker/platform.
+    // Keep Deriv/TradingView as fallback only when the selector is empty.
+    const picked = selectedValue("brokerSelect");
+    if(picked) return picked;
     if(/Volatility|BOOM|CRASH/i.test(sym)) return "Deriv";
     if(/EUR|GBP|JPY|XAU|Gold/i.test(sym)) return "TradingView";
-    return selectedValue("brokerSelect") || "Binance";
+    return "Binance";
   }
   function precision(sym){ return /JPY|Volatility|BOOM|CRASH/i.test(sym)?2:/BTC|ETH|BNB|SOL/i.test(sym)?2:5; }
   function fmt(n,sym){ const x=Number(n); return Number.isFinite(x)?x.toFixed(precision(sym)):"--"; }
@@ -4679,9 +4741,7 @@ body.portal-open .brand-footer{ display:none; }
     txt("alignSymbol", sym);
     const a=$("alignBrokerName"); if(a) a.textContent=provider;
     txt("alignMode", `${provider} comparison • signal view`);
-    // force broker selector visible text only when compatible
-    const br=$("brokerSelect");
-    if(br && br.value!==provider && [...br.options].some(o=>o.value===provider)) br.value=provider;
+    // V13.6: do not force broker selector back. The user's selected platform drives Signal A/B.
   }
   function hideRemoved(){
     document.querySelectorAll("button,div,section,label,span,small,b,h3").forEach(el=>{
@@ -4710,6 +4770,8 @@ body.portal-open .brand-footer{ display:none; }
   function boot(){
     buildSwitchPanel(); syncLabels(); hideRemoved(); cookieBanner(); legalMini(); updateQuota();
     ["assetSelect","brokerSelect","tfSelect"].forEach(id=>{const el=$(id); if(el && !el.dataset.v133){el.dataset.v133="1"; el.addEventListener("change",()=>setTimeout(()=>{syncLabels(); updateQuota();},120));}});
+    window.addEventListener("online",()=>{ try{ setSocketState("RECONNECTING"); stableReset(); }catch(e){} });
+    window.addEventListener("offline",()=>{ try{ setSocketState("RECONNECTING"); }catch(e){} });
     setInterval(()=>{syncLabels(); hideRemoved(); updateQuota();},1500);
   }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot); else boot();
