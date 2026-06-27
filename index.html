@@ -5205,5 +5205,78 @@ body{
 <!-- /NETTRACK PRO V13.8 AUTH WORKFLOW HOTFIX -->
 
 
+
+
+<!-- NETTRACK PRO V13.8.1 ULTIMATE AUTH ROUTER FIX - LOGIN / SIGNUP / RESET ISOLATED -->
+<style id="nt-v1381-auth-router-css">
+  #authOverlay{background:#f8fafc!important;color:#0f172a!important;overflow:hidden!important;}
+  #authOverlay .nt-session-loader,#authOverlay .nt-session-loader.show{display:none!important;pointer-events:none!important;}
+  #authOverlay > div:not(.nt-market-bg):not(.nt-auth-brand):not(.nt-session-loader){
+    width:376px!important;max-width:calc(100vw - 32px)!important;padding:22px!important;border-radius:18px!important;
+    background:rgba(255,255,255,.96)!important;border:1px solid #dbeafe!important;color:#0f172a!important;
+    box-shadow:0 26px 80px rgba(15,23,42,.22)!important;backdrop-filter:blur(12px)!important;position:relative!important;
+  }
+  .nt-auth-title{margin:0 0 11px!important;font-size:.8rem!important;text-transform:uppercase!important;letter-spacing:2px!important;font-weight:950!important;color:#0f172a!important;}
+  .nt-auth-tabs{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;margin-bottom:10px!important;}
+  #authOverlay .nt-auth-tab{height:34px!important;margin:0!important;border:1px solid #bae6fd!important;background:#e0f2fe!important;color:#075985!important;border-radius:10px!important;font-weight:950!important;}
+  #authOverlay .nt-auth-tab.active{background:linear-gradient(135deg,#38bdf8,#2563eb)!important;color:#fff!important;border-color:#38bdf8!important;}
+  .nt-email-label{margin:0 0 8px!important;background:#f0f9ff!important;border:1px solid #bae6fd!important;color:#075985!important;border-radius:10px!important;padding:9px!important;text-align:center!important;font-weight:950!important;}
+  #authOverlay input{width:100%!important;height:39px!important;margin:6px 0 8px!important;background:#fff!important;color:#0f172a!important;border:1px solid #cbd5e1!important;border-radius:9px!important;box-sizing:border-box!important;padding:0 10px!important;outline:none!important;}
+  #authOverlay input:focus{border-color:#38bdf8!important;box-shadow:0 0 0 3px rgba(56,189,248,.18)!important;}
+  #authOverlay button{width:100%!important;height:40px!important;margin-top:8px!important;border:0!important;border-radius:9px!important;font-weight:950!important;letter-spacing:.1px!important;cursor:pointer!important;}
+  #ntLoginBtn{background:linear-gradient(135deg,#38bdf8,#2563eb)!important;color:#fff!important;}
+  #ntSignupBtn{background:#475569!important;color:#fff!important;}
+  #ntForgotBtn{background:#0ea5e9!important;color:#020617!important;}
+  #authOverlay button:disabled{opacity:.66!important;cursor:not-allowed!important;}
+  .nt-auth-note{margin:11px 0 0!important;color:#334155!important;font-size:11px!important;line-height:1.45!important;}
+  .nt-auth-status{display:none;margin:10px 0 0;padding:9px 10px;border-radius:9px;font-size:11px;font-weight:850;line-height:1.4;}
+  .nt-auth-status.show{display:block;}.nt-auth-status.ok{background:#dcfce7;color:#166534;border:1px solid #86efac;}.nt-auth-status.warn{background:#fef9c3;color:#854d0e;border:1px solid #fde68a;}.nt-auth-status.err{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;}
+  .nt-hidden{display:none!important;}.auth-eye{color:#0f172a!important;}
+</style>
+<script id="nt-v1381-auth-router-js">
+(function(){
+  const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>Array.from(r.querySelectorAll(s)), byId=id=>document.getElementById(id);
+  const EMAIL_EXISTS='This email is already registered. Press Login if you know the password, or use Forgot password to reset it.';
+  const CONFIRM_REQUIRED='Account created. Supabase requires email confirmation, so open your inbox, confirm the email, then Login.';
+  const RATE_LIMIT='Too many email requests were made. Please wait a few minutes before requesting another email.';
+  let mode='login', cooldown=null;
+  function supa(){try{return window.supabaseClient||(typeof supabaseClient!=='undefined'?supabaseClient:null)}catch(e){return null}}
+  function card(){return q('#authOverlay > div:not(.nt-market-bg):not(.nt-auth-brand):not(.nt-session-loader)')}
+  function st(msg,type='warn'){const el=byId('ntAuthStatus'); if(!el){alert(msg);return} el.className='nt-auth-status show '+type; el.textContent=msg;}
+  function clear(){const el=byId('ntAuthStatus'); if(el){el.className='nt-auth-status'; el.textContent='';}}
+  function values(){return {email:(byId('loginEmail')?.value||'').trim().toLowerCase(), pass:(byId('loginPass')?.value||''), pass2:(byId('loginPass2')?.value||'')}}
+  function validEmail(email){return /^\S+@\S+\.\S+$/.test(email)}
+  function validate(needPass=true, needConfirm=false){const v=values(); if(!v.email||!validEmail(v.email)){st('Enter a valid email address.','err');return null} if(needPass && (!v.pass||v.pass.length<6)){st('Password must be at least 6 characters.','err');return null} if(needConfirm && v.pass!==v.pass2){st('Passwords do not match.','err');return null} return v}
+  function friendly(e,flow){const m=String(e?.message||e||'').toLowerCase(); if(m.includes('rate limit'))return RATE_LIMIT; if(m.includes('already')||m.includes('registered')||m.includes('exists')||m.includes('identity'))return EMAIL_EXISTS; if(m.includes('invalid login')||m.includes('invalid credentials'))return 'Incorrect email or password. Check the password, or use Forgot password.'; if(m.includes('email not confirmed'))return 'This email is registered but not confirmed yet. Open the confirmation email first, then Login.'; if(m.includes('signup disabled'))return 'Sign up is disabled in Supabase Auth settings. Enable email signups in Supabase.'; return (flow?flow+' failed: ':'')+(e?.message||e||'Unknown error')}
+  function busy(btn,msg){qa('#authOverlay button').forEach(b=>b.disabled=true); if(btn){btn.dataset.old=btn.textContent; btn.textContent=msg}}
+  function idle(){qa('#authOverlay button').forEach(b=>{if(!b.dataset.cooldown)b.disabled=false; if(b.dataset.old){b.textContent=b.dataset.old; delete b.dataset.old}}); updateMode(mode,false)}
+  function unlock(email){try{localStorage.setItem('nt_logged_in','1'); if(email)localStorage.setItem('nt_current_email',email)}catch(e){} const a=byId('authOverlay'); if(a)a.style.display='none'}
+  function cooldownReset(sec=60){const b=byId('ntForgotBtn'); if(!b)return; clearInterval(cooldown); b.dataset.cooldown='1'; b.disabled=true; let left=sec; const tick=()=>{b.textContent='Reset available in '+left+'s'; left--; if(left<0){clearInterval(cooldown); cooldown=null; delete b.dataset.cooldown; b.disabled=false; b.textContent='Forgot password? Reset by email'}}; tick(); cooldown=setInterval(tick,1000)}
+  function updateMode(next, doClear=true){mode=next; if(doClear)clear(); qa('.nt-auth-tab').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode)); const signup=mode==='signup'; const reset=mode==='reset'; const p=byId('loginPass'), p2=byId('loginPass2'); if(p)p.classList.toggle('nt-hidden',reset); if(p2)p2.classList.toggle('nt-hidden',!signup); byId('ntLoginBtn')?.classList.toggle('nt-hidden',mode!=='login'); byId('ntSignupBtn')?.classList.toggle('nt-hidden',!signup); byId('ntForgotBtn')?.classList.toggle('nt-hidden',!reset); const lab=byId('ntModeLabel'); if(lab)lab.textContent=signup?'Create a new NetTrack account':reset?'Reset password by email':'Sign in using email'; const note=byId('ntAuthNote'); if(note)note.textContent=signup?'Use a brand-new email only. If the email already exists, the app will tell you to login or reset password.':reset?'Enter your account email once. If Supabase rate-limits emails, wait and try again.':'Use Login for existing Supabase users. Create Account is separate and will not call password reset.'; }
+  async function login(ev){clear(); const btn=ev?.currentTarget||byId('ntLoginBtn'), v=validate(true,false); if(!v)return; busy(btn,'Logging in...'); try{const c=supa(); if(c?.auth?.signInWithPassword){const {data,error}=await c.auth.signInWithPassword({email:v.email,password:v.pass}); if(error)throw error; st('Login successful. Opening NetTrack Pro...','ok'); setTimeout(()=>unlock(data?.user?.email||v.email),250); return} const u=JSON.parse(localStorage.getItem('nt_user')||'null'); if(u&&String(u.email||'').toLowerCase()===v.email&&u.password===v.pass){unlock(v.email);return} throw new Error('Invalid login credentials')}catch(e){st(friendly(e,'Login'),'err')}finally{idle()}}
+  async function signup(ev){clear(); const btn=ev?.currentTarget||byId('ntSignupBtn'), v=validate(true,true); if(!v)return; busy(btn,'Creating account...'); try{const c=supa(); if(c?.auth?.signUp){const {data,error}=await c.auth.signUp({email:v.email,password:v.pass}); if(error)throw error; const ids=data?.user?.identities; if(Array.isArray(ids)&&ids.length===0){st(EMAIL_EXISTS,'warn'); updateMode('login',false); return} try{localStorage.setItem('nt_last_signup_email',v.email)}catch(_){} if(data?.session){st('Account created and logged in. Opening NetTrack Pro...','ok'); setTimeout(()=>unlock(data.user?.email||v.email),300)}else{st(CONFIRM_REQUIRED,'ok'); updateMode('login',false)} return} const old=JSON.parse(localStorage.getItem('nt_user')||'null'); if(old&&String(old.email||'').toLowerCase()===v.email){st(EMAIL_EXISTS,'warn');updateMode('login',false);return} localStorage.setItem('nt_user',JSON.stringify({email:v.email,password:v.pass})); st('Local test account created. Press Login.','ok'); updateMode('login',false)}catch(e){st(friendly(e,'Sign up'),'err')}finally{idle()}}
+  async function reset(ev){clear(); const btn=ev?.currentTarget||byId('ntForgotBtn'), v=validate(false,false); if(!v)return; busy(btn,'Sending reset email...'); try{const c=supa(); if(c?.auth?.resetPasswordForEmail){const {error}=await c.auth.resetPasswordForEmail(v.email,{redirectTo:location.origin+location.pathname}); if(error)throw error; st('Password reset email sent. Open your inbox and follow the link.','ok'); cooldownReset(60); return} st('Supabase Auth is required for live password reset.','warn')}catch(e){const msg=friendly(e,'Reset'); st(msg,'err'); if(msg===RATE_LIMIT)cooldownReset(60)}finally{idle()}}
+  function build(){const c=card(); if(!c)return; const oldEmail=byId('loginEmail')?.value||localStorage.getItem('nt_current_email')||localStorage.getItem('nt_last_signup_email')||''; c.dataset.ntAuthFixed='ultimate'; c.innerHTML=`
+    <h2 class="nt-auth-title">NETTRACK PRO AUTH</h2>
+    <div class="nt-auth-tabs"><button type="button" class="nt-auth-tab" data-mode="login">Login</button><button type="button" class="nt-auth-tab" data-mode="signup">Create Account</button></div>
+    <div id="ntModeLabel" class="nt-email-label">Sign in using email</div>
+    <input id="loginEmail" type="email" placeholder="Email" autocomplete="email" value="${String(oldEmail).replaceAll('&','&amp;').replaceAll('"','&quot;')}">
+    <input id="loginPass" type="password" placeholder="Password" autocomplete="current-password">
+    <input id="loginPass2" type="password" placeholder="Confirm password" autocomplete="new-password" class="nt-hidden">
+    <button id="ntLoginBtn" type="button">Login</button>
+    <button id="ntSignupBtn" type="button" class="nt-hidden">Create Account</button>
+    <button id="ntForgotBtn" type="button" class="nt-hidden">Forgot password? Reset by email</button>
+    <button id="ntResetModeBtn" type="button" style="background:#e0f2fe!important;color:#075985!important;border:1px solid #bae6fd!important;">Forgot password?</button>
+    <button id="ntGoogleBtn" type="button" style="background:#fff!important;color:#0f172a!important;border:1px solid #cbd5e1!important;">ⓖ Continue with Google</button>
+    <div id="ntAuthStatus" class="nt-auth-status"></div>
+    <p id="ntAuthNote" class="nt-auth-note"></p>`; byId('ntLoginBtn').onclick=login; byId('ntSignupBtn').onclick=signup; byId('ntForgotBtn').onclick=reset; byId('ntResetModeBtn').onclick=()=>updateMode(mode==='reset'?'login':'reset'); byId('ntGoogleBtn').onclick=()=>st('Google sign-in needs Google Provider enabled in Supabase Auth before it can be used.','warn'); qa('.nt-auth-tab',c).forEach(b=>b.onclick=()=>updateMode(b.dataset.mode)); updateMode('login',false); qa('.nt-session-loader').forEach(x=>{x.classList.remove('show');x.style.display='none'}); }
+  function cleanup(){qa('button').forEach(b=>{const t=(b.textContent||'').toLowerCase(); if(t.includes('mark win')||t.includes('mark loss')||t.includes('mark close'))b.remove()}); ['netTrackBotBox','txBox','revenueBox'].forEach(id=>byId(id)?.remove());}
+  window.ntLogin=login; window.ntSignup=signup; window.ntForgotPassword=reset;
+  function boot(){build();cleanup()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot); else boot(); [250,900,1800].forEach(t=>setTimeout(boot,t));
+})();
+</script>
+<!-- /NETTRACK PRO V13.8.1 ULTIMATE AUTH ROUTER FIX -->
+
 </body>
 </html>
