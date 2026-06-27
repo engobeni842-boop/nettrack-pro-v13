@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NetTrack Pro V13.6 Professional Signal Platform</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NetTrack Pro V13.8 Clean Signal Platform</title>
 <style>
 :root {
 --bg: #050a14;
@@ -322,36 +323,12 @@ body.portal-open .brand-footer{ display:none; }
 #testerPatternPanel .pattern-signal{font-size:1.35rem;font-weight:900;color:#22c55e;margin-top:4px}
 #testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
 
-
-/* V13.6 PROFESSIONAL SPACING + FLOW PATCH */
-header{padding:1rem 1.35rem!important;gap:18px!important;}
-.controls{gap:14px!important;flex-wrap:wrap!important;}
-.container{padding:1.65rem!important;}
-.grid{gap:1.18rem!important;}
-.card{padding:1.35rem!important;border-radius:14px!important;}
-h2,h3{font-size:.68rem!important;letter-spacing:.95px!important;margin-bottom:.95rem!important;line-height:1.35!important;}
-.big-signal{font-size:2.48rem!important;margin:.25rem 0 .7rem!important;letter-spacing:-1px!important;}
-.grade-badge{font-size:1.15rem!important;padding:5px 10px!important;top:13px!important;right:13px!important;}
-.summary-mini{gap:10px!important;}
-.summary-mini div,.level-box,.mini-box{padding:10px 11px!important;border-radius:9px!important;}
-.stat-row,.scanner-row{padding:.62rem 0!important;line-height:1.45!important;}
-#mainChart{min-height:390px!important;}
-#dsSocket{font-weight:1000!important;}
-.nt-signal-switch-mount,.nt-signal-card{border-radius:14px!important;}
-.nt-signal-card{padding:14px!important;}
-.nt-signal-card h4{font-size:.78rem!important;margin-bottom:10px!important;}
-.nt-signal-row{padding:7px 0!important;}
-.nt-signal-action{margin-top:12px!important;}
-@media(max-width:900px){.big-signal{font-size:2.1rem!important}.container{padding:1rem!important}.card{padding:1rem!important}}
 </style>
-
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#38bdf8">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="NetTrack Pro">
-<link rel="apple-touch-icon" href="icon-192.png">
-
-
+<link href="manifest.webmanifest" rel="manifest"/>
+<meta content="#38bdf8" name="theme-color"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="NetTrack Pro" name="apple-mobile-web-app-title"/>
+<link href="icon-192.png" rel="apple-touch-icon"/>
 <style id="v1212fix">
 #userPortalPage .account-email{word-break:break-all;overflow-wrap:anywhere;font-size:.95rem}
 #userPortalPage .info-card{min-width:0}
@@ -367,7 +344,6 @@ h2,h3{font-size:.68rem!important;letter-spacing:.95px!important;margin-bottom:.9
 #testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
 
 </style>
-
 <style id="v1213-final-cleanup">
 /* Final bug cleanup only: footer highlight removal + user email alignment */
 .brand-footer, .brand-footer *{
@@ -412,7 +388,6 @@ h2,h3{font-size:.68rem!important;letter-spacing:.95px!important;margin-bottom:.9
 #testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
 
 </style>
-
 <style id="v1214-text-wrap-cleanup">
 /* Bug fix only: keep long payout/cash-send lines inside their cards */
 .portal-layout, .portal-layout > *, .portal-stack, .portal-info-card{
@@ -447,8 +422,6 @@ h2,h3{font-size:.68rem!important;letter-spacing:.95px!important;margin-bottom:.9
 #testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
 
 </style>
-
-
 <style id="v1216-access-card-final-fix">
 /* Final bug fix only: keep Access card inside the User Portal card grid */
 .portal-info-grid{
@@ -483,37 +456,35 @@ h2,h3{font-size:.68rem!important;letter-spacing:.95px!important;margin-bottom:.9
 </style>
 </head>
 <body>
-
 <div id="splashScreen">
-  <div class="spark s1"></div>
-  <div class="spark s2"></div>
-  <div class="spark s3"></div>
-  <div class="spark s4"></div>
-  <div class="splash-core">
-    <div class="splash-brand">NetTrack PRO</div>
-    <div class="splash-sub">Powered by ARMOROO ENT Software and Apps</div>
-    <div class="splash-credit">Developed by Emmanuel Musiyiwa Ngobeni &amp; Thando Mbatha</div>
-  </div>
+<div class="spark s1"></div>
+<div class="spark s2"></div>
+<div class="spark s3"></div>
+<div class="spark s4"></div>
+<div class="splash-core">
+<div class="splash-brand">NetTrack PRO</div>
+<div class="splash-sub">Powered by ARMOROO ENT Software and Apps</div>
+<div class="splash-credit">Developed by Emmanuel Musiyiwa Ngobeni &amp; Thando Mbatha</div>
 </div>
-
+</div>
 <div id="notif-box"></div>
 <header>
 <div class="controls">
-<h1 style="margin:0; font-size:1.2rem; margin-right:10px">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block;font-size:.55rem;color:#94a3b8;letter-spacing:.8px">V13.6 SIGNAL PLATFORM  ARMOROO ENT</small></h1>
+<h1 style="margin:0; font-size:1.2rem; margin-right:10px">NetTrack <span style="color:var(--primary)">PRO</span><small style="display:block;font-size:.55rem;color:#94a3b8;letter-spacing:.8px">V13.8 CLEAN SIGNAL PLATFORM  ARMOROO ENT</small></h1>
 <span class="tester-badge">Free Tester Mode</span>
-<select id="assetSelect" class="pair-selector" onchange="changeAsset()">
+<select class="pair-selector" id="assetSelect" onchange="changeAsset()">
 <option value="BTCUSDT">BTC/USDT</option>
 <option value="ETHUSDT">ETH/USDT</option>
 <option value="SOLUSDT">SOL/USDT</option>
 <option value="BNBUSDT">BNB/USDT</option>
 </select>
-<select id="tfSelect" class="tf-selector" onchange="changeTimeframe()">
+<select class="tf-selector" id="tfSelect" onchange="changeTimeframe()">
 <option value="1m">1m</option>
 <option value="5m">5m</option>
 <option value="15m">15m</option>
 <option value="1h">1h</option>
 </select>
-<select id="brokerSelect" class="tf-selector" title="Broker comparison overlay" onchange="changeBroker()">
+<select class="tf-selector" id="brokerSelect" onchange="changeBroker()" title="Broker comparison overlay">
 <option value="Binance">Binance</option>
 <option value="XM">XM</option>
 <option value="MT5">MT5</option>
@@ -524,429 +495,357 @@ h2,h3{font-size:.68rem!important;letter-spacing:.95px!important;margin-bottom:.9
 <option value="Deriv">Deriv</option>
 <option value="ICMarkets">ICMarkets</option>
 <option value="Exness">Exness</option>
+<option value="IQXness">IQXness</option>
+<option value="Quotex">Quotex</option>
+<option value="Pocket Option">Pocket Option</option>
+<option value="OctaFX">OctaFX</option>
+<option value="RoboForex">RoboForex</option>
+<option value="TradeView">TradeView</option>
+<option value="HFM">HFM</option>
+<option value="FBS">FBS</option>
 </select>
-<button class="btn-outline" title="Settings" style="width:auto; padding:5px 12px; border-radius:6px; cursor:pointer" onclick="toggleSettings()">?</button>
+<small class="platform-hint">Signal platform switch</small>
+<button class="btn-outline" onclick="toggleSettings()" style="width:auto; padding:5px 12px; border-radius:6px; cursor:pointer" title="Settings">?</button>
 </div>
 <div class="live-price-container">
-<div id="livePrice" class="live-price"></div>
+<div class="live-price" id="livePrice"></div>
 <small id="updateTime" style="color:var(--muted)">INITIALIZING ENGINE</small>
 </div>
 </header>
-
-<nav class="nt-side-nav" aria-label="NetTrack page navigation">
-  <button id="navTrading" class="active" onclick="showNetTrackPage('trading')">TESTER</button>
-  <button id="navUser" onclick="showNetTrackPage('user')">USER</button>
-  <button id="navOwner" class="portal-hidden" onclick="showNetTrackPage('owner')">OWNER</button>
+<nav aria-label="NetTrack page navigation" class="nt-side-nav">
+<button class="active" id="navTrading" onclick="showNetTrackPage('trading')">TRADE</button>
+<button id="navUser" onclick="showNetTrackPage('user')">USER</button>
+<button class="portal-hidden" id="navOwner" onclick="showNetTrackPage('owner')">OWNER</button>
 </nav>
-<section id="portalStage" class="portal-stage portal-hidden">
-  <div id="userPage" class="portal-page">
-    <div class="portal-title-row">
-      <div>
-        <h2>User Portal</h2>
-        <small>30-day free trial, subscription access, verification and signal-only trading view.</small>
-      </div>
-      <button class="btn-outline" onclick="showNetTrackPage('trading')">Back to Trading</button>
-    </div>
-    <div class="portal-layout">
-      <div class="portal-stack">
-        <div id="userPortalMount"></div>
-      </div>
-      <div class="portal-stack">
-        <div class="portal-info-grid">
-          <div class="portal-info-card"><small>Account</small><b id="portalUserEmail" class="portal-email-text">--</b></div>
-          <div class="portal-info-card"><small>Status</small><b id="portalSubStatus">30-Day Trial</b></div>
-          <div class="portal-info-card portal-access-card"><small>Access</small><b>Signals Only</b></div>
-        </div>
-        <div class="portal-info-card">
-          <small>Subscription unlock</small>
-          <b>Locked features unlock through Basic / Pro / Premium subscription.</b>
-        </div>
-        <div class="portal-info-card">
-          <small>Signal access model</small>
-          <b>Free 30 days → Basic / Pro / Premium subscription</b>
-        </div>
-        <div class="portal-info-card">
-          <small>Trading responsibility</small>
-          <b>Users trade on their own broker accounts. NetTrack does not hold trading funds.</b>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="ownerPage" class="portal-page">
-    <div class="portal-title-row">
-      <div>
-        <h2>Owner Portal</h2>
-        <small>Protected owner-only subscription, user and signal access control room.</small>
-      </div>
-      <button class="btn-outline" onclick="showNetTrackPage('trading')">Back to Trading</button>
-    </div>
-    <div class="portal-layout">
-      <div id="ownerPortalMount" class="portal-stack"></div>
-      <div class="portal-stack">
-        <div class="portal-info-card">
-          <small>Owner security</small>
-          <b>Email protected • Supabase Auth • RLS-ready database</b>
-        </div>
-        <div class="portal-info-card">
-          <small>Revenue rule</small>
-          <b>Subscription payments unlock signal access after trial.</b>
-        </div>
-        <div class="portal-info-card">
-          <small>Visibility</small>
-          <b>Hidden from normal user accounts.</b>
-        </div>
-      </div>
-    </div>
-  </div>
+<section class="portal-stage portal-hidden" id="portalStage">
+<div class="portal-page" id="userPage">
+<div class="portal-title-row">
+<div>
+<h2>User Portal</h2>
+<small>30-day free trial, subscription access, verification and signal-only trading view.</small>
+</div>
+<button class="btn-outline" onclick="showNetTrackPage('trading')">Back to Trading</button>
+</div>
+<div class="portal-layout">
+<div class="portal-stack">
+<div id="userPortalMount"></div>
+</div>
+<div class="portal-stack">
+<div class="portal-info-grid">
+<div class="portal-info-card"><small>Account</small><b class="portal-email-text" id="portalUserEmail">--</b></div>
+<div class="portal-info-card"><small>Status</small><b id="portalSubStatus">30-Day Trial</b></div>
+<div class="portal-info-card portal-access-card"><small>Access</small><b>Signals Only</b></div>
+</div>
+<div class="portal-info-card">
+<small>Subscription unlock</small>
+<b>Locked features unlock through Basic / Pro / Premium subscription.</b>
+</div>
+<div class="portal-info-card">
+<small>Signal access model</small>
+<b>Free 30 days → Basic / Pro / Premium subscription</b>
+</div>
+<div class="portal-info-card">
+<small>Trading responsibility</small>
+<b>Users trade on their own broker accounts. NetTrack does not hold trading funds.</b>
+</div>
+</div>
+</div>
+</div>
+<div class="portal-page" id="ownerPage">
+<div class="portal-title-row">
+<div>
+<h2>Owner Portal</h2>
+<small>Protected owner-only subscription, user and signal access control room.</small>
+</div>
+<button class="btn-outline" onclick="showNetTrackPage('trading')">Back to Trading</button>
+</div>
+<div class="portal-layout">
+<div class="portal-stack" id="ownerPortalMount"></div>
+<div class="portal-stack">
+<div class="portal-info-card">
+<small>Owner security</small>
+<b>Email protected • Supabase Auth • RLS-ready database</b>
+</div>
+<div class="portal-info-card">
+<small>Revenue rule</small>
+<b>Subscription payments unlock signal access after trial.</b>
+</div>
+<div class="portal-info-card">
+<small>Visibility</small>
+<b>Hidden from normal user accounts.</b>
+</div>
+</div>
+</div>
+</div>
 </section>
-
 <div class="container">
 <div class="grid">
 <div class="card span-12" style="flex-direction:row; justify-content:space-between; align-items:center; padding: 10px 20px;">
-   <div style="font-size:0.75rem;"><span style="color:var(--muted)">SYMBOL:</span> <b id="dsSymbol">--</b></div>
-   <div style="font-size:0.75rem;"><span style="color:var(--muted)">TF:</span> <b id="dsTF">--</b></div>
-   <div style="font-size:0.75rem;"><span style="color:var(--muted)">CANDLES:</span> <b id="dsCandles">0</b></div>
-   <div style="font-size:0.75rem;"><span style="color:var(--muted)">SOCKET:</span> <b id="dsSocket" style="color:var(--neutral)">DISCONNECTED</b></div>
-   <div style="font-size:0.75rem;"><span style="color:var(--muted)">LAST UPDATE:</span> <b id="dsUpdate">--</b></div>
+<div style="font-size:0.75rem;"><span style="color:var(--muted)">SYMBOL:</span> <b id="dsSymbol">--</b></div>
+<div style="font-size:0.75rem;"><span style="color:var(--muted)">TF:</span> <b id="dsTF">--</b></div>
+<div style="font-size:0.75rem;"><span style="color:var(--muted)">CANDLES:</span> <b id="dsCandles">0</b></div>
+<div style="font-size:0.75rem;"><span style="color:var(--muted)">SOCKET:</span> <b id="dsSocket" style="color:var(--neutral)">DISCONNECTED</b></div>
+<div style="font-size:0.75rem;"><span style="color:var(--muted)">LAST UPDATE:</span> <b id="dsUpdate">--</b></div>
 </div>
-
+<div class="card span-12 pattern-open daily-signal-panel" id="dailySignalPanel">
+<h3>Daily Signal Pattern <span class="signal-limit-badge">2 signals/day • Signal A + Signal B</span></h3>
+<div class="daily-signal-grid">
+<div class="daily-signal-card"><small>SIGNAL A</small><b id="signalAName">WAITING</b><span id="signalADetail">Live pattern sync pending...</span></div>
+<div class="daily-signal-card"><small>SIGNAL B</small><b id="signalBName">WAITING</b><span id="signalBDetail">Second opportunity is locked until the next confirmed setup.</span></div>
+<div class="daily-signal-card"><small>ACTIVE PLATFORM</small><b id="patternPlatform">--</b><span id="patternSync">Broker, symbol and timeframe synced.</span></div>
+<div class="daily-signal-card"><small>SUBSCRIPTION GUARD</small><b id="subGuardText">FREE TESTER</b><span>Sensitive modules stay under subscription. Trade signal view stays clean.</span></div>
+</div>
+</div>
 <div class="card span-8">
-  <h3>Market Dynamics <span id="maOverlay" style="text-transform:none; color:var(--primary)"></span></h3>
-  <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; font-size:.62rem; color:var(--primary)">
-    <span style="border:1px solid rgba(56,189,248,.25);border-radius:999px;padding:4px 8px">Time Axis: ON</span>
-    <span style="border:1px solid rgba(56,189,248,.25);border-radius:999px;padding:4px 8px">Price Axis: ON</span>
-    <span style="border:1px solid rgba(56,189,248,.25);border-radius:999px;padding:4px 8px">Entry / SL / TP: ON</span>
-    <span style="border:1px solid rgba(56,189,248,.25);border-radius:999px;padding:4px 8px">Broker Overlay: <b id="brokerOverlayName">Binance</b></span>
-  </div>
-  <canvas id="mainChart" height="380"></canvas>
+<h3>Market Dynamics <span id="maOverlay" style="text-transform:none; color:var(--primary)"></span></h3>
+<div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; font-size:.62rem; color:var(--primary)">
+<span style="border:1px solid rgba(56,189,248,.25);border-radius:999px;padding:4px 8px">Time Axis: ON</span>
+<span style="border:1px solid rgba(56,189,248,.25);border-radius:999px;padding:4px 8px">Price Axis: ON</span>
+<span style="border:1px solid rgba(56,189,248,.25);border-radius:999px;padding:4px 8px">Entry / SL / TP: ON</span>
+<span style="border:1px solid rgba(56,189,248,.25);border-radius:999px;padding:4px 8px">Broker Overlay: <b id="brokerOverlayName">Binance</b></span>
 </div>
-
+<canvas height="380" id="mainChart"></canvas>
+</div>
 <div class="card span-4">
-  <h3>Executive Summary</h3>
-  <div id="signalGrade" class="grade-badge">A</div>
-  <div id="signalText" class="big-signal">NEUTRAL</div>
-  <div class="confidence-box">
-    <div style="display:flex; justify-content:space-between; font-size:0.75rem">
-      <span>Signal Confidence / Probability</span>
-      <span id="confValue">0%</span>
-    </div>
-    <div class="progress-bg"><div id="confBar" class="progress-fill" style="width:0%"></div></div>
-  </div>
-  <div class="summary-mini">
-    <div><span>Market Bias</span><b id="marketBias">--</b></div>
-    <div><span>Setup Quality</span><b id="summaryQuality">--</b></div>
-    <div><span>Trend State</span><b id="trendState">--</b></div>
-    <div><span>Volume State</span><b id="volumeState">--</b></div>
-  </div>
-
-  <div id="signalExplainer" style="font-size:0.8rem; background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; line-height:1.5; min-height: 120px;">Waiting for live market data stream...</div>
-  <div id="ntSignalSwitchMount" class="nt-signal-switch-mount" style="margin-top:12px"></div>
-  <div id="liveAlignmentBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.25); background:rgba(15,23,42,.75); font-size:.75rem; line-height:1.55">
-    <b style="color:var(--primary)">LIVE ALIGNMENT MONITOR</b><br>
-    <span>Symbol: <b id="alignSymbol">--</b></span><br>
-    <span>NetTrack: <b id="alignNet">--</b> <small id="alignNetMove" style="color:#94a3b8">--</small></span><br>
-    <span><span id="alignBrokerName">Broker</span>: <b id="alignBroker">--</b> <small id="alignBrokerMove" style="color:#94a3b8">--</small></span><br>
-    <span>Difference: <b id="alignDiff">--</b></span><br>
-    <span>Sync: <b id="alignSync">WAITING</b></span><br>
-    <span>Mode: <b id="alignMode">Signal view only</b></span>
-  </div>
-  <div id="netTrackBotBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(34,197,94,.25); background:linear-gradient(135deg, rgba(34,197,94,.09), rgba(15,23,42,.88)); font-size:.75rem; line-height:1.55">
-    <b style="color:#22c55e">NETTRACK BOT — SIGNAL ENGINE</b><br>
-    <small style="color:#94a3b8">Final signal-platform mode — no client fund custody, no wallet trading, no auto-execution. The bot scans the market and gives signals only.</small>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
-      <div style="padding:8px;border:1px solid rgba(34,197,94,.22);border-radius:8px;background:rgba(2,6,23,.30)"><small style="color:#94a3b8">Trial status</small><br><b id="trialStatus" style="color:#22c55e">30 DAYS FREE</b></div>
-      <div style="padding:8px;border:1px solid rgba(56,189,248,.22);border-radius:8px;background:rgba(2,6,23,.30)"><small style="color:#94a3b8">Days remaining</small><br><b id="trialDaysLeft" style="color:#38bdf8">30</b></div>
-    </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
-      <label style="font-size:.65rem;color:#94a3b8">Plan
-        <select id="subscriptionPlan" onchange="updateNetTrackBotPanel()" style="width:100%;margin-top:4px;background:#0f172a;color:white;border:1px solid #334155;border-radius:6px;padding:7px">
-          <option value="FREE">Free Trial — 30 Days</option>
-          <option value="BASIC">Basic — R99 / month</option>
-          <option value="PRO">Pro — R199 / month</option>
-          <option value="PREMIUM">Premium — R299 / month</option>
-        </select>
-      </label>
-      <label style="font-size:.65rem;color:#94a3b8">Unlock method
-        <select id="subscriptionMethod" onchange="updateNetTrackBotPanel()" style="width:100%;margin-top:4px;background:#0f172a;color:white;border:1px solid #334155;border-radius:6px;padding:7px">
-          <option>Trial access</option><option>Subscription unlock test</option><option>PayFast webhook later</option><option>Ozow webhook later</option><option>Card provider later</option>
-        </select>
-      </label>
-    </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:8px">
-      <button class="btn btn-success" style="padding:8px" onclick="runNetTrackBot('ACTIVATE_TRIAL')">ACTIVATE FREE TRIAL</button>
-      <button class="btn btn-success" style="padding:8px" onclick="runNetTrackBot('PAY_SUBSCRIPTION')">MARK SUBSCRIPTION PAID</button>
-      <button class="btn btn-danger" style="padding:8px" onclick="runNetTrackBot('RESET_TRIAL')">RESET TEST</button>
-    </div>
-    <div style="margin-top:8px; border-top:1px solid rgba(148,163,184,.16); padding-top:8px">
-      <span>Access mode: <b id="botPaymentStatus">FREE TRIAL</b></span><br>
-      <span>Subscription value: <b id="botZarValue">R 0.00</b></span><br>
-      <span>Signal access: <b id="botUsable">ACTIVE</b></span><br>
-      <span>Current signal: <b id="botSignal">--</b></span><br>
-      <span>Signal action: <b id="botTpReturn">User trades on own broker</b></span><br>
-      <span>Bot result: <b id="botResult">SIGNAL-ONLY MODE READY</b></span>
-    </div>
-    <small style="display:block;color:#eab308;margin-top:8px">Compliance guard: NetTrack does not hold client funds, does not place trades for users, and does not guarantee profit. It provides market signals only.</small>
-  </div>
-
-  <div id="walletBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.28); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
-    <b style="color:#38bdf8">SUBSCRIPTION ACCESS</b><br>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
-      <div><small style="color:#94a3b8">Current plan</small><br><b id="walletLevel" style="color:#22c55e">FREE TRIAL</b></div>
-      <div><small style="color:#94a3b8">Trial remaining</small><br><b id="walletPending" style="color:#eab308">30 days</b></div>
-      <div><small style="color:#94a3b8">Monthly fee</small><br><b id="walletAvailable" style="color:#38bdf8">R 0.00</b></div>
-      <div><small style="color:#94a3b8">Subscription paid</small><br><b id="walletCommission" style="color:#22c55e">R 0.00</b></div>
-    </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
-      <button class="btn btn-success" style="padding:8px" onclick="runNetTrackBot('ACTIVATE_TRIAL')">START 30-DAY FREE</button>
-      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="runNetTrackBot('PAY_SUBSCRIPTION')">UPGRADE PLAN</button>
-    </div>
-  </div>
-
-  <div id="verificationBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(234,179,8,.28); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
-    <b style="color:#eab308">VERIFICATION CENTER</b><br>
-    <div style="margin-top:8px">
-      <span>Email: <b style="color:#22c55e">VERIFIED</b></span><br>
-      <span>Phone: <b id="kycPhone" style="color:#eab308">PENDING</b></span><br>
-      <span>ID: <b id="kycId" style="color:#eab308">PENDING</b></span><br>
-      <span>Documents: <b id="kycDocs" style="color:#eab308">PENDING</b></span><br>
-      <span>Status: <b id="kycStatus">BASIC ACCOUNT</b></span>
-    </div>
-    <div class="progress-bg" style="margin-top:8px"><div id="kycProgress" class="progress-fill" style="width:25%;background:#eab308"></div></div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
-      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="verifyStep('PHONE')">PHONE</button>
-      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="verifyStep('ID')">ID DETAILS</button>
-    </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
-      <label class="btn" style="padding:8px;background:#334155;color:#e2e8f0;text-align:center;cursor:pointer">ID COPY<input type="file" accept="image/*,.pdf" style="display:none" onchange="verifyDocumentUpload('copy',this)"></label>
-      <label class="btn" style="padding:8px;background:#334155;color:#e2e8f0;text-align:center;cursor:pointer">REAL ID FRONT/BACK<input type="file" accept="image/*,.pdf" multiple style="display:none" onchange="verifyDocumentUpload('real',this)"></label>
-    </div>
-  </div>
-
-  <div id="txBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(148,163,184,.20); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
-    <b style="color:#cbd5e1">SUBSCRIPTION EVENT HISTORY</b><br>
-    <div id="txHistory" style="margin-top:8px; max-height:120px; overflow:auto; color:#cbd5e1">No subscription events yet.</div>
-  </div>
-
-  <div id="revenueBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(34,197,94,.20); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
-    <b style="color:#22c55e">SUBSCRIPTION REVENUE</b><br>
-    <span>Plans: <b>R99 / R199 / R299</b></span><br>
-    <span>Today: <b id="commissionToday">R 0.00</b></span><br>
-    <span>Total: <b id="commissionTotal">R 0.00</b></span>
-  </div>
-
-  <div id="userPortalBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.34); background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(8,13,24,.92)); font-size:.75rem; line-height:1.55">
-    <b style="color:#38bdf8">USER PORTAL</b><br>
-    <small style="color:#94a3b8">Signal subscription, verification and access overview.</small>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-      <div><small style="color:#94a3b8">Plan</small><br><b id="upZar" style="color:#22c55e">FREE TRIAL</b></div>
-      <div><small style="color:#94a3b8">Monthly price</small><br><b id="upUsd">R 0.00</b></div>
-      <div><small style="color:#94a3b8">Trial started</small><br><b id="upUsdt">Not started</b></div>
-      <div><small style="color:#94a3b8">Trial expires</small><br><b id="upBtc">--</b></div>
-      <div><small style="color:#94a3b8">Access</small><br><b id="upEth">Signals only</b></div>
-      <div><small style="color:#94a3b8">Status</small><br><b id="upWithdrawable" style="color:#eab308">TRIAL READY</b></div>
-    </div>
-    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <label><small style="color:#94a3b8">Broker / chart platform tester</small>
-        <select id="withdrawMethod" style="width:100%;margin-top:4px;background:#111827;color:#fff;border:1px solid #334155;border-radius:6px;padding:7px">
-          <option>Binance</option><option>Bybit</option><option>MT5</option><option>MT4</option><option>XM</option><option>Exness</option><option>Deriv</option><option>ICMarkets</option>
-        </select>
-      </label>
-    </div>
-    <div style="margin-top:8px;padding:8px;border:1px solid rgba(56,189,248,.18);border-radius:8px;background:rgba(2,6,23,.35);color:#cbd5e1;font-size:.72rem">
-      <b style="color:#38bdf8">Signal platform rule:</b> NetTrack gives entries, stop loss, take profit, confidence and alignment. Users place trades manually inside their own broker account.
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-      <button class="btn btn-success" style="padding:8px" onclick="runNetTrackBot('ACTIVATE_TRIAL')">START FREE TRIAL</button>
-      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="runNetTrackBot('PAY_SUBSCRIPTION')">MARK PAID / UPGRADE</button>
-    </div>
-  </div>
-
-  <div id="ownerPortalBox" style="display:none;margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(234,179,8,.42); background:linear-gradient(180deg,rgba(30,21,7,.92),rgba(15,23,42,.92)); font-size:.75rem; line-height:1.55">
-    <b style="color:#facc15">OWNER PORTAL</b><br>
-    <small style="color:#fef3c7">Visible only to the owner account.</small>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-      <div><small style="color:#cbd5e1">Subscription revenue</small><br><b id="ownerCommission" style="color:#22c55e">R 0.00</b></div>
-      <div><small style="color:#cbd5e1">Owner withdrawable</small><br><b id="ownerWithdrawable" style="color:#eab308">R 0.00</b></div>
-      <div><small style="color:#cbd5e1">Feature unlocks monitored</small><br><b id="ownerPayments">R 0.00</b></div>
-      <div><small style="color:#cbd5e1">Users</small><br><b id="ownerUsers">1 active</b></div>
-    </div>
-    <div style="margin-top:8px;border-top:1px solid rgba(250,204,21,.22);padding-top:8px">
-      <span>Revenue account: <b>Subscription income ledger</b></span><br>
-      <span>Owner email: <b>engobeni842@gmail.com</b></span><br>
-      <span>Security: <b>Email + document verification + Supabase RLS</b></span>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-      <button class="btn btn-success" style="padding:8px" onclick="ownerWithdrawCommission()">WITHDRAW REVENUE</button>
-      <button class="btn" style="padding:8px;background:#334155;color:#e2e8f0" onclick="alert('Subscription ledger ready. Live payment confirmation requires PayFast/Ozow webhook.')">VIEW LEDGER</button>
-    </div>
-  </div>
+<h3>Executive Summary</h3>
+<div class="grade-badge" id="signalGrade">A</div>
+<div class="big-signal" id="signalText">NEUTRAL</div>
+<div class="confidence-box">
+<div style="display:flex; justify-content:space-between; font-size:0.75rem">
+<span>Signal Confidence / Probability</span>
+<span id="confValue">0%</span>
+</div>
+<div class="progress-bg"><div class="progress-fill" id="confBar" style="width:0%"></div></div>
+</div>
+<div class="summary-mini">
+<div><span>Market Bias</span><b id="marketBias">--</b></div>
+<div><span>Setup Quality</span><b id="summaryQuality">--</b></div>
+<div><span>Trend State</span><b id="trendState">--</b></div>
+<div><span>Volume State</span><b id="volumeState">--</b></div>
+</div>
+<div id="signalExplainer" style="font-size:0.8rem; background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; line-height:1.5; min-height: 120px;">Waiting for live market data stream...</div>
+<div class="nt-signal-switch-mount" id="ntSignalSwitchMount" style="display:none"></div>
+<div id="liveAlignmentBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.25); background:rgba(15,23,42,.75); font-size:.75rem; line-height:1.55">
+<b style="color:var(--primary)">LIVE ALIGNMENT MONITOR</b><br/>
+<span>Symbol: <b id="alignSymbol">--</b></span><br/>
+<span>NetTrack: <b id="alignNet">--</b> <small id="alignNetMove" style="color:#94a3b8">--</small></span><br/>
+<span><span id="alignBrokerName">Broker</span>: <b id="alignBroker">--</b> <small id="alignBrokerMove" style="color:#94a3b8">--</small></span><br/>
+<span>Difference: <b id="alignDiff">--</b></span><br/>
+<span>Sync: <b id="alignSync">WAITING</b></span><br/>
+<span>Mode: <b id="alignMode">Signal view only</b></span>
 </div>
 
+<div id="walletBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.28); background:rgba(15,23,42,.78); font-size:.75rem; line-height:1.55">
+<b style="color:#38bdf8">SUBSCRIPTION ACCESS</b><br/>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+<div><small style="color:#94a3b8">Current plan</small><br/><b id="walletLevel" style="color:#22c55e">FREE TRIAL</b></div>
+<div><small style="color:#94a3b8">Trial remaining</small><br/><b id="walletPending" style="color:#eab308">30 days</b></div>
+<div><small style="color:#94a3b8">Monthly fee</small><br/><b id="walletAvailable" style="color:#38bdf8">R 0.00</b></div>
+<div><small style="color:#94a3b8">Access status</small><br/><b id="walletCommission" style="color:#22c55e">EMAIL VERIFIED</b></div>
+</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+<button class="btn btn-success" onclick="runNetTrackBot('ACTIVATE_TRIAL')" style="padding:8px">START 30-DAY FREE</button>
+<button class="btn" onclick="runNetTrackBot('PAY_SUBSCRIPTION')" style="padding:8px;background:#334155;color:#e2e8f0">UPGRADE PLAN</button>
+</div>
+</div>
+
+
+
+<div id="userPortalBox" style="margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(56,189,248,.34); background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(8,13,24,.92)); font-size:.75rem; line-height:1.55">
+<b style="color:#38bdf8">USER PORTAL</b><br/>
+<small style="color:#94a3b8">Signal subscription, verification and access overview.</small>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+<div><small style="color:#94a3b8">Plan</small><br/><b id="upZar" style="color:#22c55e">FREE TRIAL</b></div>
+<div><small style="color:#94a3b8">Monthly price</small><br/><b id="upUsd">R 0.00</b></div>
+<div><small style="color:#94a3b8">Trial started</small><br/><b id="upUsdt">Not started</b></div>
+<div><small style="color:#94a3b8">Trial expires</small><br/><b id="upBtc">--</b></div>
+<div><small style="color:#94a3b8">Access</small><br/><b id="upEth">Signals only</b></div>
+<div><small style="color:#94a3b8">Status</small><br/><b id="upWithdrawable" style="color:#eab308">TRIAL READY</b></div>
+</div>
+<div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<label><small style="color:#94a3b8">Broker / chart platform tester</small>
+<select id="withdrawMethod" style="width:100%;margin-top:4px;background:#111827;color:#fff;border:1px solid #334155;border-radius:6px;padding:7px">
+<option>Binance</option><option>Bybit</option><option>MT5</option><option>MT4</option><option>XM</option><option>Exness</option><option>Deriv</option><option>ICMarkets</option>
+</select>
+</label>
+</div>
+<div style="margin-top:8px;padding:8px;border:1px solid rgba(56,189,248,.18);border-radius:8px;background:rgba(2,6,23,.35);color:#cbd5e1;font-size:.72rem">
+<b style="color:#38bdf8">Signal platform rule:</b> NetTrack gives entries, stop loss, take profit, confidence and alignment. Users place trades manually inside their own broker account.
+    </div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+<button class="btn btn-success" onclick="runNetTrackBot('ACTIVATE_TRIAL')" style="padding:8px">START FREE TRIAL</button>
+<button class="btn" onclick="runNetTrackBot('PAY_SUBSCRIPTION')" style="padding:8px;background:#334155;color:#e2e8f0">MARK PAID / UPGRADE</button>
+</div>
+</div>
+<div id="ownerPortalBox" style="display:none;margin-top:12px; padding:12px; border-radius:10px; border:1px solid rgba(234,179,8,.42); background:linear-gradient(180deg,rgba(30,21,7,.92),rgba(15,23,42,.92)); font-size:.75rem; line-height:1.55">
+<b style="color:#facc15">OWNER PORTAL</b><br/>
+<small style="color:#fef3c7">Visible only to the owner account.</small>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+<div><small style="color:#cbd5e1">Subscription access revenue</small><br/><b id="ownerCommission" style="color:#22c55e">R 0.00</b></div>
+<div><small style="color:#cbd5e1">Owner balance</small><br/><b id="ownerWithdrawable" style="color:#eab308">R 0.00</b></div>
+<div><small style="color:#cbd5e1">Feature unlocks</small><br/><b id="ownerPayments">R 0.00</b></div>
+<div><small style="color:#cbd5e1">Users</small><br/><b id="ownerUsers">1 active</b></div>
+</div>
+<div style="margin-top:8px;border-top:1px solid rgba(250,204,21,.22);padding-top:8px">
+<span>Access account: <b>Subscription ledger</b></span><br/>
+<span>Owner email: <b>engobeni842@gmail.com</b></span><br/>
+<span>Security: <b>Email verification + Supabase RLS</b></span>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+<button class="btn btn-success" onclick="ownerWithdrawCommission()" style="padding:8px">OWNER REPORT</button>
+<button class="btn" onclick="alert('Subscription ledger ready. Live payment confirmation requires PayFast/Ozow webhook.')" style="padding:8px;background:#334155;color:#e2e8f0">VIEW LEDGER</button>
+</div>
+</div>
+</div>
 <div class="card span-6">
-  <h3>Win/Loss Analytics</h3>
-  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px; margin-bottom:15px">
-    <div class="card" style="padding:10px; background:#1e293b; align-items:center">
-      <small>Win Rate</small><b id="anRate" style="font-size:1.5rem">0%</b>
-    </div>
-    <div class="card" style="padding:10px; background:#1e293b; align-items:center">
-      <small>Profit Factor</small><b id="anPF" style="font-size:1.5rem">0.0</b>
-    </div>
-    <div class="card" style="padding:10px; background:#1e293b; align-items:center">
-      <small>Current Streak</small><b id="anStreak" style="font-size:1.5rem">0</b>
-    </div>
-  </div>
-  <div class="stat-row"><span>Total Gains</span><b id="anWins" style="color:var(--buy)">0</b></div>
-  <div class="stat-row"><span>Total Losses</span><b id="anLoss" style="color:var(--sell)">0</b></div>
-  <div class="stat-row"><span>Max Drawdown</span><b id="anDD" style="color:var(--sell)">0.0%</b></div>
+<h3>Win/Loss Analytics</h3>
+<div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px; margin-bottom:15px">
+<div class="card" style="padding:10px; background:#1e293b; align-items:center">
+<small>Win Rate</small><b id="anRate" style="font-size:1.5rem">0%</b>
 </div>
-
+<div class="card" style="padding:10px; background:#1e293b; align-items:center">
+<small>Profit Factor</small><b id="anPF" style="font-size:1.5rem">0.0</b>
+</div>
+<div class="card" style="padding:10px; background:#1e293b; align-items:center">
+<small>Current Streak</small><b id="anStreak" style="font-size:1.5rem">0</b>
+</div>
+</div>
+<div class="stat-row"><span>Total Gains</span><b id="anWins" style="color:var(--buy)">0</b></div>
+<div class="stat-row"><span>Total Losses</span><b id="anLoss" style="color:var(--sell)">0</b></div>
+<div class="stat-row"><span>Max Drawdown</span><b id="anDD" style="color:var(--sell)">0.0%</b></div>
+</div>
 <div class="card span-6">
-  <h3>Equity Curve (Performance)</h3>
-  <canvas id="equityChart" height="180"></canvas>
+<h3>Equity Curve (Performance)</h3>
+<canvas height="180" id="equityChart"></canvas>
 </div>
-
 <div class="card span-4">
-  <h3>RSI Oscillator (14)</h3>
-  <canvas id="rsiChart" height="150"></canvas>
+<h3>RSI Oscillator (14)</h3>
+<canvas height="150" id="rsiChart"></canvas>
 </div>
-
 <div class="card span-4">
-  <h3>MACD Momentum (12, 26, 9)</h3>
-  <canvas id="macdChart" height="150"></canvas>
+<h3>MACD Momentum (12, 26, 9)</h3>
+<canvas height="150" id="macdChart"></canvas>
 </div>
-
 <div class="card span-4">
-  <h3>Indicator Convergence</h3>
-  <div class="stat-row"><span>RSI Oscillator</span><span id="voteRSI" class="vote-badge bg-neutral">NEUTRAL</span></div>
-  <div class="stat-row"><span>MACD Momentum</span><span id="voteMACD" class="vote-badge bg-neutral">NEUTRAL</span></div>
-  <div class="stat-row"><span>Trend Structure</span><span id="voteMA" class="vote-badge bg-neutral">NEUTRAL</span></div>
-  <div class="stat-row"><span>Candle Sentiment</span><span id="votePattern" class="vote-badge bg-neutral">NEUTRAL</span></div>
-  <div class="stat-row"><span>S/R Barrier</span><span id="voteSR" class="vote-badge bg-neutral">NEUTRAL</span></div>
+<h3>Indicator Convergence</h3>
+<div class="stat-row"><span>RSI Oscillator</span><span class="vote-badge bg-neutral" id="voteRSI">NEUTRAL</span></div>
+<div class="stat-row"><span>MACD Momentum</span><span class="vote-badge bg-neutral" id="voteMACD">NEUTRAL</span></div>
+<div class="stat-row"><span>Trend Structure</span><span class="vote-badge bg-neutral" id="voteMA">NEUTRAL</span></div>
+<div class="stat-row"><span>Candle Sentiment</span><span class="vote-badge bg-neutral" id="votePattern">NEUTRAL</span></div>
+<div class="stat-row"><span>S/R Barrier</span><span class="vote-badge bg-neutral" id="voteSR">NEUTRAL</span></div>
 </div>
-
 <div class="card span-4">
-  <h3>Smart Confirmation</h3>
-  <div class="stat-row"><span>Volume Pressure</span><span id="voteVolume" class="vote-badge bg-neutral">NEUTRAL</span></div>
-  <div id="volumeDebug" class="volume-debug">Current Vol: -- | Avg Vol: -- | Ratio: --</div>
-  <div class="stat-row"><span>MTF Agreement</span><span id="voteMTF" class="vote-badge bg-neutral">WAITING</span></div>
-  <div class="mini-grid" style="margin-top:10px">
-    <div class="mini-box">1m<b id="mtf1m">--</b></div>
-    <div class="mini-box">5m<b id="mtf5m">--</b></div>
-    <div class="mini-box">15m<b id="mtf15m">--</b></div>
-    <div class="mini-box">1h<b id="mtf1h">--</b></div>
-  </div>
-  <small style="color:var(--muted); margin-top:10px">Signals are blocked when higher timeframes disagree or volume does not support the move.</small>
+<h3>Smart Confirmation</h3>
+<div class="stat-row"><span>Volume Pressure</span><span class="vote-badge bg-neutral" id="voteVolume">NEUTRAL</span></div>
+<div class="volume-debug" id="volumeDebug">Current Vol: -- | Avg Vol: -- | Ratio: --</div>
+<div class="stat-row"><span>MTF Agreement</span><span class="vote-badge bg-neutral" id="voteMTF">WAITING</span></div>
+<div class="mini-grid" style="margin-top:10px">
+<div class="mini-box">1m<b id="mtf1m">--</b></div>
+<div class="mini-box">5m<b id="mtf5m">--</b></div>
+<div class="mini-box">15m<b id="mtf15m">--</b></div>
+<div class="mini-box">1h<b id="mtf1h">--</b></div>
 </div>
-
+<small style="color:var(--muted); margin-top:10px">Signals are blocked when higher timeframes disagree or volume does not support the move.</small>
+</div>
 <div class="card span-4">
-  <h3>Trade Quality & Levels</h3>
-  <div style="display:flex; justify-content:space-between; font-size:0.75rem">
-    <span>Trade Quality</span>
-    <b id="qualityValue">0 / 100</b>
-  </div>
-  <div class="quality-bar"><div id="qualityFill" class="quality-fill"></div></div>
-  <div class="level-grid">
-    <div class="level-box"><span>Entry</span><b id="planEntry">--</b></div>
-    <div class="level-box"><span>Stop Loss</span><b id="planSL">--</b></div>
-    <div class="level-box"><span>Take Profit</span><b id="planTP">--</b></div>
-    <div class="level-box"><span>Risk/Reward</span><b id="planRR">--</b></div>
-    <div class="level-box"><span>Risk Amount</span><b id="planRiskAmt">--</b></div>
-    <div class="level-box"><span>Reward Amount</span><b id="planRewardAmt">--</b></div>
-    <div class="level-box"><span>ATR</span><b id="planATR">--</b></div>
-    <div class="level-box"><span>SL / TP Distance</span><b id="planDistance">--</b></div>
-  </div>
-  <div class="watch-note" id="planNote">Waiting for a clean setup. This panel shows levels only when the setup has enough quality.</div>
+<h3>Trade Quality &amp; Levels</h3>
+<div style="display:flex; justify-content:space-between; font-size:0.75rem">
+<span>Trade Quality</span>
+<b id="qualityValue">0 / 100</b>
 </div>
-
-
-<div id="testerPatternPanel" class="card span-4 pattern-open">
-  <h3>Open Signal Pattern Generator <span style="color:#22c55e">FREE</span></h3>
-  <div class="level-grid">
-    <div class="level-box"><span>Pattern</span><b id="testerPatternName">Waiting...</b></div>
-    <div class="level-box"><span>Direction</span><b id="testerPatternSide">--</b></div>
-    <div class="level-box"><span>Confidence</span><b id="testerPatternConf">0%</b></div>
-    <div class="level-box"><span>Take Profit</span><b id="testerPatternTP">--</b></div>
-  </div>
-  <div class="pattern-signal" id="testerPatternSignal">TESTER READY</div>
-  <div class="pattern-note" id="testerPatternNote">This is the one open free pattern. Charts, broker overlay sync view, entry and take-profit levels remain available for testing. Advanced modules are locked under subscription.</div>
+<div class="quality-bar"><div class="quality-fill" id="qualityFill"></div></div>
+<div class="level-grid">
+<div class="level-box"><span>Entry</span><b id="planEntry">--</b></div>
+<div class="level-box"><span>Stop Loss</span><b id="planSL">--</b></div>
+<div class="level-box"><span>Take Profit</span><b id="planTP">--</b></div>
+<div class="level-box"><span>Risk/Reward</span><b id="planRR">--</b></div>
+<div class="level-box"><span>Risk Amount</span><b id="planRiskAmt">--</b></div>
+<div class="level-box"><span>Reward Amount</span><b id="planRewardAmt">--</b></div>
+<div class="level-box"><span>ATR</span><b id="planATR">--</b></div>
+<div class="level-box"><span>SL / TP Distance</span><b id="planDistance">--</b></div>
 </div>
-
+<div class="watch-note" id="planNote">Waiting for a clean setup. This panel shows levels only when the setup has enough quality.</div>
+</div>
+<div class="card span-4 pattern-open" id="testerPatternPanel">
+<h3>Open Signal Pattern Generator <span style="color:#22c55e">FREE</span></h3>
+<div class="level-grid">
+<div class="level-box"><span>Pattern</span><b id="testerPatternName">Waiting...</b></div>
+<div class="level-box"><span>Direction</span><b id="testerPatternSide">--</b></div>
+<div class="level-box"><span>Confidence</span><b id="testerPatternConf">0%</b></div>
+<div class="level-box"><span>Take Profit</span><b id="testerPatternTP">--</b></div>
+</div>
+<div class="pattern-signal" id="testerPatternSignal">TESTER READY</div>
+<div class="pattern-note" id="testerPatternNote">This is the one open free pattern. Charts, broker overlay sync view, entry and take-profit levels remain available for testing. Advanced modules are locked under subscription.</div>
+</div>
 <div class="card span-4">
-  <h3>Historical Backtest</h3>
-  <div style="display:flex; gap:10px; margin-bottom:10px">
-    <select id="btLookback" style="margin:0">
-      <option value="300" selected>300 Candles</option>
-      <option value="500">500 Candles</option>
-      <option value="1000">1000 Candles</option>
-    </select>
-    <button class="btn btn-primary" style="margin:0; width:auto" onclick="runAdvancedBacktest()">Run Test</button>
-  </div>
-  <div id="btResults" style="font-size:0.85rem">
-    <div class="stat-row"><span>Simulated Win Rate</span><b id="btRate">0%</b></div>
-    <div class="stat-row"><span>Sample Size</span><b id="btSample">0</b></div>
-  </div>
+<h3>Historical Backtest</h3>
+<div style="display:flex; gap:10px; margin-bottom:10px">
+<select id="btLookback" style="margin:0">
+<option selected="" value="300">300 Candles</option>
+<option value="500">500 Candles</option>
+<option value="1000">1000 Candles</option>
+</select>
+<button class="btn btn-primary" onclick="runAdvancedBacktest()" style="margin:0; width:auto">Run Test</button>
 </div>
-
-
+<div id="btResults" style="font-size:0.85rem">
+<div class="stat-row"><span>Simulated Win Rate</span><b id="btRate">0%</b></div>
+<div class="stat-row"><span>Sample Size</span><b id="btSample">0</b></div>
+</div>
+</div>
 <div class="card span-4">
-  <h3>Strongest Pair Scanner</h3>
-  <div id="scannerBest" class="scanner-best">
-    <small>Best Opportunity Now</small>
-    <b>Scanning...</b>
-  </div>
-  <div id="scannerStatus" class="watch-note" style="margin-top:0">Scanning BTC, ETH, SOL and BNB...</div>
-  <div id="pairScanner">
-    <div class="scanner-row"><span>BTCUSDT</span><b class="scanner-score">--</b></div>
-    <div class="scanner-row"><span>ETHUSDT</span><b class="scanner-score">--</b></div>
-    <div class="scanner-row"><span>SOLUSDT</span><b class="scanner-score">--</b></div>
-    <div class="scanner-row"><span>BNBUSDT</span><b class="scanner-score">--</b></div>
-  </div>
+<h3>Strongest Pair Scanner</h3>
+<div class="scanner-best" id="scannerBest">
+<small>Best Opportunity Now</small>
+<b>Scanning...</b>
 </div>
-
-
+<div class="watch-note" id="scannerStatus" style="margin-top:0">Scanning BTC, ETH, SOL and BNB...</div>
+<div id="pairScanner">
+<div class="scanner-row"><span>BTCUSDT</span><b class="scanner-score">--</b></div>
+<div class="scanner-row"><span>ETHUSDT</span><b class="scanner-score">--</b></div>
+<div class="scanner-row"><span>SOLUSDT</span><b class="scanner-score">--</b></div>
+<div class="scanner-row"><span>BNBUSDT</span><b class="scanner-score">--</b></div>
+</div>
+</div>
 <div class="card span-4">
-  <h3>Session Context</h3>
-  <label>Stake Calculator</label>
-  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px">
-    <input type="number" id="riskBal" value="1000" oninput="saveGlobalSettings()">
-    <input type="number" id="riskPct" value="2" oninput="saveGlobalSettings()">
-  </div>
-  <div class="stat-row"><span>Risk Stake</span><b id="calcStake">$20.00</b></div>
-  <textarea id="tradeJournal" placeholder="Current market thesis..." oninput="saveJournal()"></textarea>
+<h3>Session Context</h3>
+<label>Stake Calculator</label>
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px">
+<input id="riskBal" oninput="saveGlobalSettings()" type="number" value="1000"/>
+<input id="riskPct" oninput="saveGlobalSettings()" type="number" value="2"/>
 </div>
-
+<div class="stat-row"><span>Risk Stake</span><b id="calcStake">$20.00</b></div>
+<textarea id="tradeJournal" oninput="saveJournal()" placeholder="Current market thesis..."></textarea>
+</div>
 <div class="card span-12">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-    <h3>Signal & Trade History</h3>
-    <div style="display:flex; gap:8px"><button class="btn btn-outline" style="width:auto; margin:0" onclick="clearHistory()">Clear History</button><button class="btn btn-outline" style="width:auto; margin:0" onclick="exportCSV()">Export Data</button></div>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Time</th>
-          <th>Pair</th>
-          <th>TF</th>
-          <th>Price</th>
-          <th>Signal</th>
-          <th>Grading</th>
-          <th>Setup Quality</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="historyBody"></tbody>
-    </table>
-  </div>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+<h3>Signal &amp; Trade History</h3>
+<div style="display:flex; gap:8px"><button class="btn btn-outline" onclick="clearHistory()" style="width:auto; margin:0">Clear History</button><button class="btn btn-outline" onclick="exportCSV()" style="width:auto; margin:0">Export Data</button></div>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>Pair</th>
+<th>TF</th>
+<th>Price</th>
+<th>Signal</th>
+<th>Grading</th>
+<th>Setup Quality</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="historyBody"></tbody>
+</table>
 </div>
 </div>
 </div>
-
+</div>
 <div class="brand-footer">
-  <b>ARMOROO ENT Software and Apps</b><br>
-  <span>NetTrack Pro V13.4 Premium Signal Platform</span><br>
-  <span>Developed by Emmanuel Musiyiwa Ngobeni &amp; Thando Mbatha</span>
+<b>ARMOROO ENT Software and Apps</b><br/>
+<span>NetTrack Pro V13.8 Clean Signal Platform</span><br/>
+<span>Developed by Emmanuel Musiyiwa Ngobeni &amp; Thando Mbatha</span>
 </div>
-
 <div id="settingsModal" onclick="if(event.target===this) toggleSettings()">
 <div class="modal-content">
 <h3>User Preferences</h3>
@@ -965,8 +864,8 @@ h2,h3{font-size:.68rem!important;letter-spacing:.95px!important;margin-bottom:.9
 <option value="1h">1h</option>
 </select>
 <label>Global Risk %</label>
-<input type="number" id="prefRisk" value="2">
-<button class="btn btn-success" style="margin-top:20px" onclick="toggleSettings(true)">SAVE PREFERENCES</button>
+<input id="prefRisk" type="number" value="2"/>
+<button class="btn btn-success" onclick="toggleSettings(true)" style="margin-top:20px">SAVE PREFERENCES</button>
 </div>
 </div>
 <script>
@@ -1810,14 +1709,8 @@ function changeBroker() {
   if (n) n.innerText = selectedBrokerLabel();
   const a = document.getElementById("alignBrokerName");
   if (a) a.innerText = selectedBrokerLabel();
-  const m = document.getElementById("alignMode");
-  if (m) m.innerText = selectedBrokerLabel() + " comparison • signal view";
   lastAlignSnapshot = { net:null, broker:null, t:0 };
-  if (currentSignal) { drawMain(currentSignal); updateLiveAlignment(currentSignal); updateDashboard(currentSignal); }
-  try { if (typeof ntGenerateSignalSwitch === "function") {
-    const out = document.getElementById("ntSignalSwitchOutput");
-    if(out && !/Waiting/.test(out.innerText)) ntGenerateSignalSwitch();
-  }} catch(e){}
+  if (currentSignal) { drawMain(currentSignal); updateLiveAlignment(currentSignal); }
 }
 
 function brokerSpreadEstimate(price) {
@@ -2493,13 +2386,13 @@ function connectWS() {
   } catch(e) {}
 })();
 </script>
-
 <div id="authOverlay" style="position:fixed;inset:0;background:#020617;z-index:999999;display:flex;align-items:center;justify-content:center">
 <div style="background:#0f172a;padding:24px;border-radius:12px;width:340px;color:white">
 <h2>NetTrack Pro Login</h2>
-<input id="loginEmail" placeholder="Email" style="width:100%;margin:6px 0;padding:10px">
-<input id="loginPass" type="password" placeholder="Password" style="width:100%;margin:6px 0;padding:10px">
+<input id="loginEmail" placeholder="Email" style="width:100%;margin:6px 0;padding:10px"/>
+<input id="loginPass" placeholder="Password" style="width:100%;margin:6px 0;padding:10px" type="password"/>
 <button onclick="ntLogin()" style="width:100%;padding:10px;margin-top:8px">Login</button>
+<button onclick="ntForgotPassword()" style="width:100%;padding:10px;margin-top:8px;background:#0ea5e9;color:#020617;font-weight:900">Forgot password? Reset by email</button>
 <button onclick="ntSignup()" style="width:100%;padding:10px;margin-top:8px">Sign Up</button>
 <p style="font-size:12px">Frontend beta auth. Supabase verification can be connected next.</p>
 </div></div>
@@ -2526,7 +2419,6 @@ window.addEventListener('load',()=>{
  }
 });
 </script>
-
 <style>
 #pwaInstallBtn{position:fixed;left:18px;bottom:18px;z-index:999998;background:#38bdf8;color:#020617;border:none;border-radius:999px;padding:12px 16px;font-weight:900;box-shadow:0 12px 30px rgba(0,0,0,.45);display:none;cursor:pointer}
 #pwaInstallToast{position:fixed;left:18px;bottom:72px;z-index:999998;background:#0f172a;color:#e2e8f0;border:1px solid #1e293b;border-radius:12px;padding:12px 14px;font-size:12px;max-width:310px;display:none}
@@ -2677,8 +2569,6 @@ document.addEventListener('click', async (event) => {
   }
 });
 </script>
-
-
 <style>
 #authOverlay{
 background:
@@ -2831,7 +2721,6 @@ if(typeof ntSignup==='function'){
  };
 }
 </script>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const supabaseClient = supabase.createClient('https://gwmyifyalerernilzpqz.supabase.co','sb_publishable_sFY-MHu4vk5MNQHgi9lISQ_3w_e8YHv');
@@ -2864,8 +2753,6 @@ window.addEventListener('load', async ()=>{
  }
 });
 </script>
-
-
 <!-- NETTRACK PRO V10.7 FOREX AUTH UI UPGRADE -->
 <style id="nt-v107-auth-style">
 #authOverlay{
@@ -3174,7 +3061,6 @@ body.portal-open .brand-footer{ display:none; }
 #testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
 
 </style>
-
 <script id="nt-v107-auth-script">
 (function(){
   const supaUrl = "https://gwmyifyalerernilzpqz.supabase.co";
@@ -3321,8 +3207,6 @@ body.portal-open .brand-footer{ display:none; }
 })();
 </script>
 <!-- /NETTRACK PRO V10.7 FOREX AUTH UI UPGRADE -->
-
-
 <style>
 #ntUserPanel{position:fixed;bottom:20px;right:20px;z-index:9999;background:#081224;border:1px solid #1e3a5f;color:#fff;padding:12px;border-radius:12px;font-size:12px}
 /* V12.0 layout patch: separate Trading / User / Owner pages */
@@ -3440,10 +3324,10 @@ body.portal-open .brand-footer{ display:none; }
 
 </style>
 <div id="ntUserPanel">
-<b>NetTrack V10.8</b><br>
-User Profile ✓<br>
-Cloud Save Ready ✓<br>
-MT4 / MT5 Labels ✓<br>
+<b>NetTrack V10.8</b><br/>
+User Profile ✓<br/>
+Cloud Save Ready ✓<br/>
+MT4 / MT5 Labels ✓<br/>
 Exness Ready ✓
 </div>
 <script>
@@ -3452,7 +3336,6 @@ if(!localStorage.getItem('nt_profile')){
  localStorage.setItem('nt_profile',JSON.stringify({plan:'FREE',wins:0,losses:0}));
 }
 </script>
-
 <!-- NETTRACK PRO V10.9 USER + MARKETS + CLOUD FOUNDATION -->
 <style id="nt-v109-style">
 #ntUserPanel{display:none!important}
@@ -3614,7 +3497,6 @@ body.portal-open .brand-footer{ display:none; }
 #testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
 
 </style>
-
 <script id="nt-v109-script">
 (function(){
   const VERSION = "10.9";
@@ -3774,8 +3656,6 @@ body.portal-open .brand-footer{ display:none; }
 })();
 </script>
 <!-- /NETTRACK PRO V10.9 USER + MARKETS + CLOUD FOUNDATION -->
-
-
 <!-- NETTRACK PRO V11 PROFILE + MARKET HANDLING PATCH -->
 <style id="nt-v11-style">
 .nt-profile-modal{
@@ -3922,32 +3802,29 @@ body.portal-open .brand-footer{ display:none; }
 #testerPatternPanel .pattern-note{color:#94a3b8;font-size:.75rem;line-height:1.45;margin-top:8px}
 
 </style>
-
-<div id="ntProfileModal" class="nt-profile-modal">
-  <div class="nt-profile-box">
-    <h2>NetTrack User Profile</h2>
-    <div class="nt-profile-grid">
-      <div class="nt-profile-cell"><span>Email</span><b id="ntProfileEmail">Free User</b></div>
-      <div class="nt-profile-cell"><span>Plan</span><b style="color:#22c55e">FREE TESTING</b></div>
-      <div class="nt-profile-cell"><span>Preferred Market</span><b id="ntProfileMarket">Crypto</b></div>
-      <div class="nt-profile-cell"><span>Broker Mode</span><b>Signal View</b></div>
-      <div class="nt-profile-cell"><span>Saved Pair</span><b id="ntProfilePair">--</b></div>
-      <div class="nt-profile-cell"><span>Saved Timeframe</span><b id="ntProfileTF">--</b></div>
-    </div>
-    <div class="nt-market-warning">
+<div class="nt-profile-modal" id="ntProfileModal">
+<div class="nt-profile-box">
+<h2>NetTrack User Profile</h2>
+<div class="nt-profile-grid">
+<div class="nt-profile-cell"><span>Email</span><b id="ntProfileEmail">Free User</b></div>
+<div class="nt-profile-cell"><span>Plan</span><b style="color:#22c55e">FREE TESTING</b></div>
+<div class="nt-profile-cell"><span>Preferred Market</span><b id="ntProfileMarket">Crypto</b></div>
+<div class="nt-profile-cell"><span>Broker Mode</span><b>Signal View</b></div>
+<div class="nt-profile-cell"><span>Saved Pair</span><b id="ntProfilePair">--</b></div>
+<div class="nt-profile-cell"><span>Saved Timeframe</span><b id="ntProfileTF">--</b></div>
+</div>
+<div class="nt-market-warning">
       NetTrack currently provides signal intelligence. MT4/MT5/Exness auto-trading execution needs a later secure broker bridge.
     </div>
-    <div class="nt-profile-actions">
-      <button class="nt-btn-blue" onclick="ntSaveSessionNow()">Save Profile</button>
-      <button class="nt-btn-red" onclick="ntCloseProfile()">Close</button>
-    </div>
-  </div>
+<div class="nt-profile-actions">
+<button class="nt-btn-blue" onclick="ntSaveSessionNow()">Save Profile</button>
+<button class="nt-btn-red" onclick="ntCloseProfile()">Close</button>
 </div>
-
-<div id="ntModeBadge" class="nt-mode-badge">
-  <b>V11 Mode</b><br>Free signals • Cloud profile • Broker signal view
 </div>
-
+</div>
+<div class="nt-mode-badge" id="ntModeBadge">
+<b>V11 Mode</b><br/>Free signals • Cloud profile • Broker signal view
+</div>
 <script id="nt-v11-script">
 (function(){
   const FOREX_LIKE = ["EURUSD","GBPUSD","USDJPY","XAUUSD","R_75","R_100","BOOM1000","CRASH1000"];
@@ -4046,9 +3923,6 @@ body.portal-open .brand-footer{ display:none; }
 })();
 </script>
 <!-- /NETTRACK PRO V11 PROFILE + MARKET HANDLING PATCH -->
-
-
-
 <script>
 /* NETTRACK PRO V12.0 USER PORTAL + OWNER PORTAL FINAL PHASE */
 (function(){
@@ -4107,7 +3981,6 @@ body.portal-open .brand-footer{ display:none; }
   });
 })();
 </script>
-
 <script>
 /* V12.0 final layout patch: move user/owner portals into separate pages and protect owner page */
 (function(){
@@ -4199,8 +4072,6 @@ body.portal-open .brand-footer{ display:none; }
   });
 })();
 </script>
-
-
 <script>
 /* V12.4 Tester subscription-lock patch */
 (function(){
@@ -4251,12 +4122,9 @@ body.portal-open .brand-footer{ display:none; }
   });
 })();
 </script>
-
-<div class="card span-12" style="display:none" aria-hidden="true">
-<h2>Services Hub moved into NetTrack Bot</h2>
+<div aria-hidden="true" class="card span-12" style="display:none">
+<h2>Services Hub disabled in clean signal platform</h2>
 </div>
-
-
 <!-- NETTRACK PRO V13.3 STABILITY + SIGNAL LIMIT + CLEAN USER/PAYMENT PATCH -->
 <style id="nt-v131-final-style">
   /* White, clean auth card requested */
@@ -4411,18 +4279,9 @@ body.portal-open .brand-footer{ display:none; }
       updateDashboard(res);
       if(isCrypto(SYMBOL)) stableCryptoSocket(nonce); else stableWatchTimer(nonce);
     }catch(e){
-      // V13.6: do not kill the dashboard when the REST preload fails.
-      // Firebase/API may be fine while Binance REST or browser network blocks candles.
-      // Use safe local candles, keep Signal A/B alive, and still attempt the live stream.
       isSwitching = false;
-      candles = syntheticCandles(SYMBOL,600);
-      updateCoreFromCandles(SYMBOL);
-      const res = analyze(candles,{isClosed:true, symbol:SYMBOL});
-      currentSignal = res;
-      updateDashboard(res);
-      setSocketState(isCrypto(SYMBOL) ? "RECONNECTING" : "CONNECTED");
-      const expl=byId("signalExplainer"); if(expl) expl.innerHTML = `Backup feed active for <b>${label(SYMBOL)}</b>. Live socket is retrying automatically; Signal A and Signal B remain usable.`;
-      if(isCrypto(SYMBOL)) stableCryptoSocket(nonce); else stableWatchTimer(nonce);
+      setSocketState("ERROR");
+      const expl=byId("signalExplainer"); if(expl) expl.innerHTML = `Feed error for <b>${label(SYMBOL)}</b>. Switch market or retry.`;
     }
   }
 
@@ -4440,9 +4299,8 @@ body.portal-open .brand-footer{ display:none; }
   function stableCryptoSocket(nonce){
     try{
       ws = new WebSocket(`wss://stream.binance.com:9443/ws/${SYMBOL.toLowerCase()}@kline_${INTERVAL}`);
-      let lastTickAt = Date.now();
       ws.onopen = ()=>{ if(nonce===ntSessionNonce) setSocketState("CONNECTED"); };
-      ws.onmessage = (m)=>{ lastTickAt = Date.now();
+      ws.onmessage = (m)=>{
         if(nonce!==ntSessionNonce) return;
         try{
           const parsed=JSON.parse(m.data); if(!parsed || !parsed.k) return;
@@ -4454,30 +4312,9 @@ body.portal-open .brand-footer{ display:none; }
           const res=analyze(candles,{isClosed:c.isClosed, symbol:SYMBOL}); currentSignal=res; updateDashboard(res);
         }catch(e){}
       };
-      ws.onclose = ()=>{
-        if(nonce===ntSessionNonce && !isSwitching){
-          setSocketState("RECONNECTING");
-          if(reconnectTimeout) clearTimeout(reconnectTimeout);
-          reconnectTimeout = setTimeout(()=>{ if(nonce===ntSessionNonce) stableReset(); },2500);
-        }
-      };
-      ws.onerror = ()=>{
-        if(nonce===ntSessionNonce){
-          setSocketState("RECONNECTING");
-          try{ ws.close(); }catch(_e){}
-        }
-      };
-      setTimeout(()=>{
-        if(nonce===ntSessionNonce && isCrypto(SYMBOL) && Date.now()-lastTickAt>12000){
-          setSocketState("RECONNECTING");
-          try{ ws.close(); }catch(_e){}
-        }
-      },13000);
-    }catch(e){
-      setSocketState("RECONNECTING");
-      if(reconnectTimeout) clearTimeout(reconnectTimeout);
-      reconnectTimeout = setTimeout(()=>{ if(nonce===ntSessionNonce) stableReset(); },3000);
-    }
+      ws.onclose = ()=>{ if(nonce===ntSessionNonce && !isSwitching){ setSocketState("RECONNECTING"); setTimeout(()=>{ if(nonce===ntSessionNonce) stableReset(); },3500); } };
+      ws.onerror = ()=>{ if(nonce===ntSessionNonce) setSocketState("ERROR"); };
+    }catch(e){ setSocketState("ERROR"); }
   }
 
   window.activeSymbolLabel = function(){ return label(SYMBOL); };
@@ -4566,8 +4403,6 @@ body.portal-open .brand-footer{ display:none; }
 })();
 </script>
 <!-- /NETTRACK PRO V13.3 STABILITY + SIGNAL LIMIT + CLEAN USER/PAYMENT PATCH -->
-
-
 <!-- NETTRACK PRO V13.3 FINAL SIGNAL-ONLY UX + SMART SIGNAL SWITCH PATCH -->
 <style id="nt-v133-signal-switch-style">
   #testerPatternPanel{display:none!important}
@@ -4621,13 +4456,9 @@ body.portal-open .brand-footer{ display:none; }
     return "BTC/USDT";
   }
   function providerFor(sym){
-    // V13.6: Signal A/B must follow the selected broker/platform.
-    // Keep Deriv/TradingView as fallback only when the selector is empty.
-    const picked = selectedValue("brokerSelect");
-    if(picked) return picked;
     if(/Volatility|BOOM|CRASH/i.test(sym)) return "Deriv";
     if(/EUR|GBP|JPY|XAU|Gold/i.test(sym)) return "TradingView";
-    return "Binance";
+    return selectedValue("brokerSelect") || "Binance";
   }
   function precision(sym){ return /JPY|Volatility|BOOM|CRASH/i.test(sym)?2:/BTC|ETH|BNB|SOL/i.test(sym)?2:5; }
   function fmt(n,sym){ const x=Number(n); return Number.isFinite(x)?x.toFixed(precision(sym)):"--"; }
@@ -4741,7 +4572,9 @@ body.portal-open .brand-footer{ display:none; }
     txt("alignSymbol", sym);
     const a=$("alignBrokerName"); if(a) a.textContent=provider;
     txt("alignMode", `${provider} comparison • signal view`);
-    // V13.6: do not force broker selector back. The user's selected platform drives Signal A/B.
+    // force broker selector visible text only when compatible
+    const br=$("brokerSelect");
+    if(br && br.value!==provider && [...br.options].some(o=>o.value===provider)) br.value=provider;
   }
   function hideRemoved(){
     document.querySelectorAll("button,div,section,label,span,small,b,h3").forEach(el=>{
@@ -4770,16 +4603,12 @@ body.portal-open .brand-footer{ display:none; }
   function boot(){
     buildSwitchPanel(); syncLabels(); hideRemoved(); cookieBanner(); legalMini(); updateQuota();
     ["assetSelect","brokerSelect","tfSelect"].forEach(id=>{const el=$(id); if(el && !el.dataset.v133){el.dataset.v133="1"; el.addEventListener("change",()=>setTimeout(()=>{syncLabels(); updateQuota();},120));}});
-    window.addEventListener("online",()=>{ try{ setSocketState("RECONNECTING"); stableReset(); }catch(e){} });
-    window.addEventListener("offline",()=>{ try{ setSocketState("RECONNECTING"); }catch(e){} });
     setInterval(()=>{syncLabels(); hideRemoved(); updateQuota();},1500);
   }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot); else boot();
 })();
 </script>
 <!-- /NETTRACK PRO V13.3 FINAL SIGNAL-ONLY UX + SMART SIGNAL SWITCH PATCH -->
-
-
 <!-- NETTRACK PRO V13.4 PREMIUM SIGNAL PLATFORM PATCH -->
 <style id="nt-v134-premium-signal-ui">
 :root{
@@ -4971,7 +4800,7 @@ body{
       if(t.includes("mark win")||t.includes("mark loss")){
         const parent=el.closest(".card")||el.parentElement||el; parent.style.display="none";
       }
-      if(t.includes("nettrack bot")){
+      if(t.includes("signal engine")){
         const parent=el.closest(".card")||el.closest("div")||el; parent.style.display="none";
       }
       if(t.includes("face verification")||t.includes("selfie")||t.includes("identity check")){
@@ -5043,201 +4872,121 @@ body{
 })();
 </script>
 <!-- /NETTRACK PRO V13.4 PREMIUM SIGNAL PLATFORM PATCH -->
-
-
-<!-- NETTRACK PRO V13.5 LOCK-IN LOGIC + THEME PATCH -->
-<style id="nt-v135-lockin-style">
-:root{
-  --bg:#050505!important;
-  --card-bg:#0a0a0a!important;
-  --panel:#121212!important;
-  --border:rgba(255,255,255,.10)!important;
-  --text:#ffffff!important;
-  --muted:#a1a1aa!important;
-  --primary:#0091ff!important;
-  --buy:#22c55e!important;
-  --sell:#ef4444!important;
-  --neutral:#ffc800!important;
-}
-body{
-  background:
-    radial-gradient(circle at 0% 0%, rgba(0,145,255,.14), transparent 32%),
-    radial-gradient(circle at 100% 10%, rgba(0,229,255,.10), transparent 28%),
-    radial-gradient(circle at 50% 100%, rgba(255,200,0,.055), transparent 30%),
-    #050505!important;
-  color:#fff!important;
-}
-header, .card, .portal-page, .portal-info-card{
-  background:linear-gradient(145deg,rgba(18,18,18,.96),rgba(10,10,10,.98))!important;
-  border:1px solid rgba(255,255,255,.10)!important;
-  box-shadow:0 18px 50px rgba(0,0,0,.32)!important;
-}
-.card h2,.card h3,h2,h3{color:#a1a1aa!important}
-.pair-selector{background:#0091ff!important;color:#000!important;border-color:rgba(0,145,255,.65)!important}
-.tf-selector, select, input, textarea{
-  background:#121212!important;color:#fff!important;border-color:rgba(255,255,255,.13)!important;
-}
-.live-price{color:#00e5ff}
-.nt-more-white-shell .card,.nt-more-white-shell .span-4:nth-child(odd),.nt-more-white-shell .span-6:nth-child(odd){
-  background:linear-gradient(145deg,rgba(18,18,18,.98),rgba(10,10,10,.96))!important;
-  color:#fff!important;
-  border-color:rgba(255,255,255,.10)!important;
-}
-.nt-signal-switch-mount{
-  background:linear-gradient(145deg,rgba(12,18,30,.98),rgba(5,5,5,.96))!important;
-  color:#fff!important;
-  border:1px solid rgba(0,145,255,.35)!important;
-  box-shadow:0 20px 60px rgba(0,145,255,.10),0 20px 60px rgba(0,0,0,.38)!important;
-  border-radius:18px!important;
-}
-.nt-signal-switch-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-.nt-signal-switch-head b{color:#fff!important}
-.nt-signal-badge{background:rgba(255,200,0,.14)!important;color:#ffc800!important;border:1px solid rgba(255,200,0,.28)!important}
-.nt-signal-card{
-  background:rgba(255,255,255,.055)!important;
-  border:1px solid rgba(255,255,255,.10)!important;
-  color:#fff!important;
-  border-radius:14px!important;
-}
-.nt-signal-card h4{color:#00e5ff!important}
-.nt-signal-card h4 span{color:#a1a1aa!important}
-.nt-signal-row{border-bottom:1px solid rgba(255,255,255,.08)!important}
-.nt-signal-row span,.nt-signal-profits,.nt-user-only-note{color:#a1a1aa!important}
-.nt-signal-row b{color:#fff!important}
-.nt-signal-action button,#ntSignalSwitchBtn{
-  background:linear-gradient(135deg,#0091ff,#00e5ff)!important;
-  color:#020617!important;
-  border:0!important;
-  border-radius:12px!important;
-  padding:12px 14px!important;
-  font-weight:1000!important;
-  letter-spacing:.04em;
-  cursor:pointer;
-}
-.nt-quota-line{background:rgba(255,200,0,.09)!important;color:#ffc800!important;border-color:rgba(255,200,0,.24)!important}
-.nt-sensitive-card.nt-sensitive-locked::after{
-  content:"🔒 Under subscription — sensitive signal data hidden. Signal A and Signal B generator stays open."!important;
-  background:linear-gradient(135deg,rgba(5,5,5,.74),rgba(0,145,255,.30))!important;
-  color:#fff!important;
-  border:1px solid rgba(255,255,255,.18);
-}
-.nt-sensitive-card.nt-sensitive-locked:has(#ntSignalSwitchPanel)::after,
-.nt-sensitive-card.nt-sensitive-locked:has(#ntSignalSwitchMount)::after{display:none!important}
-.nt-sensitive-card.nt-sensitive-locked:has(#ntSignalSwitchPanel)>*,
-.nt-sensitive-card.nt-sensitive-locked:has(#ntSignalSwitchMount)>*{filter:none!important;opacity:1!important}
-.nt-v135-chip{display:inline-flex;gap:6px;align-items:center;border:1px solid rgba(0,229,255,.28);background:rgba(0,229,255,.08);color:#00e5ff;border-radius:999px;padding:3px 8px;font-size:.68rem;font-weight:900}
-.nt-v135-reason{margin-top:8px;border:1px solid rgba(255,200,0,.20);background:rgba(255,200,0,.075);color:#ffe08a;border-radius:10px;padding:8px;font-size:.72rem;line-height:1.45}
+<style id="nt-v138-clean-workflow-css">
+.platform-hint{color:#38bdf8;font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:.7px;white-space:nowrap}
+.daily-signal-panel{padding:12px!important}
+.signal-limit-badge{color:#22c55e;font-size:.68rem}.daily-signal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.daily-signal-card{background:rgba(2,6,23,.35);border:1px solid rgba(56,189,248,.18);border-radius:10px;padding:10px;min-height:78px}.daily-signal-card small{display:block;color:#94a3b8;text-transform:uppercase;font-size:.62rem;letter-spacing:.7px}.daily-signal-card b{display:block;color:#38bdf8;font-size:1rem;margin-top:3px}.daily-signal-card span{display:block;color:#cbd5e1;font-size:.72rem;margin-top:4px;line-height:1.35}.nt-side-nav{position:fixed;left:10px;top:205px;z-index:1100;display:flex;flex-direction:column;gap:10px}.nt-side-nav button{min-width:58px;border:1px solid rgba(56,189,248,.45);background:#0f172a;color:#e2e8f0;border-radius:10px;padding:10px 8px;font-weight:900;font-size:.72rem}.nt-side-nav button.active{background:#38bdf8;color:#020617}.container{padding:1rem 1.2rem 1rem 92px;max-width:1500px}.card{padding:1rem}#mainChart{min-height:320px}canvas#mainChart{height:320px!important}.big-signal{font-size:2.45rem}.summary-mini div{padding:7px}#signalExplainer{min-height:92px!important}.premium-locked{filter:blur(1px) grayscale(.5);opacity:.38}@media (min-width:1200px){.container{max-height:calc(100vh - 92px);overflow:auto}.grid{gap:.75rem}.span-8{grid-column:span 8}.span-4{grid-column:span 4}}@media (max-width:1100px){.daily-signal-grid{grid-template-columns:repeat(2,1fr)}.container{padding-left:82px}.controls{gap:7px}}
 </style>
-<script id="nt-v135-lockin-logic">
+<script id="nt-v138-clean-workflow-js">
 (function(){
-  const PATCH_VERSION="13.5-lockin";
-  const $=id=>document.getElementById(id);
-  const DISPLAY={BTCUSDT:"BTC/USDT",ETHUSDT:"ETH/USDT",SOLUSDT:"SOL/USDT",BNBUSDT:"BNB/USDT",EURUSD:"EUR/USD",GBPUSD:"GBP/USD",USDJPY:"USD/JPY",XAUUSD:"XAU/USD Gold",R_75:"Volatility 75",R_100:"Volatility 100",BOOM1000:"BOOM1000",CRASH1000:"CRASH1000"};
-  const BASE={BTCUSDT:61700,ETHUSDT:3400,SOLUSDT:145,BNBUSDT:562,EURUSD:1.086,GBPUSD:1.274,USDJPY:159.2,XAUUSD:2320,R_75:100000,R_100:85000,BOOM1000:10400,CRASH1000:9200};
-  function sym(){return String((window.SYMBOL||$("assetSelect")?.value||"BTCUSDT")).replace(/[^A-Z0-9_]/g,"")||"BTCUSDT"}
-  function tf(){return String(window.INTERVAL||$("tfSelect")?.value||"1m")}
-  function broker(s){if(/EUR|GBP|JPY|XAU/.test(s))return "TradingView / MT4 / MT5"; if(/R_|BOOM|CRASH/.test(s))return "Deriv"; return "Binance / Bybit";}
-  function dec(s){return /EURUSD|GBPUSD/.test(s)?5:(/USDJPY/.test(s)?3:2)}
-  function fmt(v,s){return (/EURUSD|GBPUSD|USDJPY/.test(s)?"":/XAU|USDT/.test(s)?"$":"")+Number(v||0).toFixed(dec(s))}
-  function lastPrice(s){
-    try{const c=window.candles||[]; const last=c[c.length-1]; if(last&&Number.isFinite(last.close))return Number(last.close)}catch(e){}
-    const drift=Math.sin((Date.now()/60000)+[...s].reduce((a,c)=>a+c.charCodeAt(0),0))*0.002;
-    return (BASE[s]||100)*(1+drift);
+  function $(id){return document.getElementById(id)}
+  window.ntForgotPassword = async function(){
+    const email=($('loginEmail')&&$('loginEmail').value.trim())||prompt('Enter the email you use for NetTrack Pro:');
+    if(!email) return alert('Enter your email first, then press Forgot password.');
+    try{
+      if(window.supabaseClient && window.supabaseClient.auth && window.supabaseClient.auth.resetPasswordForEmail){
+        const {error}=await window.supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:location.href});
+        if(error) throw error;
+        alert('Password reset link sent to '+email+'. Open your email and set a new password.');
+      }else{
+        localStorage.setItem('nt_pending_reset_email',email);
+        alert('Reset request saved for '+email+'. Connect Supabase Auth to send live reset emails.');
+      }
+    }catch(e){ alert('Reset failed: '+(e.message||e)); }
+  };
+  function addForgot(){
+    const card=document.querySelector('#authOverlay > div:not(.nt-market-bg):not(.nt-auth-brand):not(.nt-session-loader)');
+    if(!card || $('ntForgotBtn')) return;
+    const btn=document.createElement('button'); btn.id='ntForgotBtn'; btn.type='button'; btn.textContent='Forgot password? Reset by email';
+    btn.style.cssText='width:100%;padding:10px;margin-top:8px;background:#0ea5e9;color:#020617;font-weight:900;border-radius:8px';
+    btn.onclick=window.ntForgotPassword;
+    const login=[...card.querySelectorAll('button')].find(b=>(b.textContent||'').toLowerCase().includes('login'));
+    if(login) login.insertAdjacentElement('afterend',btn); else card.appendChild(btn);
   }
-  function readCore(){
-    const signal=String($("signalText")?.textContent||"").toUpperCase();
-    const conf=Number(String($("confValue")?.textContent||"0").replace(/\D/g,""))||0;
-    const qual=Number(String($("summaryQuality")?.textContent||"0").replace(/\D/g,""))||0;
-    return {signal,conf,qual};
+  function syncDailySignals(){
+    const sig=($('signalText')?.textContent||'NEUTRAL').trim(); const conf=($('confValue')?.textContent||'0%').trim();
+    const broker=($('brokerSelect')?.value||'Binance'); const sym=($('assetSelect')?.value||'BTCUSDT'); const tf=($('tfSelect')?.value||'1m');
+    const dir=sig.includes('SELL')?'SELL':sig.includes('BUY')?'BUY':'WAIT';
+    if($('signalAName')) $('signalAName').textContent=dir==='WAIT'?'WAIT FOR SETUP':dir+' • CONFIRMED';
+    if($('signalADetail')) $('signalADetail').textContent=`${sym} ${tf} on ${broker}. Confidence ${conf}. Entry/SL/TP follows the live chart overlay.`;
+    if($('signalBName')) $('signalBName').textContent=dir==='WAIT'?'LOCKED':(dir==='BUY'?'PULLBACK BUY':'RETEST SELL');
+    if($('signalBDetail')) $('signalBDetail').textContent='Second daily signal unlocks only after the next clean pattern confirmation. Limit stays 2/day.';
+    if($('patternPlatform')) $('patternPlatform').textContent=broker+' • '+sym+' • '+tf;
+    if($('patternSync')) $('patternSync').textContent='Switching platform updates the signal view, alignment monitor and broker overlay together.';
   }
-  function sideFor(variant){
-    const c=readCore();
-    if(c.signal.includes("BUY")) return variant==="B" && c.conf<72 ? "SELL" : "BUY";
-    if(c.signal.includes("SELL")) return variant==="B" && c.conf<72 ? "BUY" : "SELL";
-    const s=sym();
-    const seed=[...s].reduce((a,ch)=>a+ch.charCodeAt(0),0)+Math.floor(Date.now()/300000)+(variant==="B"?7:0);
-    return seed%2===0?"BUY":"SELL";
+  function clean(){
+    addForgot(); syncDailySignals();
+    ['netTrackBotBox','txBox','revenueBox'].forEach(id=>{const e=$(id); if(e) e.style.display='none';});
+    const v=$('verificationBox'); if(v && v.parentElement && v.parentElement.id!=='userPortalMount' && v.parentElement.id!=='ownerPortalMount'){ v.style.display='none'; }
+    document.querySelectorAll('button').forEach(b=>{const t=(b.textContent||'').toLowerCase(); if(t.includes('mark win')||t.includes('mark loss')||t.includes('mark close')) b.style.display='none';});
   }
-  function makeSignal(variant){
-    const s=sym(), p=lastPrice(s), core=readCore();
-    const side=sideFor(variant);
-    const market=/EURUSD|GBPUSD/.test(s)?"forex":/USDJPY/.test(s)?"jpy":/XAU/.test(s)?"gold":/R_|BOOM|CRASH/.test(s)?"synthetic":"crypto";
-    const mult=market==="forex"?0.0012:market==="jpy"?0.0014:market==="gold"?0.0024:market==="synthetic"?0.0035:0.006;
-    const risk=Math.max(Math.abs(p*mult)*(variant==="B"?1.18:1), market==="forex"?0.0007:0.01);
-    const entry=variant==="B" ? p + (side==="BUY"?risk*.20:-risk*.20) : p;
-    const sl=side==="BUY"?entry-risk:entry+risk;
-    const tp=side==="BUY"?entry+risk*1.75:entry-risk*1.75;
-    const target=tp;
-    const conf=Math.max(61,Math.min(94,(core.conf||68)+(variant==="A"?4:-2)));
-    const quality=Math.max(58,Math.min(96,(core.qual||72)+(variant==="A"?3:-4)));
-    const expiry= tf()==="1m" ? "3–5 min" : tf()==="5m" ? "10–15 min" : tf()==="15m" ? "30–45 min" : "1–2 candles";
-    return {variant,s,side,entry,sl,tp,target,conf,quality,expiry,provider:broker(s),timeframe:tf(),reason:reasonText(side,core)};
-  }
-  function reasonText(side,core){
-    const bits=[];
-    if(core.signal.includes(side)) bits.push("main engine agrees");
-    if(core.conf>=70) bits.push("confidence above filter");
-    if(core.qual>=65) bits.push("trade quality accepted");
-    if(!bits.length) bits.push("fallback structure scan active");
-    return bits.join(" • ");
-  }
-  function render(sig){
-    const color=sig.side==="BUY"?"#22c55e":"#ef4444";
-    return `<div class="nt-signal-card">
-      <h4>Signal ${sig.variant}<span>${sig.provider}</span></h4>
-      <div class="side" style="color:${color};font-size:1.9rem;font-weight:1000">${sig.side}</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px"><span class="nt-v135-chip">${DISPLAY[sig.s]||sig.s}</span><span class="nt-v135-chip">${sig.timeframe}</span><span class="nt-v135-chip">${sig.conf}% confidence</span></div>
-      <div class="nt-signal-row"><span>Entry</span><b>${fmt(sig.entry,sig.s)}</b></div>
-      <div class="nt-signal-row"><span>Suggested Target</span><b>${fmt(sig.target,sig.s)}</b></div>
-      <div class="nt-signal-row"><span>Take Profit</span><b>${fmt(sig.tp,sig.s)}</b></div>
-      <div class="nt-signal-row"><span>Stop Loss</span><b>${fmt(sig.sl,sig.s)}</b></div>
-      <div class="nt-signal-row"><span>Quality</span><b>${sig.quality}/100</b></div>
-      <div class="nt-signal-row"><span>Expiry Window</span><b>${sig.expiry}</b></div>
-      <div class="nt-v135-reason"><b>Logic:</b> ${sig.reason}. Manual execution only — no guaranteed profit.</div>
-    </div>`;
-  }
-  function quotaKey(){return "ntp_v135_signal_quota_"+new Date().toISOString().slice(0,10)}
-  function quota(){return Number(localStorage.getItem(quotaKey())||0)}
-  function setQuota(n){localStorage.setItem(quotaKey(),String(n))}
-  function paid(){try{return !!(window.subscriptionState && subscriptionState.paidUntil && Number(subscriptionState.paidUntil)>Date.now())}catch(e){return false}}
-  function can(){return paid()||quota()<2}
-  function quotaText(){
-    const q=$("ntSwitchQuota");
-    if(q) q.textContent=paid()?"Subscription active — generator unlocked.":`Free test mode: ${Math.max(0,2-quota())} of 2 Signal A/B generations left today.`;
-    const b=$("ntSignalSwitchBtn");
-    if(b){b.disabled=!can(); b.style.opacity=can()?"1":".55"; b.textContent=can()?"GENERATE SIGNAL A + SIGNAL B":"DAILY LIMIT REACHED — SUBSCRIBE";}
-  }
-  function unlockGeneratorCard(){
-    const panel=$("ntSignalSwitchPanel")||$("ntSignalSwitchMount");
-    const card=panel?.closest?.(".card");
-    if(card){card.classList.remove("nt-sensitive-locked"); card.classList.add("nt-generator-open-card");}
-  }
-  function runGenerate(){
-    if(!can()){quotaText(); if(typeof window.notify==="function")notify("Daily free limit reached. Subscribe to unlock more Signal A/B generations."); return;}
-    const a=makeSignal("A"), b=makeSignal("B"), out=$("ntSignalSwitchOutput");
-    if(out) out.innerHTML=render(a)+render(b)+`<div class="nt-signal-disclaimer" style="grid-column:1/-1"><b>Reality check:</b> These are analysis signals, not a promise. Check your broker chart before using real money.</div>`;
-    if(!paid())setQuota(quota()+1);
-    try{localStorage.setItem("ntp_v135_last_signals",JSON.stringify({a,b,at:new Date().toISOString(),patch:PATCH_VERSION}))}catch(e){}
-    quotaText(); unlockGeneratorCard();
-    if(typeof window.notify==="function")notify("Signal A and Signal B generated with confidence and suggested target.");
-  }
-  function install(){
-    const panel=$("ntSignalSwitchPanel");
-    const mount=$("ntSignalSwitchMount");
-    if(panel){
-      const head=panel.querySelector(".nt-signal-switch-head b"); if(head)head.textContent="Network Pro Daily Signal Logic";
-      const badge=panel.querySelector(".nt-signal-badge"); if(badge)badge.textContent="SIGNAL A + SIGNAL B";
-    }
-    if(mount) mount.classList.add("nt-signal-switch-mount");
-    window.ntGenerateSignalSwitch=runGenerate;
-    quotaText(); unlockGeneratorCard();
-  }
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install); else install();
-  window.addEventListener("load",install);
-  setInterval(install,1600);
+  ['change','input'].forEach(ev=>document.addEventListener(ev,()=>setTimeout(clean,80),true));
+  setInterval(clean,900); if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',clean); else clean();
 })();
 </script>
-<!-- /NETTRACK PRO V13.5 LOCK-IN LOGIC + THEME PATCH -->
 
+<!-- NETTRACK PRO V13.8 AUDIT HARDENING PATCH -->
+<style id="nt-v138-audit-hardening-css">
+/* Audit fix: compact single-screen desktop alignment + remove leftover trading-result controls. */
+@media (min-width:1200px){
+  body{overflow:hidden}
+  .container{max-height:calc(100vh - 92px);overflow:auto;padding-top:.65rem;padding-bottom:.65rem}
+  .grid{gap:.65rem}
+  .daily-signal-panel{padding:10px!important}
+  canvas#mainChart{height:300px!important;min-height:300px!important}
+  .card{padding:.85rem!important}
+  .big-signal{font-size:2.15rem!important}
+  #signalExplainer{min-height:78px!important}
+}
+</style>
+<script id="nt-v138-audit-hardening-js">
+(function(){
+  function $(id){return document.getElementById(id)}
+  function client(){return window.supabaseClient || (typeof supabaseClient!=="undefined" ? supabaseClient : null)}
+  window.ntForgotPassword = async function(){
+    const email = ($('loginEmail') && $('loginEmail').value.trim()) || prompt('Enter your NetTrack Pro email:');
+    if(!email) return alert('Enter your email first.');
+    const c = client();
+    try{
+      if(c && c.auth && c.auth.resetPasswordForEmail){
+        const {error}=await c.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+        if(error) throw error;
+        alert('Password reset email sent to '+email+'. Open your inbox and follow the link.');
+        return;
+      }
+    }catch(e){ return alert('Reset email failed: '+(e.message||e)); }
+    /* Offline/local beta fallback: no email can be sent without Supabase, so update local test account safely. */
+    const raw=localStorage.getItem('nt_user');
+    const user=raw?JSON.parse(raw):null;
+    if(user && String(user.email||'').toLowerCase()===email.toLowerCase()){
+      const np=prompt('Supabase is not connected in this browser. Enter a new local test password:');
+      if(!np || np.length<6) return alert('Password must be at least 6 characters.');
+      user.password=np; localStorage.setItem('nt_user',JSON.stringify(user));
+      alert('Local test password updated. Use it to log in.');
+    }else{
+      alert('Supabase is required to send real reset emails. Check the Supabase project settings and redirect URL.');
+    }
+  };
+  function auditClean(){
+    ['netTrackBotBox','txBox','revenueBox','verificationBox'].forEach(id=>{const e=$(id); if(e)e.remove();});
+    document.querySelectorAll('button').forEach(b=>{const t=(b.textContent||'').toLowerCase(); if(t.includes('mark win')||t.includes('mark loss')||t.includes('mark close')) b.remove();});
+    if(!$('ntForgotBtn')){
+      const pass=$('loginPass');
+      if(pass){
+        const btn=document.createElement('button'); btn.id='ntForgotBtn'; btn.type='button';
+        btn.textContent='Forgot password? Reset by email';
+        btn.style.cssText='width:100%;padding:10px;margin-top:8px;background:#0ea5e9;color:#020617;font-weight:900;border-radius:8px';
+        btn.onclick=window.ntForgotPassword;
+        const login=[...document.querySelectorAll('#authOverlay button')].find(x=>(x.textContent||'').toLowerCase().includes('login'));
+        (login||pass).insertAdjacentElement('afterend',btn);
+      }
+    }
+  }
+  auditClean();
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',auditClean);
+  setInterval(auditClean,1200);
+})();
+</script>
+<!-- /NETTRACK PRO V13.8 AUDIT HARDENING PATCH -->
 </body>
 </html>
